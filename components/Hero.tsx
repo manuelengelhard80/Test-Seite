@@ -49,7 +49,7 @@ export const Hero: React.FC = () => {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 bg-primary-light rounded-full px-4 py-1.5 shadow-sm mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700 border border-primary/20">
           <Sparkles size={14} className="text-primary-dark" strokeWidth={2.5} />
-          <span className="text-xs font-bold text-primary-dark uppercase tracking-wide">Die Nr. 1 KI Telefon Lösung für moderne Praxen</span>
+          <span className="text-xs font-bold text-primary-dark uppercase tracking-wide">Die Zukunft der Praxistelefonie</span>
         </div>
 
         {/* Headline */}

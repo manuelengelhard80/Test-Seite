@@ -7,7 +7,7 @@ export const SavingsCalculator: React.FC = () => {
   const [callsPerDay, setCallsPerDay] = useState(25);
   const [avgDuration, setAvgDuration] = useState(4);
   const [hourlyRate, setHourlyRate] = useState(28);
-  const [selectedPackage, setSelectedPackage] = useState<'Solo' | 'Team'>('Solo');
+  const [selectedPackage, setSelectedPackage] = useState<'Voice' | 'Assist' | 'Pulse'>('Assist');
   
   // Results State
   const [results, setResults] = useState({
@@ -28,16 +28,20 @@ export const SavingsCalculator: React.FC = () => {
     const totalMinutes = callsPerDay * avgDuration * WORKING_DAYS;
     
     // 2. Calculate Status Quo (Personnel Costs)
-    // Formula: (Total Mins / Effective Mins per Hour) * Hourly Rate
     const paidHoursRequired = totalMinutes / EFFECTIVE_MFA_MINS_PER_HOUR;
     const personnelCostOld = paidHoursRequired * hourlyRate;
     
-    // 3. Calculate Auxilium AI Costs
-    // As per user request: Service (49€) + Usage (0.15€/min)
-    const serviceFee = selectedPackage === 'Solo' ? 49 : 99;
-    const minuteRate = selectedPackage === 'Solo' ? 0.15 : 0.12;
-    const usageCost = totalMinutes * minuteRate;
-    const totalAiCost = serviceFee + usageCost;
+    // 3. Define Package Rates (Matching PricingPage.tsx)
+    const configs = {
+      Voice: { base: 99, included: 1000, rate: 0.15 },
+      Assist: { base: 299, included: 3000, rate: 0.12 },
+      Pulse: { base: 599, included: 10000, rate: 0.10 }
+    };
+    
+    const config = configs[selectedPackage];
+    const overageMinutes = Math.max(0, totalMinutes - config.included);
+    const usageCost = overageMinutes * config.rate;
+    const totalAiCost = config.base + usageCost;
 
     // 4. Calculate Savings & ROI
     const monthlySavings = Math.max(0, personnelCostOld - totalAiCost);
@@ -47,7 +51,7 @@ export const SavingsCalculator: React.FC = () => {
     setResults({
       timeSavedHours: Number(timeSavedHours.toFixed(1)),
       personnelCostOld: Math.round(personnelCostOld),
-      aiCostService: serviceFee,
+      aiCostService: config.base,
       aiCostUsage: Math.round(usageCost),
       totalAiCost: Math.round(totalAiCost),
       monthlySavings: Math.round(monthlySavings),
@@ -82,18 +86,24 @@ export const SavingsCalculator: React.FC = () => {
               {/* Package Selector */}
               <div className="space-y-4">
                 <label className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Gewählter Tarif</label>
-                <div className="grid grid-cols-2 gap-2 p-1.5 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                <div className="grid grid-cols-3 gap-2 p-1.5 bg-white border border-slate-200 rounded-2xl shadow-sm">
                   <button
-                    onClick={() => setSelectedPackage('Solo')}
-                    className={`py-4 rounded-xl text-xs font-bold transition-all ${selectedPackage === 'Solo' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
+                    onClick={() => setSelectedPackage('Voice')}
+                    className={`py-3 rounded-xl text-[10px] font-bold transition-all ${selectedPackage === 'Voice' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
                   >
-                    Solo (Basis)
+                    Voice
                   </button>
                   <button
-                    onClick={() => setSelectedPackage('Team')}
-                    className={`py-4 rounded-xl text-xs font-bold transition-all ${selectedPackage === 'Team' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
+                    onClick={() => setSelectedPackage('Assist')}
+                    className={`py-3 rounded-xl text-[10px] font-bold transition-all ${selectedPackage === 'Assist' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
                   >
-                    Team (Pro)
+                    Assist
+                  </button>
+                  <button
+                    onClick={() => setSelectedPackage('Pulse')}
+                    className={`py-3 rounded-xl text-[10px] font-bold transition-all ${selectedPackage === 'Pulse' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
+                  >
+                    Pulse
                   </button>
                 </div>
               </div>
@@ -154,7 +164,7 @@ export const SavingsCalculator: React.FC = () => {
                <div className="bg-white/60 p-6 rounded-2xl border border-slate-200/50 flex gap-4">
                   <Info className="text-primary shrink-0" size={20} />
                   <p className="text-[11px] text-slate-500 leading-relaxed font-medium italic">
-                    Kalkulation: 22 Arbeitstage/Monat. Kostenbasis: {selectedPackage === 'Solo' ? '0,15 €' : '0,12 €'} pro KI-Minute und 35 Min. effektive MFA-Telefonzeit pro bezahlter Stunde.
+                    Kalkulation: 22 Arbeitstage/Monat. Kostenbasis: {selectedPackage === 'Voice' ? '0,15 €' : selectedPackage === 'Assist' ? '0,12 €' : '0,10 €'} pro KI-Minute und 35 Min. effektive MFA-Telefonzeit pro bezahlter Stunde.
                   </p>
                </div>
             </div>
@@ -174,7 +184,7 @@ export const SavingsCalculator: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
                 <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 flex flex-col justify-center">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Zeitgewinn Team</p>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Zeitgewinn ({selectedPackage})</p>
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-black text-slate-900">{results.timeSavedHours.toLocaleString('de-DE')}</span>
                     <span className="text-sm font-bold text-slate-500 uppercase">Std.</span>

@@ -18,7 +18,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="bg-white border-t border-slate-100 pt-16 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-16">
           
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
@@ -75,9 +75,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Rechtliches</h4>
             <ul className="space-y-3 text-sm text-slate-500">
               <li><button onClick={(e) => handleNav(e, 'impressum')} className="hover:text-primary transition-colors text-left">Impressum</button></li>
-              <li><button onClick={(e) => handleNav(e, 'security')} className="hover:text-primary transition-colors text-left">Datenschutz</button></li>
-              <li><button onClick={(e) => handleNav(e, 'home')} className="hover:text-primary transition-colors text-left">AGB</button></li>
+              <li><button onClick={(e) => handleNav(e, 'privacy')} className="hover:text-primary transition-colors text-left">Datenschutz</button></li>
+              <li><button onClick={(e) => handleNav(e, 'agb')} className="hover:text-primary transition-colors text-left">AGB</button></li>
               <li><button onClick={(e) => handleNav(e, 'home')} className="hover:text-primary transition-colors text-left">Cookie-Einstellungen</button></li>
+            </ul>
+          </div>
+
+          {/* Dankeseiten Column */}
+          <div>
+            <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Erfolg</h4>
+            <ul className="space-y-3 text-sm text-slate-500">
+              <li><button onClick={(e) => handleNav(e, 'thankyou-voice')} className="hover:text-primary transition-colors text-left">Dankeseite Voice</button></li>
+              <li><button onClick={(e) => handleNav(e, 'thankyou-assist')} className="hover:text-primary transition-colors text-left">Dankeseite Assist</button></li>
+              <li><button onClick={(e) => handleNav(e, 'thankyou-pulse')} className="hover:text-primary transition-colors text-left">Dankeseite Pulse</button></li>
             </ul>
           </div>
         </div>

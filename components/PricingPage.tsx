@@ -10,7 +10,7 @@ interface PricingPageProps {
 export const PricingPage: React.FC<PricingPageProps> = ({ onBack }) => {
   const usagePackages = [
     { 
-      name: "Solo", 
+      name: "Auxilium Voice", 
       price: "99 €", 
       sub: "/ Monat",
       description: "Ideal für Einzelpraxen mit moderatem Aufkommen",
@@ -30,7 +30,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack }) => {
       ]
     },
     { 
-      name: "Team", 
+      name: "Auxilium Assist", 
       price: "299 €", 
       sub: "/ Monat",
       description: "Für wachsende Teams & Gemeinschaftspraxen",
@@ -46,13 +46,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack }) => {
         "Unbegrenzte User"
       ],
       features: [
-        "Alles in Solo",
+        "Alles in Auxilium Voice",
         "Eigener SIP Trunk",
         "Outbound Anrufe"
       ]
     },
     { 
-      name: "Business", 
+      name: "Auxilium Pulse", 
       price: "599 €", 
       sub: "/ Monat",
       description: "Die Komplettlösung für MVZs & hohes Volumen",
@@ -66,7 +66,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack }) => {
         "Unbegrenzte User"
       ],
       features: [
-        "Alles in Team",
+        "Alles in Auxilium Assist",
         "Eigene Stimme (Voice Clone)",
         "SSO (Single Sign-On)",
         "Individueller SLA"

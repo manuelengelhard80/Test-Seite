@@ -17,6 +17,9 @@ import { TestPage } from './components/TestPage';
 import { FeaturesPage } from './components/FeaturesPage';
 import { LoginPage } from './components/LoginPage';
 import { DashboardPage } from './components/DashboardPage';
+import { AGBPage } from './components/AGBPage';
+import { PrivacyPage } from './components/PrivacyPage';
+import { ThankYouPage } from './components/ThankYouPage';
 
 const App: React.FC = () => {
   // Simple state-based routing
@@ -56,7 +59,7 @@ const App: React.FC = () => {
             <Hero />
             <FeatureFocus />
             {/* "Drei starke Module" bleiben auf der Startseite als Produktvorstellung */}
-            <Products />
+            <Products onNavigate={handleNavigate} />
             <Testimonials />
             
             {/* Trust Section / Stats */}
@@ -106,6 +109,16 @@ const App: React.FC = () => {
         return <PricingPage onBack={() => handleNavigate('home')} />;
       case 'impressum':
         return <ImpressumPage onBack={() => handleNavigate('home')} />;
+      case 'agb':
+        return <AGBPage onBack={() => handleNavigate('home')} />;
+      case 'privacy':
+        return <PrivacyPage onBack={() => handleNavigate('home')} />;
+      case 'thankyou-voice':
+        return <ThankYouPage productType="voice" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />;
+      case 'thankyou-assist':
+        return <ThankYouPage productType="assist" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />;
+      case 'thankyou-pulse':
+        return <ThankYouPage productType="pulse" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />;
       default:
         // Assume anything else is a specialty page ID
         return <SpecialtyPage specialtyId={currentView} onBack={() => handleNavigate('home')} />;

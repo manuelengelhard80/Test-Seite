@@ -1,8 +1,12 @@
 
 import React, { useRef, useState } from 'react';
-import { CheckCircle2, Rocket, Settings, ChevronLeft, ChevronRight, Mail, Hospital, Globe, XCircle } from 'lucide-react';
+import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus } from 'lucide-react';
 
-export const Products: React.FC = () => {
+interface ProductsProps {
+  onNavigate?: (view: string) => void;
+}
+
+export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -73,77 +77,50 @@ export const Products: React.FC = () => {
             className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
           >
             
-            {/* 1. Starter */}
+            {/* 1. Auxilium Voice */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <Rocket className="text-primary-dark" size={28} strokeWidth={1.5} />
+                <PhoneCall className="text-primary-dark" size={28} strokeWidth={1.5} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Starter</h3>
-              <p className="text-slate-500 mb-4 text-sm leading-relaxed relative z-10 min-h-[40px]">
-                KI-Telefonassistent mit intelligentem Anrufbeantworter für maximale Erreichbarkeit und strukturierte Erfassung aller Anliegen.
-                <br/>
-                <span className="font-medium text-slate-400 mt-2 block">(Anzahl der Stimmen 7)</span>
-              </p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Voice</h3>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
+                <p>Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
+                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                  Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.
+                </div>
+              </div>
+
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+                Smarter KI-Telefonassistent mit natürlicher Stimme
+              </h4>
 
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
                 {/* Active Features */}
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Smarter KI-Telefonassistent mit natürlicher Stimme</span>
+                  <span>Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Nimmt alle Anrufe für Sie entgegen (24/7 Erreichbarkeit in 25 Sprachen)</span>
+                  <span>Empathische Patientenkommunikation</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Empathische und menschliche Patientenbetreuung</span>
+                  <span>Notfall- & Dringlichkeitserkennung</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Dringlichkeits-Erkennung & Notfall-Weiterleitung</span>
+                  <span>Rezept- & Überweisungsannahme</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Erledigt alle Rezept- & Überweisungsanfragen</span>
+                  <span>Automatische E-Mail-Weiterleitung</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>E-Mail-Weiterleitung von allen Anliegen an den Ansprechpartner</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Beantwortung von allen Fragen rund um Ihre Praxis (FAQ)</span>
-                </li>
-
-                <Separator />
-
-                {/* Inactive Features (Professional) */}
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Terminvergabe mit intelligenter Lückensuche</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Terminabsage und automatische Freigabe des Terminzeitraums</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Terminbestätigung per SMS</span>
-                </li>
-
-                <Separator />
-
-                {/* Inactive Features (Klinik) */}
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Direkte Praxiskalender-Anbindung über eine API Schnittstelle</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Automatischer Recall-Service</span>
+                  <span>Beantwortung häufiger Praxisfragen (FAQ)</span>
                 </li>
               </ul>
 
@@ -159,85 +136,56 @@ export const Products: React.FC = () => {
                     <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
                   </div>
                 </div>
-                <button className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md">
+                <button 
+                  onClick={() => onNavigate?.('thankyou-voice')}
+                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md"
+                >
                   Jetzt bestellen
                 </button>
               </div>
             </div>
 
-            {/* 2. Professional (Bestseller) */}
+            {/* 2. Auxilium Assist (Bestseller) */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10">
                <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
                  <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
                </div>
               
               <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <Settings className="text-primary-dark" size={28} strokeWidth={1.5} />
+                <CalendarCheck2 className="text-primary-dark" size={28} strokeWidth={1.5} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 relative z-10">Professional</h3>
-              <p className="text-slate-500 mb-4 text-sm leading-relaxed relative z-10 min-h-[40px]">
-                KI-Telefonassistent mit vollautomatischer Terminplanung, intelligenter Lückensuche und zuverlässigem Management von Absagen.
-                <br/>
-                <span className="font-medium text-slate-400 mt-2 block">(Anzahl der Stimmen 10)</span>
-              </p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Assist</h3>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
+                <p>Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
+                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                  Automatisiert Terminprozesse und reduziert den täglichen Telefonaufwand erheblich.
+                </div>
+              </div>
+
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+                Smarter KI-Telefonassistent mit natürlicher Stimme
+              </h4>
               
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                {/* Full list from Starter explicitly repeated with updated voice count */}
-                <li className="flex items-start gap-3 text-slate-700 font-medium">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Smarter KI-Telefonassistent mit natürlicher Stimme</span>
+                <li className="flex items-start gap-3 text-slate-600">
+                  <Plus size={16} className="text-slate-900 shrink-0 mt-0.5" />
+                  <span className="font-medium">Alles aus Voice</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Nimmt alle Anrufe für Sie entgegen (24/7 Erreichbarkeit in 25 Sprachen)</span>
+                  <span>Vollautomatische Terminvergabe</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Empathische und menschliche Patientenbetreuung</span>
+                  <span>Intelligente Lückensuche in Ihrer Praxissoftware</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Dringlichkeits-Erkennung & Notfall-Weiterleitung</span>
+                  <span>Automatische Terminabsagen & Freigabe</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Erledigt alle Rezept- & Überweisungsanfragen</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>E-Mail-Weiterleitung von allen Anliegen an den Ansprechpartner</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Beantwortung von allen Fragen rund um Ihre Praxis (FAQ)</span>
-                </li>
-
-                <Separator />
-
-                {/* Professional Specific Features */}
-                <li className="flex items-start gap-3 text-slate-700 font-medium">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminvergabe mit intelligenter Lückensuche</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminabsage und automatische Freigabe des Terminzeitraums</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminbestätigung per SMS</span>
-                </li>
-
-                <Separator />
-
-                {/* Inactive Features (Klinik) */}
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Direkte Praxiskalender-Anbindung über eine API Schnittstelle</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-300 line-through decoration-slate-300">
-                  <XCircle size={18} className="text-slate-300 shrink-0 mt-0.5" />
-                  <span>Automatischer Recall-Service</span>
+                  <span>SMS-Terminbestätigung</span>
                 </li>
               </ul>
 
@@ -253,82 +201,54 @@ export const Products: React.FC = () => {
                     <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
                   </div>
                 </div>
-                <button className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md">
+                <button 
+                  onClick={() => onNavigate?.('thankyou-assist')}
+                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md"
+                >
                   Jetzt bestellen
                 </button>
               </div>
             </div>
 
-            {/* 3. Klinik (Formerly Expert/Enterprise) */}
+            {/* 3. Auxilium Pulse */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity"></div>
 
               <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <Hospital className="text-primary-dark" size={28} strokeWidth={1.5} />
+                <Activity className="text-primary-dark animate-pulse" size={28} strokeWidth={1.5} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 relative z-10">Klinik</h3>
-              <p className="text-slate-500 mb-4 text-sm leading-relaxed relative z-10 min-h-[40px]">
-                KI-Telefonassistent mit Praxiskalender-Synchronisation, direkter API-Anbindung und automatischem Recall-Service.
-                <br/>
-                <span className="font-medium text-slate-400 mt-2 block">(Anzahl der Stimmen 13)</span>
-              </p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Pulse</h3>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
+                <p>Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
+                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                  Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.
+                </div>
+              </div>
+
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+                Smarter KI-Telefonassistent mit natürlicher Stimme
+              </h4>
               
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                 {/* Inherit all features from Professional */}
-                <li className="flex items-start gap-3 text-slate-700 font-medium">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Smarter KI-Telefonassistent mit natürlicher Stimme</span>
+                <li className="flex items-start gap-3 text-slate-600">
+                  <Plus size={16} className="text-slate-900 shrink-0 mt-0.5" />
+                  <span className="font-medium">Alles aus Assist</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Nimmt alle Anrufe für Sie entgegen (24/7 Erreichbarkeit in 25 Sprachen)</span>
+                  <span>Direkte Integration in Ihre Praxissoftware</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Empathische und menschliche Patientenbetreuung</span>
+                  <span>API-Anbindung für individuelle Systeme</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Dringlichkeits-Erkennung & Notfall-Weiterleitung</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Erledigt alle Rezept- & Überweisungsanfragen</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>E-Mail-Weiterleitung von allen Anliegen an den Ansprechpartner</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Beantwortung von allen Fragen rund um Ihre Praxis (FAQ)</span>
-                </li>
-
-                <Separator />
-
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminvergabe mit intelligenter Lückensuche</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminabsage und automatische Freigabe des Terminzeitraums</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Terminbestätigung per SMS</span>
-                </li>
-                
-                <Separator />
-                
-                {/* Klinik Specific Features */}
-                <li className="flex items-start gap-3 text-slate-700 font-medium">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Direkte Praxiskalender-Anbindung über eine API Schnittstelle</span>
-                </li>
-                <li className="flex items-start gap-3 text-slate-700 font-medium">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
                   <span>Automatischer Recall-Service</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-700">
+                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                  <span>Vollständige Prozessautomatisierung</span>
                 </li>
               </ul>
 
@@ -344,13 +264,16 @@ export const Products: React.FC = () => {
                     <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
                   </div>
                 </div>
-                <button className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md">
+                <button 
+                  onClick={() => onNavigate?.('thankyou-pulse')}
+                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md"
+                >
                   Jetzt bestellen
                 </button>
               </div>
             </div>
 
-            {/* 4. Enterprise (Was Klinik, Price on request) */}
+            {/* 4. Enterprise (Price on request) */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-slate-50 px-8 pb-8 pt-16 rounded-3xl border border-slate-200/60 shadow-none hover:shadow-sm transition-all duration-300 flex flex-col relative overflow-hidden group">
               {/* No top gradient strip for subtle look */}
               

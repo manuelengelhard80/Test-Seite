@@ -12,67 +12,67 @@ export const FeaturesPage: React.FC<FeaturesPageProps> = ({ onBack }) => {
       icon: Mic2,
       title: "Natürliche Sprach-KI",
       benefit: "Smarter Telefonassistent mit natürlicher Stimme für empathische Patientenbetreuung.",
-      detail: "Unsere KI klingt nicht wie ein Roboter, sondern führt natürliche Dialoge. Sie erkennt Nuancen, lässt Patienten ausreden und sorgt für ein angenehmes Gesprächserlebnis (Starter)."
+      detail: "Unsere KI klingt nicht wie ein Roboter, sondern führt natürliche Dialoge. Sie erkennt Nuancen, lässt Patienten ausreden und sorgt für ein angenehmes Gesprächserlebnis (Auxilium Voice)."
     },
     {
       icon: Clock,
       title: "24/7 Erreichbarkeit",
       benefit: "Nimmt alle Anrufe entgegen – rund um die Uhr und in 25 Sprachen.",
-      detail: "Egal ob nachts, am Wochenende oder bei hohem Aufkommen: Kein Anruf geht verloren. Die Mehrsprachigkeit baut Barrieren ab und versorgt alle Patientengruppen optimal (Starter)."
+      detail: "Egal ob nachts, am Wochenende oder bei hohem Aufkommen: Kein Anruf geht verloren. Die Mehrsprachigkeit baut Barrieren ab und versorgt alle Patientengruppen optimal (Auxilium Voice)."
     },
     {
       icon: AlertTriangle,
       title: "Notfall-Triage",
       benefit: "Erkennt Dringlichkeiten sofort und leitet Notfälle gezielt weiter.",
-      detail: "Anhand von Schlüsselwörtern (z.B. 'Atemnot', 'Brustschmerz') filtert das System kritische Fälle heraus und leitet sie sofort an eine Notfallnummer durch oder gibt Handlungsanweisungen (Starter)."
+      detail: "Anhand von Schlüsselwörtern (z.B. 'Atemnot', 'Brustschmerz') filtert das System kritische Fälle heraus und leitet sie sofort an eine Notfallnummer durch oder gibt Handlungsanweisungen (Auxilium Voice)."
     },
     {
       icon: Pill,
       title: "Rezept & Überweisung",
       benefit: "Nimmt Rezeptwünsche und Überweisungsanfragen strukturiert auf.",
-      detail: "Patienten sprechen ihre Wünsche einfach auf. Die KI extrahiert Name, Medikament und Dosierung und stellt Ihnen eine strukturierte Liste zur Verfügung (Starter)."
+      detail: "Patienten sprechen ihre Wünsche einfach auf. Die KI extrahiert Name, Medikament und Dosierung und stellt Ihnen eine strukturierte Liste zur Verfügung (Auxilium Voice)."
     },
     {
       icon: Mail,
       title: "E-Mail-Weiterleitung",
       benefit: "Leitet Anliegen inklusive Transkript direkt an den richtigen Ansprechpartner.",
-      detail: "Jedes Gespräch wird transkribiert und zusammen mit der Audio-Datei kategorisiert per E-Mail an das Praxispostfach oder den zuständigen Arzt gesendet (Starter)."
+      detail: "Jedes Gespräch wird transkribiert und zusammen mit der Audio-Datei kategorisiert per E-Mail an das Praxispostfach oder den zuständigen Arzt gesendet (Auxilium Voice)."
     },
     {
       icon: HelpCircle,
       title: "Praxis-FAQ",
       benefit: "Beantwortet häufige Fragen zu Öffnungszeiten, Parkplätzen oder Leistungen automatisch.",
-      detail: "Entlasten Sie Ihr Team von Standardfragen. Die KI gibt Auskunft zu Sprechzeiten, Anfahrt, IGeL-Leistungen oder Urlaubsvertretungen (Starter)."
+      detail: "Entlasten Sie Ihr Team von Standardfragen. Die KI gibt Auskunft zu Sprechzeiten, Anfahrt, IGeL-Leistungen oder Urlaubsvertretungen (Auxilium Voice)."
     },
     {
       icon: Calendar,
       title: "Smarte Terminvergabe",
       benefit: "Findet intelligent Lücken im Kalender und bucht Termine direkt ein.",
-      detail: "Die KI prüft Ihre Verfügbarkeiten in Echtzeit, schlägt dem Patienten passende Slots vor und bucht den Termin fest ein – unter Berücksichtigung Ihrer Pufferzeiten (Professional)."
+      detail: "Die KI prüft Ihre Verfügbarkeiten in Echtzeit, schlägt dem Patienten passende Slots vor und bucht den Termin fest ein – unter Berücksichtigung Ihrer Pufferzeiten (Auxilium Assist)."
     },
     {
       icon: XCircle,
       title: "Absage-Management",
       benefit: "Nimmt Absagen entgegen und gibt den Terminzeitraum sofort wieder frei.",
-      detail: "Sagt ein Patient ab, wird der Slot sofort wieder im System verfügbar gemacht. So minimieren Sie Leerlaufzeiten und optimieren die Auslastung (Professional)."
+      detail: "Sagt ein Patient ab, wird der Slot sofort wieder im System verfügbar gemacht. So minimieren Sie Leerlaufzeiten und optimieren die Auslastung (Auxilium Assist)."
     },
     {
       icon: MessageSquare,
       title: "SMS-Bestätigung",
       benefit: "Sendet automatische Terminbestätigungen direkt auf das Handy des Patienten.",
-      detail: "Nach erfolgreicher Buchung erhält der Patient eine Bestätigung per SMS. Dies reduziert die No-Show-Rate signifikant (Professional)."
+      detail: "Nach erfolgreicher Buchung erhält der Patient eine Bestätigung per SMS. Dies reduziert die No-Show-Rate signifikant (Auxilium Assist)."
     },
     {
       icon: Link2,
       title: "API-Schnittstelle",
       benefit: "Direkte, tiefe Integration in Ihren Praxiskalender über API.",
-      detail: "Für maximale Automatisierung: Volle Lese- und Schreibrechte direkt in Ihrem PVS-Kalender für eine nahtlose Synchronisation ohne manuelle Überträge (Klinik)."
+      detail: "Für maximale Automatisierung: Volle Lese- und Schreibrechte direkt in Ihrem PVS-Kalender für eine nahtlose Synchronisation ohne manuelle Überträge (Auxilium Pulse)."
     },
     {
       icon: RotateCw,
       title: "Recall-Service",
       benefit: "Erinnert Patienten automatisch an Vorsorge- oder Folgetermine.",
-      detail: "Die KI kontaktiert Patienten proaktiv, um an jährliche Kontrollen oder Impfungen zu erinnern und direkt einen Termin zu vereinbaren (Klinik)."
+      detail: "Die KI kontaktiert Patienten proaktiv, um an jährliche Kontrollen oder Impfungen zu erinnern und direkt einen Termin zu vereinbaren (Auxilium Pulse)."
     },
     {
       icon: ShieldCheck,

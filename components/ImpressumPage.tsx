@@ -43,9 +43,9 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Angaben gemäß § 5 TMG</h2>
               <p className="text-slate-600 leading-relaxed">
-                <strong>auxilium.ai</strong><br />
-                [Straße und Hausnummer]<br />
-                [PLZ] [Ort]<br />
+                <strong>2Bmedia & Marketing GbR</strong><br />
+                Beeker Ring 7<br />
+                89423 Gundelfingen an der Donau<br />
                 Deutschland
               </p>
             </div>
@@ -54,7 +54,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Vertreten durch</h2>
               <p className="text-slate-600 leading-relaxed">
-                [Vorname Nachname des Geschäftsführers]
+                Manuel Engelhard (geschäftsführender Gesellschafter)
               </p>
             </div>
 
@@ -63,36 +63,24 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Kontakt</h2>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-slate-600">
-                  <Phone size={18} className="text-slate-400" />
-                  <span>Telefon: [Telefonnummer]</span>
-                </div>
-                <div className="flex items-center gap-3 text-slate-600">
                   <Mail size={18} className="text-slate-400" />
-                  <span>E-Mail: hallo@auxilium.ai</span>
+                  <span>E-Mail: <a href="mailto:info@auxiliumassist.ai" className="text-primary hover:underline">info@auxiliumassist.ai</a></span>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600">
                   <FileText size={18} className="text-slate-400" />
-                  <span>Web: www.auxilium.ai</span>
+                  <span>Web: www.auxiliumassist.ai</span>
                 </div>
               </div>
             </div>
 
-            {/* Registereintrag */}
-            <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Registereintrag</h2>
-              <p className="text-slate-600 leading-relaxed">
-                Eintragung im Handelsregister.<br />
-                Registergericht: [Amtsgericht]<br />
-                Registernummer: [HRB Nummer]
-              </p>
-            </div>
-
+            {/* Registereintrag removed if not provided, usually for GbR not needed unless specifically requested */}
+            
             {/* Umsatzsteuer-ID */}
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Umsatzsteuer-ID</h2>
               <p className="text-slate-600 leading-relaxed">
                 Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                <strong>[USt-ID Nummer]</strong>
+                <strong>[USt-ID Nummer wird nachgereicht]</strong>
               </p>
             </div>
 
