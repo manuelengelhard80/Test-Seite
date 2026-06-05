@@ -91,11 +91,23 @@ const AppContent: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleNavigate = (view: string) => {
-    if (view === 'home') {
-      navigate('/');
-    } else {
-      navigate(`/${view}`);
-    }
+    const routeMap: Record<string, string> = {
+      'home': '/',
+      'test': '/test',
+      'features': '/funktionen',
+      'audio': '/hörproben',
+      'security': '/dsgvo',
+      'pricing': '/preise',
+      'impressum': '/impressum',
+      'agb': '/agb',
+      'privacy': '/datenschutz',
+      'thankyou-voice': '/danke-voice',
+      'thankyou-assist': '/danke-assist',
+      'thankyou-pulse': '/danke-pulse',
+    };
+    
+    const targetPath = routeMap[view] || (view.startsWith('/') ? view : `/${view}`);
+    navigate(targetPath);
     window.scrollTo(0, 0);
   };
 
@@ -125,20 +137,50 @@ const AppContent: React.FC = () => {
       <Route element={<Layout onNavigate={handleNavigate} />}>
         <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
         <Route path="/test" element={<TestPage />} />
+        
+        {/* German and English routes aliases */}
+        <Route path="/funktionen" element={<FeaturesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/features" element={<FeaturesPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/hörproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/hoerproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/audio" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/dsgvo" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
         <Route path="/security" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} />} />
         <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} />} />
+        
         <Route path="/impressum" element={<ImpressumPage onBack={() => handleNavigate('home')} />} />
+        
         <Route path="/agb" element={<AGBPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/datenschutz" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
         <Route path="/privacy" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
+        
+        {/* Dankeseiten with German and Legacy routes */}
+        <Route 
+          path="/danke-voice" 
+          element={<ThankYouPage productType="voice" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />} 
+        />
         <Route 
           path="/thankyou-voice" 
           element={<ThankYouPage productType="voice" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />} 
         />
+        
+        <Route 
+          path="/danke-assist" 
+          element={<ThankYouPage productType="assist" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />} 
+        />
         <Route 
           path="/thankyou-assist" 
           element={<ThankYouPage productType="assist" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />} 
+        />
+        
+        <Route 
+          path="/danke-pulse" 
+          element={<ThankYouPage productType="pulse" onBack={() => handleNavigate('home')} onNavigateHome={() => handleNavigate('home')} />} 
         />
         <Route 
           path="/thankyou-pulse" 

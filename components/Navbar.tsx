@@ -35,7 +35,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
     if (onNavigate) {
       onNavigate(pageId);
     } else {
-      window.location.href = `/${pageId}`;
+      const routeMap: Record<string, string> = {
+        'home': '/',
+        'test': '/test',
+        'features': '/funktionen',
+        'audio': '/hörproben',
+        'security': '/dsgvo',
+        'pricing': '/preise',
+        'impressum': '/impressum',
+        'agb': '/agb',
+        'privacy': '/datenschutz',
+        'thankyou-voice': '/danke-voice',
+        'thankyou-assist': '/danke-assist',
+        'thankyou-pulse': '/danke-pulse',
+      };
+      
+      const targetPath = routeMap[pageId] || (pageId.startsWith('/') ? pageId : `/${pageId}`);
+      window.location.href = targetPath;
     }
     setMobileOpen(false);
     window.scrollTo(0,0);
@@ -63,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D9488] shadow-sm"></span>
               </span>
-              <span className="font-bold text-gradient leading-none text-lg self-center">auxilium.ai</span>
+              <span className="font-bold text-gradient leading-none text-lg self-center">Auxilium Assist</span>
             </div>
 
             {/* Desktop Menu */}
@@ -126,7 +142,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-4">
               <button onClick={() => handleNavClick('login')} className="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
-                <LogIn size={16} /> Login
+                <LogIn size={16} /> Praxis-Login
               </button>
               <button className="bg-gradient-medical text-white px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-glow flex items-center gap-2 shadow-md hover:-translate-y-0.5">
                 Beratung <ArrowRight size={14} />

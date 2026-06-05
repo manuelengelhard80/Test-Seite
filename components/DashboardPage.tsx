@@ -138,7 +138,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488]"></span>
              </span>
-             <span className="font-bold text-slate-800 text-xl tracking-tight">auxilium.ai</span>
+             <span className="font-bold text-slate-800 text-xl tracking-tight">Auxilium Assist</span>
            </div>
            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-600">
              <X size={24} />

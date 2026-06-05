@@ -37,7 +37,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488] shadow-sm"></span>
               </span>
-              <span className="font-bold text-gradient text-2xl leading-none ml-1">auxilium.ai</span>
+              <span className="font-bold text-gradient text-2xl leading-none ml-1">Auxilium Assist</span>
             </div>
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Praxis-Login</h2>

@@ -28,13 +28,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D9488] shadow-sm"></span>
               </span>
-              <span className="font-bold text-gradient text-lg leading-none">auxilium.ai</span>
+              <span className="font-bold text-gradient text-lg leading-none">Auxilium Assist</span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs mb-6">
               Der KI-Telefonassistent für die moderne Arztpraxis. Entlastung, Erreichbarkeit und Effizienz durch intelligente Automatisierung.
             </p>
             <p className="text-xs text-slate-400 flex items-center gap-1.5">
-              © {currentYear} auxilium.ai <span className="mx-1">•</span> 
+              © {currentYear} Auxilium Assist <span className="mx-1">•</span> 
               Made in Germany
               <img 
                 src="https://cdn.shopify.com/s/files/1/0915/3334/5117/files/51968274-the-german-flag-round-matte-icon-isolated-on-white-background.jpg?v=1764167249" 
