@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Play, Pause, ShieldCheck, Sparkles } from 'lucide-react';
+import { useQuiz } from './QuizModal';
 
 export const HeroTest: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { openQuiz } = useQuiz();
 
   useEffect(() => {
     // Initialize Audio Object
@@ -64,8 +66,11 @@ export const HeroTest: React.FC = () => {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-          <button className="w-full sm:w-auto bg-gradient-medical text-white px-8 py-4 rounded-full font-bold hover:shadow-glow transition-all hover:-translate-y-0.5 shadow-lg flex items-center justify-center gap-2 h-[64px]">
-            Jetzt kostenlos beraten lassen!
+          <button 
+            onClick={openQuiz}
+            className="w-full sm:w-auto bg-gradient-medical text-white px-8 py-4 rounded-full font-bold hover:shadow-glow transition-all hover:-translate-y-0.5 shadow-lg flex items-center justify-center gap-2 h-[64px]"
+          >
+            Jetzt zum 3-Minuten-Praxis-Check!
             <ArrowRight size={18} />
           </button>
           

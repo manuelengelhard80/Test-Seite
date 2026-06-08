@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, ChevronDown, Stethoscope, Heart, Baby, Eye, Activity, Brain, Smile, Bone, Check, Ear, HeartPulse, BrainCircuit, Mic2, TestTube, LogIn } from 'lucide-react';
 
+
 interface NavbarProps {
   onNavigate?: (page: string) => void;
 }
@@ -144,7 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               <button onClick={() => handleNavClick('login')} className="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
                 <LogIn size={16} /> Praxis-Login
               </button>
-              <button className="bg-gradient-medical text-white px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-glow flex items-center gap-2 shadow-md hover:-translate-y-0.5">
+              <button onClick={() => handleNavClick('praxis-check')} className="bg-gradient-medical text-white px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-glow flex items-center gap-2 shadow-md hover:-translate-y-0.5">
                 Beratung <ArrowRight size={14} />
               </button>
             </div>
@@ -182,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             <button onClick={() => handleNavClick('login')} className="text-xl font-medium text-slate-500 flex items-center justify-center gap-2"><LogIn size={20} /> Praxis-Login</button>
             <div className="h-px bg-slate-100 my-2 w-full"></div>
             
-            <button className="w-full bg-gradient-medical text-white py-4 rounded-xl font-bold text-lg shadow-lg mt-2">
+            <button onClick={() => { handleNavClick('praxis-check'); setMobileOpen(false); }} className="w-full bg-gradient-medical text-white py-4 rounded-xl font-bold text-lg shadow-lg mt-2">
               Beratung
             </button>
           </div>

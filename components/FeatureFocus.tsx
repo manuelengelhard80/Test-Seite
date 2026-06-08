@@ -1,7 +1,10 @@
 import React from 'react';
 import { CheckCircle2, MessageSquareHeart, ArrowRight, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const FeatureFocus: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="pt-16 pb-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,8 +107,11 @@ export const FeatureFocus: React.FC = () => {
               <p className="text-xl font-medium text-slate-800 mb-4 max-w-2xl mx-auto">
                 "Mehr Zeit für das, was wirklich zählt: Ihre Patienten."
               </p>
-              <button className="text-primary-dark font-bold text-lg hover:text-primary transition-colors inline-flex items-center gap-2 group">
-                Jetzt kostenlos beraten lassen <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              <button 
+                onClick={() => { navigate('/praxis-check'); window.scrollTo(0, 0); }}
+                className="text-primary-dark font-bold text-lg hover:text-primary transition-colors inline-flex items-center gap-2 group cursor-pointer"
+              >
+                Jetzt zum 3-Minuten-Praxis-Check! <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </button>
             </div>
           </div>

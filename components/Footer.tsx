@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={(e) => handleNav(e, 'features')} className="hover:text-primary transition-colors text-left">Funktionen</button></li>
               <li><button onClick={(e) => handleNav(e, 'pricing')} className="hover:text-primary transition-colors text-left">Preise & Ersparnis</button></li>
               <li><button onClick={(e) => handleNav(e, 'security')} className="hover:text-primary transition-colors text-left">DSGVO</button></li>
-              <li><button onClick={(e) => handleNav(e, 'test')} className="hover:text-primary transition-colors text-left">Test</button></li>
+              <li><button onClick={(e) => handleNav(e, 'praxis-check')} className="text-[#0D9488] hover:text-[#0D9488]/80 font-semibold transition-colors text-left">3-Minuten-Praxis-Check</button></li>
             </ul>
           </div>
 

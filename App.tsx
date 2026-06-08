@@ -14,13 +14,15 @@ import { SecurityPage } from './components/SecurityPage';
 import { PricingPage } from './components/PricingPage';
 import { CTASection } from './components/CTASection';
 import { ImpressumPage } from './components/ImpressumPage';
-import { TestPage } from './components/TestPage';
+import { PraxisCheckPage } from './components/PraxisCheckPage';
 import { FeaturesPage } from './components/FeaturesPage';
 import { LoginPage } from './components/LoginPage';
 import { DashboardPage } from './components/DashboardPage';
 import { AGBPage } from './components/AGBPage';
 import { PrivacyPage } from './components/PrivacyPage';
 import { ThankYouPage } from './components/ThankYouPage';
+import { CookieConsent } from './components/CookieConsent';
+
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
   return (
@@ -93,7 +95,8 @@ const AppContent: React.FC = () => {
   const handleNavigate = (view: string) => {
     const routeMap: Record<string, string> = {
       'home': '/',
-      'test': '/test',
+      'test': '/praxis-check',
+      'praxis-check': '/praxis-check',
       'features': '/funktionen',
       'audio': '/hörproben',
       'security': '/dsgvo',
@@ -136,7 +139,9 @@ const AppContent: React.FC = () => {
       {/* Pages with standard Layout (navbar/footer) */}
       <Route element={<Layout onNavigate={handleNavigate} />}>
         <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
-        <Route path="/test" element={<TestPage />} />
+        <Route path="/test" element={<PraxisCheckPage />} />
+        <Route path="/praxis-check" element={<PraxisCheckPage />} />
+        <Route path="/3-minuten-praxis-check" element={<PraxisCheckPage />} />
         
         {/* German and English routes aliases */}
         <Route path="/funktionen" element={<FeaturesPage onBack={() => handleNavigate('home')} />} />
@@ -198,6 +203,7 @@ const App: React.FC = () => {
   return (
     <HashRouter>
       <AppContent />
+      <CookieConsent />
     </HashRouter>
   );
 };
