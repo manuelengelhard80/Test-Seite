@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, ArrowRight, ArrowLeft, Check, Sparkles, Lock, 
   ShieldCheck, Server, FileText, CheckCircle2, AlertCircle,
-  Building, Mail, Phone, User, Star, Flame, Award, Heart, Shield, Landmark
+  Building, Mail, Phone, User, Star, Flame, Award, Heart, Shield, Landmark,
+  TrendingUp, Clock, Euro, ArrowUpRight
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface Question {
   id: number;
   title: string;
-  type: 'select' | 'text';
+  type: 'select' | 'multiselect' | 'text';
   options?: string[];
   placeholder?: string;
   hint?: string;
@@ -19,14 +20,19 @@ interface Question {
 const quizQuestions: Question[] = [
   {
     id: 1,
-    title: 'Wie viele Anrufe gehen in Ihrer Praxis schätzungsweise an einem normalen Vormittag ein?',
+    title: 'Wie viele Anrufe gehen in Ihrer Praxis schätzungsweise an einem normalen Tag ein?',
     type: 'select',
-    options: ['Unter 30 Anrufe', '30 bis 75 Anrufe', 'Über 75 Anrufe'],
+    options: [
+      'Unter 20 Anrufe',
+      '20 bis 50 Anrufe',
+      '51 bis 100 Anrufe',
+      'Über 100 Anrufe'
+    ],
   },
   {
     id: 2,
     title: 'Welche Art von Anrufen blockiert Ihr Team im Alltag am meisten?',
-    type: 'select',
+    type: 'multiselect',
     options: [
       'Routine-Rezeptbestellungen & Überweisungen',
       'Terminvereinbarungen & -absagen',
@@ -40,7 +46,7 @@ const quizQuestions: Question[] = [
     type: 'select',
     options: [
       'Das Telefon ist besetzt (Patienten sind frustriert)',
-      'Ein Anrufbeantworter läuft (muss mühsam abgetippt werden)',
+      'Ein Anrufbeantworter läuft (muss später mühsam abgetippt werden)',
       'Die Anrufe gehen verloren',
     ],
   },
@@ -63,115 +69,138 @@ const quizQuestions: Question[] = [
   },
   {
     id: 6,
-    title: 'Muss das Telefonsystem direkt an Ihr Praxisverwaltungssystem (PVS) angebunden werden?',
+    title: 'Wie möchte Ihr Team die von der KI dokumentierten Anrufe (z.B. Rezeptwünsche) erhalten?',
     type: 'select',
     options: [
-      'Ja, eine direkte PVS-Synchronisation ist zwingend erforderlich (z.B. für sofortigen Datenabgleich / Rezepte).',
-      'Nein, ein eigenständiges Online-Dashboard oder sichere E-Mail-Übermittlung reicht uns völlig.',
-      'Optional – wir möchten uns hierzu erst beraten lassen.',
+      'Direkt synchronisiert in unserer Praxissoftware (via offener API)',
+      'Übersichtlich aufbereitet als tägliche E-Mail-Zusammenfassung',
+    ],
+  },
+  {
+    id: 7,
+    title: 'Wann soll der KI-Telefonassistent Ihr Team idealerweise entlasten?',
+    type: 'select',
+    options: [
+      'Nur zu den extremen Stoßzeiten (z. B. Montagmorgen), um den Empfang freizuhalten',
+      'Nur außerhalb die Sprechzeiten (Mittagspause, Abende, Wochenende) anstelle des ABs',
+      'Flexibel im Hybrid-Modell (vormittags das Team, nachmittags die KI)',
+      'Rund um die Uhr (24/7), um maximale Erreichbarkeit zu garantieren',
     ],
   },
 ];
 
 export const PraxisCheckPage: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<number>(1); // 1-6: Questions, 7: Email Lead Gate, 8: Thank you page
+  const [step, setStep] = useState<number>(1); // 1-7: Questions, 8: Lead Gate, 9: Evaluation Screen
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [leadForm, setLeadForm] = useState({
-    salutation: '', // 'Herr' | 'Frau'
     name: '',
     praxis: '',
     email: '',
+    phone: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Dynamic values calculation based on answers
+  // Calculations based on Question 1 answers
   const calculatePotentialSavings = () => {
-    let hoursSaved = 4;
-    let patientSatisfaction = 'Hoch';
+    const q1 = answers[1] || 'Unter 20 Anrufe';
     
-    const q1 = answers[1]; // calls at morning
-    const q2 = answers[2]; // bottleneck type
-    const q4 = answers[4]; // stress level
-
-    if (q1 === 'Unter 30 Anrufe') hoursSaved = 5;
-    if (q1 === '30 bis 75 Anrufe') hoursSaved = 12;
-    if (q1 === 'Über 75 Anrufe') hoursSaved = 22;
-
-    if (q2 === 'Routine-Rezeptbestellungen & Überweisungen') {
-      hoursSaved += 3;
-    } else if (q2 === 'Terminvereinbarungen & -absagen') {
-      hoursSaved += 4;
+    // LOGIK 1: BERECHNUNG DES MONATLICHEN TARIFS (Basis: Frage 1)
+    let anrufe_tag = 15;
+    let tarif = 'Doc-Tarif (99 € / Mon.)';
+    let systemkosten = 99;
+    let inklusivminuten = '1.000 Inklusivminuten (jede weitere 0,15 €)';
+    
+    if (q1 === 'Unter 20 Anrufe') {
+      anrufe_tag = 15;
+      tarif = 'Doc-Tarif (99 € / Mon.)';
+      systemkosten = 99;
+      inklusivminuten = '1.000 Inklusivminuten (jede weitere 0,15 €)';
+    } else if (q1 === '20 bis 50 Anrufe') {
+      anrufe_tag = 35;
+      tarif = 'Praxis-Tarif (299 € / Mon.)';
+      systemkosten = 299;
+      inklusivminuten = '3.000 Inklusivminuten (jede weitere 0,12 €)';
+    } else if (q1 === '51 bis 100 Anrufe') {
+      anrufe_tag = 75;
+      tarif = 'Praxis-Tarif (414 € / Mon.)';
+      systemkosten = 414;
+      inklusivminuten = '3.000 Inklusivminuten (jede weitere 0,12 €)';
+    } else {
+      // Über 100 Anrufe
+      anrufe_tag = 130;
+      tarif = 'Klinik-Tarif (ab 499 € / Mon.)';
+      systemkosten = 723;
+      inklusivminuten = 'ab 5.000 Inklusivminuten (individuell anpassbar)';
     }
 
-    if (q4 === 'Extrem – das Team arbeitet am Limit.') {
-      hoursSaved += 2;
+    const workingDays = 22;
+    const ki_minuten = Math.round(anrufe_tag * 0.80 * 4 * workingDays);
+    const zeitgewinn_stunden = Math.round(ki_minuten / 33);
+    const brutto_ersparnis = Math.round(zeitgewinn_stunden * 25.0);
+    const netto_ersparnis = Math.round(brutto_ersparnis - systemkosten);
+    const roi = Math.round((netto_ersparnis / systemkosten) * 100);
+
+    // LOGIK 2: ERMITTLUNG DES INSTALLATIONS-PRODUKTS (Basis: Funktionale Fragen)
+    const isPuls = answers[6] === 'Direkt synchronisiert in unserer Praxissoftware (via offener API)';
+    const q2Answers = answers[2] || '';
+    const isAssist = !isPuls && q2Answers.includes('Terminvereinbarungen & -absagen');
+    
+    let hauptprodukt = 'Auxilium Voice';
+    let link = 'https://auxilium-assist.de/voice-kaufen';
+    if (isPuls) {
+      hauptprodukt = 'Auxilium Puls';
+      link = 'https://auxilium-assist.de/puls-kaufen';
+    } else if (isAssist) {
+      hauptprodukt = 'Auxilium Assist';
+      link = 'https://auxilium-assist.de/assist-kaufen';
     }
 
     return {
-      hours: hoursSaved,
-      pctReduction: q1 === 'Über 75 Anrufe' ? '85%' : '75%',
-      stressLabel: q4 === 'Extrem – das Team arbeitet am Limit.' ? 'Signifikante Reduktion' : 'Bessere Urlaubsübersicht'
+      tarif,
+      inklusivminuten,
+      zeitgewinn_stunden,
+      brutto_ersparnis: `${brutto_ersparnis.toLocaleString('de-DE')} €`,
+      netto_ersparnis: `${netto_ersparnis.toLocaleString('de-DE')} €`,
+      roi,
+      hauptprodukt,
+      link,
+      anrufe_tag,
+      workingDays,
+      ki_minuten,
+      systemkosten,
+      brutto_ersparnis_num: brutto_ersparnis,
+      netto_ersparnis_num: netto_ersparnis
     };
-  };
-
-  const getProductRecommendation = () => {
-    const isPvsRequired = answers[6]?.includes('Ja') || answers[6]?.includes('zwingend');
-    const isOptional = answers[6]?.includes('Optional') || answers[6]?.includes('beraten');
-    const pvsName = answers[5] || 'Ihre Praxissoftware';
-    
-    if (isPvsRequired) {
-      return {
-        title: 'Voice Assist & Pulse Sync Pro',
-        tagline: `Vollintegrierte KI-Telefonie & Live-Datenabgleich für ${pvsName}`,
-        description: `Die ultimative Kombination aus unserem hochentwickelten Telefonassistenten (Voice Assist) und dem Echtzeit-Konnektor (Pulse). Damit fließen alle Rezept-, Überweisungs- und Terminanfragen vollautomatisch und synchronisiert in Ihr System ${pvsName}.`,
-        features: [
-          `Nahtlose Verbindung von Voice Assist & Pulse für ${pvsName}`,
-          'Vollautomatischer Eintrag von Rezepten direkt in die Karteikarte',
-          'Intelligente Patienten-Identifikation via Versichertennummer/Rufnummer',
-          'Verschlüsselte bidirektionale Datenübertragung (FHIR & REST)'
-        ],
-        badge: 'Vollautomatische Premium-Lösung',
-        icon: 'Server',
-      };
-    } else if (isOptional) {
-      return {
-        title: 'Voice Assist & Pulse Hybrid',
-        tagline: 'Smarter KI-Anrufbeantworter mit flexiblem Pulse-Anschluss',
-        description: `Die perfekte Brücke für Praxen, die flexibel bleiben möchten. Starten Sie direkt mit dem KI-Sprachassistenten (Voice Assist) und nutzen Sie das sichere Pulse-Kanal-Portal. Die tiefe Schnittstellenanbindung zu ${pvsName} kann jederzeit per Knopfdruck nachgerüstet werden.`,
-        features: [
-          'Voice Assist übernimmt 105% aller Anrufe in Stoßzeiten',
-          'Sichere Vorab-Strukturierung im Pulse-Portal ohne IT-Eingriff',
-          'Persönliche Beratung zur optimalen Schnittstellen-Einrichtung inklusive',
-          'Jederzeit erweiterbar auf volle automatische PVS-Synchronisation'
-        ],
-        badge: 'Häufigste Empfehlung',
-        icon: 'Sparkles',
-      };
-    } else {
-      return {
-        title: 'Voice Assist Standalone (inkl. Pulse Dashboard)',
-        tagline: 'Autarke KI-Telefonie – Sofort bereit ohne Installationsaufwand',
-        description: 'Nutzen Sie die gesamte Power des KI-Sprachassistenten (Voice Assist) völlig unabhängig von Ihrer Praxissoftware. Alle Patientenwünsche werden in Echtzeit im übersichtlichen, browserbasierten Pulse Dashboard für Ihren Empfang aufbereitet.',
-        features: [
-          'Komplett autarker Betrieb – Keine Modifikation Ihrer Praxis-IT erforderlich',
-          'Inbetriebnahme und Rufumleitung in weniger als 15 Minuten einsatzbereit',
-          'Intuitives Pulse Dashboard für jeden Browser (PC, Laptop oder Tablet)',
-          'Sichere, DSGVO-konforme Übermittlung von Rezeptnachfragen per Mail & Web'
-        ],
-        badge: 'Schnellste Inbetriebnahme',
-        icon: 'ShieldCheck',
-      };
-    }
   };
 
   const savings = calculatePotentialSavings();
 
   const handleSelectOption = (questionId: number, option: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
+    // Single choice: advances automatically and without delay
     setTimeout(() => {
-      setStep((curr) => Math.min(curr + 1, 8));
-    }, 280);
+      setStep((curr) => {
+        if (curr === 7) {
+          return 9; // Skip step 8 (Lead Gate is deactivated for testing mode)
+        }
+        return curr + 1;
+      });
+    }, 250);
+  };
+
+  const handleToggleMultiOption = (questionId: number, option: string) => {
+    setAnswers((prev) => {
+      const currentVal = prev[questionId] || '';
+      const selectedList = currentVal ? currentVal.split('; ') : [];
+      let newList;
+      if (selectedList.includes(option)) {
+        newList = selectedList.filter((item) => item !== option);
+      } else {
+        newList = [...selectedList, option];
+      }
+      return { ...prev, [questionId]: newList.join('; ') };
+    });
   };
 
   const handleTextChange = (questionId: number, value: string) => {
@@ -181,13 +210,15 @@ export const PraxisCheckPage: React.FC = () => {
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const errors: Record<string, string> = {};
-    if (!leadForm.salutation) errors.salutation = 'Bitte wählen Sie eine Anrede aus';
     if (!leadForm.name.trim()) errors.name = 'Name ist erforderlich';
-    if (!leadForm.praxis.trim()) errors.praxis = 'Praxisname ist erforderlich';
+    if (!leadForm.praxis.trim()) errors.praxis = 'Praxisname/Fachrichtung ist erforderlich';
     if (!leadForm.email.trim()) {
-      errors.email = 'E-Mail ist erforderlich';
+      errors.email = 'E-Mail-Adresse ist erforderlich';
     } else if (!/\S+@\S+\.\S+/.test(leadForm.email)) {
-      errors.email = 'Bitte geben Sie eine gültige E-Mail an';
+      errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+    }
+    if (!leadForm.phone.trim()) {
+      errors.phone = 'Telefonnummer ist erforderlich';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -196,24 +227,25 @@ export const PraxisCheckPage: React.FC = () => {
     }
 
     setFormErrors({});
-    setStep(8); // Show final thank you page
+    setStep(9); // Show live evaluation langsung in the browser
+    window.scrollTo(0, 0);
   };
 
   const handleBackToStart = () => {
     navigate('/');
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   };
 
   return (
     <div className="min-h-screen bg-slate-50/50 pt-28 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Intro Header */}
-        {step < 8 && (
+        {/* Intro Header (only visible before result page) */}
+        {step < 9 && (
           <div className="text-center max-w-3xl mx-auto mb-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100 mb-4 animate-pulse">
               <Sparkles size={12} className="text-emerald-600" />
-              100% Kostenlos und Unverbindlich
+              100% Kostenlos &amp; Unverbindlich
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-none">
               Der 3-Minuten-Praxis-Check
@@ -227,13 +259,13 @@ export const PraxisCheckPage: React.FC = () => {
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left panel - Main Quiz Card (7 columns) */}
-          <div className={`${step === 8 ? 'lg:col-span-12' : 'lg:col-span-7 xl:col-span-8'} w-full`}>
+          {/* Left panel - Main Container (takes full width on step 9) */}
+          <div className={`${step === 9 ? 'lg:col-span-12' : 'lg:col-span-7 xl:col-span-8'} w-full`}>
             
             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
               
               {/* Card Header Profile Indicator */}
-              {step <= 7 && (
+              {step <= 8 && (
                 <div className="px-6 py-4.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center text-xs text-slate-500 font-medium">
                   <div className="flex items-center gap-2">
                     <span className="flex h-2.5 w-2.5 relative">
@@ -242,23 +274,23 @@ export const PraxisCheckPage: React.FC = () => {
                     </span>
                     <span className="font-bold text-slate-800 text-sm uppercase tracking-wide">Praxis-Check live-Auswertung</span>
                   </div>
-                  <span>Frage {step <= 6 ? step : 6} von 6</span>
+                  <span>Frage {Math.min(step, 7)} von 7</span>
                 </div>
               )}
 
               {/* Progress bar */}
-              {step <= 7 && (
+              {step <= 8 && (
                 <div className="w-full bg-slate-100 h-1.5 flex transition-all duration-300">
                   <div 
                     className="bg-gradient-medical h-full rounded-r-full transition-all duration-500 ease-out"
-                    style={{ width: `${(Math.min(step, 7) / 7) * 100}%` }}
+                    style={{ width: `${(Math.min(step, 8) / 8) * 100}%` }}
                   />
                 </div>
               )}
 
-              <div className="p-8">
+              <div className="p-6 sm:p-8">
                 <AnimatePresence mode="wait">
-                  {step <= 6 ? (
+                  {step <= 7 ? (
                     // QUESTIONS STEP
                     <motion.div
                       key={`step-${step}`}
@@ -277,13 +309,15 @@ export const PraxisCheckPage: React.FC = () => {
                       </h2>
 
                       <div className="space-y-3 mt-4">
+                        
+                        {/* SELECT (SINGLE CHOICE) */}
                         {quizQuestions[step - 1].type === 'select' && quizQuestions[step - 1].options?.map((option, idx) => {
                           const isSelected = answers[step] === option;
                           return (
                             <button
                               key={idx}
                               onClick={() => handleSelectOption(step, option)}
-                              className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all flex items-center justify-between group ${
+                              className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all flex items-center justify-between group cursor-pointer ${
                                 isSelected 
                                   ? 'border-[#0D9488] bg-emerald-50/30 text-[#0D9488] font-semibold shadow-md' 
                                   : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
@@ -301,6 +335,50 @@ export const PraxisCheckPage: React.FC = () => {
                           );
                         })}
 
+                        {/* MULTISELECT (MULTIPLE CHOICE WITH MANUAL NEXT BUTTON) */}
+                        {quizQuestions[step - 1].type === 'multiselect' && (
+                          <div className="space-y-3">
+                            {quizQuestions[step - 1].options?.map((option, idx) => {
+                              const selectedList = answers[step] ? answers[step].split('; ') : [];
+                              const isSelected = selectedList.includes(option);
+                              return (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  onClick={() => handleToggleMultiOption(step, option)}
+                                  className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all flex items-center justify-between group cursor-pointer ${
+                                    isSelected 
+                                      ? 'border-[#0D9488] bg-emerald-50/20 text-[#0D9488] font-semibold' 
+                                      : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                                  }`}
+                                >
+                                  <span className="text-sm sm:text-base pr-4">{option}</span>
+                                  <div className={`h-5 w-5 rounded-md border flex items-center justify-center shrink-0 transition-all ${
+                                    isSelected 
+                                      ? 'border-[#0D9488] bg-[#0D9488] text-white' 
+                                      : 'border-slate-300 group-hover:border-slate-400 bg-white'
+                                  }`}>
+                                    {isSelected && <Check size={12} strokeWidth={3.5} />}
+                                  </div>
+                                </button>
+                              );
+                            })}
+
+                            {/* Manual Confirm/Next Button */}
+                            <div className="pt-4 flex justify-end">
+                              <button
+                                type="button"
+                                onClick={() => setStep((curr) => curr + 1)}
+                                disabled={!answers[step]}
+                                className="bg-[#0D9488] hover:bg-[#0b7f74] disabled:opacity-50 disabled:pointer-events-none text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                              >
+                                Weiter <ArrowRight size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TEXT INPUT WITH MANUAL NEXT BUTTON */}
                         {quizQuestions[step - 1].type === 'text' && (
                           <div className="space-y-4">
                             <div className="relative">
@@ -314,55 +392,55 @@ export const PraxisCheckPage: React.FC = () => {
                                 autoFocus
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter' && answers[step]?.trim()) {
-                                    setStep((curr) => Math.min(curr + 1, 8));
+                                    setStep((curr) => curr + 1);
                                   }
                                 }}
                               />
                             </div>
                             
                             {quizQuestions[step - 1].hint && (
-                              <div className="flex gap-3 bg-primary-light/40 p-4.5 rounded-2xl border border-primary-light">
+                              <div className="flex gap-3 bg-[#EEF2F6] p-4.5 rounded-2xl border border-slate-200">
                                 <AlertCircle size={18} className="text-[#0D9488] shrink-0 mt-0.5" />
                                 <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                                   {quizQuestions[step - 1].hint}
                                 </p>
                               </div>
                             )}
+
+                            {/* Manual Confirm/Next Button */}
+                            <div className="pt-2 flex justify-end">
+                              <button
+                                type="button"
+                                onClick={() => setStep((curr) => curr + 1)}
+                                disabled={!answers[step]?.trim()}
+                                className="bg-[#0D9488] hover:bg-[#0b7f74] disabled:opacity-50 disabled:pointer-events-none text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                              >
+                                Weiter <ArrowRight size={16} />
+                              </button>
+                            </div>
                           </div>
                         )}
+
                       </div>
 
                       {/* Controls Footer inside Card */}
                       <div className="mt-8 flex justify-between items-center pt-5 border-t border-slate-100">
                         <button
+                          type="button"
                           onClick={() => setStep((curr) => Math.max(curr - 1, 1))}
                           disabled={step === 1}
-                          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-semibold transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-semibold transition-colors disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
                         >
                           <ArrowLeft size={16} /> Zurück
                         </button>
 
-                        {quizQuestions[step - 1].type === 'text' ? (
-                          <button
-                            onClick={() => setStep((curr) => Math.min(curr + 1, 8))}
-                            disabled={!answers[step]?.trim()}
-                            className="bg-gradient-medical text-white px-7 py-3.5 rounded-full font-bold text-sm hover:shadow-glow transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none flex items-center gap-1.5 shadow-md"
-                          >
-                            Weiter <ArrowRight size={16} />
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setStep((curr) => Math.min(curr + 1, 8))}
-                            disabled={!answers[step]}
-                            className="text-slate-500 hover:text-slate-800 text-sm font-semibold transition-colors disabled:opacity-30 disabled:pointer-events-none flex items-center gap-1.5"
-                          >
-                            Nächste Frage <ArrowRight size={16} />
-                          </button>
-                        )}
+                        <span className="text-xs text-slate-400 font-medium font-sans">
+                          Schritt {step} von 7
+                        </span>
                       </div>
                     </motion.div>
-                  ) : step === 7 ? (
-                    // LEAD GATE STEP
+                  ) : step === 8 ? (
+                    // LEAD GATE STEP (Daten-Sperre)
                     <motion.div
                       key="lead-gate"
                       initial={{ opacity: 0, scale: 0.98 }}
@@ -375,109 +453,92 @@ export const PraxisCheckPage: React.FC = () => {
                           <Sparkles size={24} />
                         </div>
                         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                          Fast fertig! Ihre Auswertung wird generiert.
+                          Fast fertig! Ihre Auswertung liegt bereit.
                         </h2>
                         <p className="text-slate-500 mt-2 text-sm sm:text-base leading-relaxed">
-                          Wir berechnen nun Ihr individuelles Entlastungskonzept. Tragen Sie einfach Ihre Daten ein, um die detaillierte PDF-Auswertung und ein kurzes Audio-Hörbeispiel unserer Praxis-KI per E-Mail zu erhalten.
+                          Wir berechnen nun die betriebswirtschaftlichen Kennzahlen für Ihre Praxis. Bitte tragen Sie Ihre Daten ein, um die Auswertung sofort in Echtzeit zu entsperren.
                         </p>
                       </div>
 
                       <form onSubmit={handleLeadSubmit} className="space-y-4 max-w-xl mx-auto">
-                        {/* Anrede */}
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Anrede</label>
-                          <div className="grid grid-cols-2 gap-3">
-                            <button
-                              type="button"
-                              onClick={() => setLeadForm({ ...leadForm, salutation: 'Frau' })}
-                              className={`py-3 px-4 rounded-xl border font-semibold text-sm transition-all focus:outline-none flex items-center justify-center gap-2 cursor-pointer ${
-                                leadForm.salutation === 'Frau'
-                                  ? 'border-[#0D9488] bg-emerald-50/30 text-[#0D9488] ring-2 ring-[#0D9488]/10'
-                                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
-                              }`}
-                            >
-                              <span className={`h-2 text-xs flex items-center justify-center rounded-full w-2 ${leadForm.salutation === 'Frau' ? 'bg-[#0D9488]' : 'bg-slate-300'}`} />
-                              Frau
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setLeadForm({ ...leadForm, salutation: 'Herr' })}
-                              className={`py-3 px-4 rounded-xl border font-semibold text-sm transition-all focus:outline-none flex items-center justify-center gap-2 cursor-pointer ${
-                                leadForm.salutation === 'Herr'
-                                  ? 'border-[#0D9488] bg-emerald-50/30 text-[#0D9488] ring-2 ring-[#0D9488]/10'
-                                  : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
-                              }`}
-                            >
-                              <span className={`h-2 text-xs flex items-center justify-center rounded-full w-2 ${leadForm.salutation === 'Herr' ? 'bg-[#0D9488]' : 'bg-slate-300'}`} />
-                              Herr
-                            </button>
-                          </div>
-                          {formErrors.salutation && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.salutation}</span>}
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Name */}
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Nachname des Ansprechpartners</label>
-                            <div className="relative">
-                              <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                              <input
-                                type="text"
-                                value={leadForm.name}
-                                onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                                placeholder="z.B. Dr. Müller"
-                                className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                              />
-                            </div>
-                            {formErrors.name && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.name}</span>}
-                          </div>
-
-                          {/* Praxis */}
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Praxis / Fachrichtung</label>
-                            <div className="relative">
-                              <Building size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                              <input
-                                type="text"
-                                value={leadForm.praxis}
-                                onChange={(e) => setLeadForm({ ...leadForm, praxis: e.target.value })}
-                                placeholder="z.B. Hausarztpraxis, Zahnarzt"
-                                className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.praxis ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                              />
-                            </div>
-                            {formErrors.praxis && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.praxis}</span>}
-                          </div>
-                        </div>
-
-                        {/* E-Mail */}
+                        
+                        {/* Name des Ansprechpartners */}
                         <div className="space-y-1">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">E-Mail-Adresse (für PDF-Auswertung & Marketing)</label>
+                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Name des Ansprechpartners (lead_name)</label>
+                          <div className="relative">
+                            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                              type="text"
+                              value={leadForm.name}
+                              onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
+                              placeholder="z.B. Müller (oder Dr. Müller)"
+                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
+                            />
+                          </div>
+                          {formErrors.name && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.name}</span>}
+                        </div>
+
+                        {/* Name der Praxis / Fachrichtung */}
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Name der Praxis / Fachrichtung (praxis_name)</label>
+                          <div className="relative">
+                            <Building size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                              type="text"
+                              value={leadForm.praxis}
+                              onChange={(e) => setLeadForm({ ...leadForm, praxis: e.target.value })}
+                              placeholder="z.B. Gemeinschaftspraxis Westend, Hausarztpraxis"
+                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.praxis ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
+                            />
+                          </div>
+                          {formErrors.praxis && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.praxis}</span>}
+                        </div>
+
+                        {/* E-Mail-Adresse */}
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">E-Mail-Adresse (lead_email)</label>
                           <div className="relative">
                             <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                             <input
                               type="email"
                               value={leadForm.email}
                               onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                              placeholder="name@praxis-mueller.de"
+                              placeholder="dr.mueller@praxis-westend.de"
                               className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.email ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
                             />
                           </div>
                           {formErrors.email && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.email}</span>}
                         </div>
 
-                        {/* Submit Button */}
+                        {/* Telefonnummer */}
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Telefonnummer (lead_phone)</label>
+                          <div className="relative">
+                            <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                              type="text"
+                              value={leadForm.phone}
+                              onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
+                              placeholder="z.B. +49 89 1234567"
+                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.phone ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
+                            />
+                          </div>
+                          {formErrors.phone && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.phone}</span>}
+                        </div>
+
+                        {/* Submit Button with explicitly requested text */}
                         <div className="pt-4">
                           <button
                             type="submit"
-                            className="w-full bg-gradient-medical text-white font-bold py-4 rounded-2xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-lg flex items-center justify-center gap-2 group cursor-pointer"
+                            className="w-full bg-gradient-medical text-white font-bold py-4 rounded-2xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-lg flex items-center justify-center gap-2 group cursor-pointer text-base"
                           >
-                            Jetzt Auswertung anfordern & Audio-Demo sichern
+                            Jetzt Auswertung in Echtzeit anzeigen
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                           </button>
                         </div>
 
                         {/* DSGVO Note */}
-                        <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 pt-2 border-t border-slate-100 mt-4">
+                        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-100 mt-4">
                           <Lock size={12} />
                           <span>Ihre Daten sind absolut sicher und werden streng DSGVO-konform geschützt.</span>
                         </div>
@@ -486,240 +547,280 @@ export const PraxisCheckPage: React.FC = () => {
                       <div className="pt-4 flex justify-between items-center text-xs text-slate-400">
                         <button
                           type="button"
-                          onClick={() => setStep(6)}
-                          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-semibold text-sm transition-colors cursor-pointer"
+                          onClick={() => setStep(7)}
+                          className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer"
                         >
-                          <ArrowLeft size={16} /> Zurück zur Schnittstellen-Frage
+                          <ArrowLeft size={14} /> Zurück zur letzten Frage
                         </button>
                       </div>
                     </motion.div>
                   ) : (
-                    // THANK YOU STEP
+                    // LIVE EVALUATION SCREEN (ECHTZEIT-ANZEIGE)
                     <motion.div
-                      key="thankyou"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="space-y-8"
+                      key="live-evaluation"
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="space-y-8 text-slate-800 font-sans"
                     >
-                      <div className="text-center max-w-2xl mx-auto mb-6">
-                        <div className="inline-flex p-4 rounded-full bg-emerald-50 text-emerald-600 mb-4 border border-emerald-100 shadow-sm">
-                          <CheckCircle2 size={48} strokeWidth={1.5} className="animate-bounce" />
+                      {/* Dashboard Header */}
+                      <div className="border-b border-slate-150 pb-5 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div>
+                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-50 text-[#0D9488] font-bold text-[11px] uppercase tracking-wider rounded-full mb-3 border border-emerald-100/50 animate-pulse">
+                            <CheckCircle2 size={12} className="text-[#0D9488]" /> Live-Auswertung abgeschlossen
+                          </span>
+                          <h1 className="text-3xl sm:text-4.5xl font-black text-slate-950 tracking-tight leading-none">
+                            📊 Ihr Praxis-Effizienz-Dashboard
+                          </h1>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight animate-fade-in">
-                          Vielen Dank! Ihre Auswertung wird übermittelt.
-                        </h2>
+                      </div>
+
+                      {/* 1. EMPFOHLENE INFRASTRUKTUR BANNER */}
+                      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden group">
+                        {/* Background light rays */}
+                        <div className="absolute -right-16 -top-16 w-64 h-64 bg-[#0D9488] opacity-10 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
                         
-                        <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-5.5 mt-5 leading-relaxed inline-block max-w-[550px]">
-                          <p className="text-emerald-800 text-sm font-semibold">
-                            Vielen Dank, {leadForm.salutation === 'Frau' ? 'Frau' : 'Herr'} {leadForm.name}! Wir haben Ihre Angaben erfolgreich erhalten. Die detaillierte Auswertung sowie das akustische Hörbeispiel senden wir Ihnen in den nächsten 2 Minuten direkt an Ihre E-Mail-Adresse:
+                        <div className="flex flex-col lg:flex-row justify-between items-stretch gap-6 relative z-10">
+                          <div className="space-y-3 flex-1">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 font-extrabold text-[10px] uppercase tracking-wider rounded-full border border-emerald-500/20">
+                              🏆 Empfohlene Infrastruktur
+                            </span>
+                            <div className="space-y-1.5 pt-1">
+                              <h2 className="text-2.5xl sm:text-3.5xl font-black tracking-tight leading-tight text-white">
+                                {savings.hauptprodukt} + <span className="text-[#0D9488]">{savings.tarif}</span>
+                              </h2>
+                              <p className="text-slate-400 text-sm sm:text-base font-medium leading-relaxed">
+                                *Exakt abgestimmt auf Ihre funktionale Struktur und Ihr monatliches Anrufvolumen.*
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-center lg:justify-end shrink-0 pt-2 lg:pt-0">
+                            <a
+                              href={savings.link}
+                              target="_blank"
+                              referrerPolicy="no-referrer"
+                              className="w-full sm:w-auto text-center bg-gradient-to-r from-emerald-500 to-[#0D9488] hover:from-emerald-400 hover:to-[#0fab9d] text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
+                              id="btn-buy-recommendation"
+                            >
+                              🚀 JETZT AKTIVIEREN & EINRICHTEN
+                              <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 2. WIRTSCHAFTLICHE KENNZAHLEN (MONATLICH) */}
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-emerald-500 text-xl">📈</span>
+                          <h3 className="font-black text-slate-900 text-sm sm:text-base uppercase tracking-wider">
+                            Wirtschaftliche Kennzahlen (Monatlich)
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          
+                          {/* Zeitgewinn Box */}
+                          <div className="bg-white border border-slate-200/80 rounded-2.5xl p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 transition-colors">
+                            <div className="flex justify-between items-start">
+                              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">⏰ Zeitgewinn</span>
+                              <span className="p-1 px-2.5 bg-emerald-50 text-[#0D9488] font-bold text-[10px] rounded-full">Pro Monat</span>
+                            </div>
+                            <div className="mt-4">
+                              <h2 className="text-3xl sm:text-4xl font-black text-slate-950 leading-none">
+                                +{savings.zeitgewinn_stunden} Std.
+                              </h2>
+                              <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-medium">
+                                wertvolle Fokuszeit am Tresen
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* BUDGET-ENTLASTUNG Box */}
+                          <div className="bg-white border border-slate-200/80 rounded-2.5xl p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 transition-colors">
+                            <div className="flex justify-between items-start">
+                              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">💶 BUDGET-ENTLASTUNG</span>
+                              <span className="p-1 px-2.5 bg-emerald-50 text-[#0D9488] font-bold text-[10px] rounded-full">Monatlich</span>
+                            </div>
+                            <div className="mt-4">
+                              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-none text-[#0D9488]">
+                                {savings.brutto_ersparnis}
+                              </h2>
+                              <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-medium">
+                                freigeschaufelte Personalkosten
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Reale Netto-Ersparnis Box */}
+                          <div className="bg-gradient-to-br from-emerald-50/10 via-[#EEF9F8]/25 to-white border-2 border-[#0D9488]/40 rounded-2.5xl p-6 shadow-md flex flex-col justify-between hover:border-[#0D9488]/60 transition-colors relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-[#0D9488] opacity-5 rounded-full blur-xl"></div>
+                            <div className="flex justify-between items-start relative z-10">
+                              <span className="text-xs font-bold text-[#0D9488] uppercase tracking-widest flex items-center gap-1">📉 REALE NETTO-ERSPARNIS</span>
+                              <span className="p-1 px-2.5 bg-emerald-500 text-white font-extrabold text-[10px] rounded-full uppercase tracking-wider">Effektiv</span>
+                            </div>
+                            <div className="mt-4 relative z-10">
+                              <h2 className="text-3.5xl sm:text-4.5xl font-black text-slate-950 leading-none">
+                                {savings.netto_ersparnis}
+                              </h2>
+                              <p className="text-slate-600 text-xs sm:text-sm mt-2 font-bold block">
+                                echte Netto-Ersparnis pro Monat
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* System-ROI Box */}
+                          <div className="bg-white border border-slate-200/80 rounded-2.5xl p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 transition-colors">
+                            <div className="flex justify-between items-start">
+                              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">📈 SYSTEM-ROI</span>
+                              <span className="p-1 px-2.5 bg-emerald-50 text-[#0D9488] font-bold text-[10px] rounded-full">Rendite</span>
+                            </div>
+                            <div className="mt-4">
+                              <h2 className="text-3xl sm:text-4xl font-black text-slate-950 leading-none">
+                                {savings.roi}%
+                              </h2>
+                              <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-medium">
+                                Amortisation ab Tag 1
+                              </p>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {/* 3. DIREKTZUGANG BANNER */}
+                      <div className="bg-white border border-slate-200/85 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 to-[#0D9488]"></div>
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                          <div>
+                            <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-wider uppercase flex items-center gap-2">
+                              🛒 IHR DIREKTZUGANG
+                            </h3>
+                            <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-2 font-medium">
+                              Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:
+                            </p>
+                          </div>
+                          <div className="w-full md:w-auto shrink-0 flex items-center">
+                            <a
+                              href={savings.link}
+                              target="_blank"
+                              referrerPolicy="no-referrer"
+                              className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-6 bg-[#0D9488] hover:bg-[#0b7f74] text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer"
+                              id="btn-direct-access-link"
+                            >
+                              👉 Dieses System direkt für die Praxis buchen
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 4. DISCLAMER / INFORMATION LABEL */}
+                      <div className="flex items-start gap-2.5 bg-slate-50 p-4.5 rounded-2xl border border-slate-200">
+                        <span className="text-base text-slate-400 shrink-0 mt-0.5">ℹ️</span>
+                        <p className="text-xs text-slate-500 leading-relaxed font-sans">
+                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten.
+                        </p>
+                      </div>
+
+                      {/* COLLAPSIBLE OR NICE TRANSPARENCY REPORT */}
+                      <div className="bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-150 space-y-4">
+                        <h3 className="text-md sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                           🔍 Transparenz-Bericht: So haben wir gerechnet
+                        </h3>
+                        
+                        <div className="space-y-4 text-slate-600 text-xs sm:text-[13px] leading-relaxed">
+                          <p>
+                            Damit Sie unser betriebswirtschaftliches Ergebnis exakt nachvollziehen können, legen wir den exakten mathematischen Rechenweg basierend auf Ihren Praxisdaten offen.
                           </p>
-                          <span className="underline font-bold text-emerald-950 block mt-1.5 text-base">{leadForm.email}</span>
-                        </div>
-                      </div>
 
-                      {/* INDIVIDUELLES SPARKENNZAHLEN-BOARD (FREIGESCHALTET) */}
-                      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-slate-800 relative overflow-hidden shadow-2xl">
-                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                          <Sparkles size={200} />
-                        </div>
-                        
-                        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/10 pb-6 mb-6 gap-4">
-                          <div>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#0D9488]/10 text-emerald-400 border border-emerald-500/20 mb-2">
-                              <Star size={12} fill="currentColor" /> Individuelle Auswertung freigeschaltet
-                            </span>
-                            <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
-                              Das Sparpotenzial Ihrer Praxis
-                            </h3>
-                            <p className="text-slate-400 text-xs sm:text-sm mt-1.5">
-                              Berechnet basierend auf den Angaben von <span className="text-emerald-400 font-semibold">{leadForm.praxis || 'Ihrer Praxis'}</span> ({leadForm.salutation === 'Frau' ? 'Frau' : 'Herr'} {leadForm.name})
-                            </p>
-                          </div>
-                          
-                          <div className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full font-bold text-xs flex items-center gap-1.5 shrink-0 w-fit">
-                            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                            Live-Analyse abgeschlossen
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          
-                          {/* Hours Saved */}
-                          <div className="bg-slate-800/40 rounded-2xl p-5 border border-slate-850 flex flex-col justify-between">
+                          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-xs sm:text-sm space-y-4">
                             <div>
-                              <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest block mb-1">Entlastung am Telefon</span>
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-3xl sm:text-4xl font-extrabold text-emerald-400 tracking-tight">{savings.hours} Std.</span>
-                                <span className="text-xs text-slate-400">/ Woche</span>
-                              </div>
+                              <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-2 font-sans">Ausgangsdaten Ihrer Praxis</p>
+                              <ul className="space-y-1.5 text-slate-700">
+                                <li>• Geschätztes Anrufvolumen: <strong>{savings.anrufe_tag} Anrufe / Tag</strong></li>
+                                <li>• Arbeitstage: <strong>{savings.workingDays} Tage / Monat</strong></li>
+                                <li>• KI-Abfangrate: <strong>80 %</strong> (pauschale Abfangrate)</li>
+                                <li>• Zeitaufwand pro Anruf: <strong>4 Minuten</strong> (inkl. Nachbearbeitungszeit)</li>
+                                <li>• Arbeitgeber-Stundensatz MFA (inkl. Lohnnebenkosten Stand 2026): <strong>25,00 € / Stunde</strong></li>
+                              </ul>
                             </div>
-                            <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                              Diese wertvolle Arbeitszeit wird künftig nicht mehr durch administrative Telefonate blockiert.
-                            </p>
-                          </div>
 
-                          {/* Call assurance percentage reduction */}
-                          <div className="bg-slate-800/40 rounded-2xl p-5 border border-slate-850 flex flex-col justify-between">
-                            <div>
-                              <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest block mb-1">Anruf-Erfassungsquote</span>
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">{savings.pctReduction}</span>
-                              </div>
-                            </div>
-                            <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                              Einsparung bisheriger Ausfallzeiten. Ihre Leitungen sind niemals besetzt, Ihre Patienten stets gut betreut.
-                            </p>
-                          </div>
-
-                          {/* Effect on the team */}
-                          <div className="bg-slate-800/40 rounded-2xl p-5 border border-slate-850 flex flex-col justify-between">
-                            <div>
-                              <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest block mb-1">Team-Stress-Effekt</span>
-                              <div className="flex items-baseline gap-1">
-                                <span className="text-lg sm:text-xl font-extrabold text-white tracking-tight leading-tight">{savings.stressLabel}</span>
-                              </div>
-                            </div>
-                            <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                              Weniger abgelenktes Praxisleben bedeutet mehr Zuwendung für die anwesenden Patienten vor Ort.
-                            </p>
-                          </div>
-
-                        </div>
-
-                        {/* Recap list of parameters for medical gravity */}
-                        <div className="mt-6 pt-5 border-t border-slate-800/60 grid grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
-                          <div>
-                            <span className="text-slate-500 font-medium block">Anrufaufkommen:</span>
-                            <span className="text-slate-200 font-semibold block mt-0.5">{answers[1] || 'Keine Angabe'}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 font-medium block">Häufigster Zeitfresser:</span>
-                            <span className="text-slate-250 font-semibold block mt-0.5 text-slate-200">{answers[2] || 'Keine Angabe'}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 font-medium block">Stoßzeiten-Gefahr:</span>
-                            <span className="text-slate-200 font-semibold block mt-0.5">{answers[3] || 'Keine Angabe'}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 font-medium block">PVS (Praxissoftware):</span>
-                            <span className="text-slate-200 font-semibold block mt-0.5">{answers[5] || 'Keine Angabe'}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 font-medium block">PVS-Anbindung:</span>
-                            <span className="text-slate-200 font-semibold block mt-0.5 text-[#0D9488] font-bold">
-                              {answers[6] ? (answers[6].includes('Ja') ? 'Zwingend' : answers[6].includes('Nein') ? 'Autark' : 'Optional') : 'Keine Angabe'}
-                            </span>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      {/* INDIVIDUELLE PRODUKT-EMPFEHLUNG (DYNAMISCH) */}
-                      <div className="bg-gradient-to-br from-[#0D9488]/5 to-emerald-500/10 border-2 border-[#0D9488]/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#0D9488]/15 pb-5">
-                          <div>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#0D9488] text-white mb-2 shadow-sm">
-                              ✓ Empfohlenes Produkt & Setup für {answers[5] || 'Ihre Praxis'}
-                            </span>
-                            <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                              {getProductRecommendation().icon === 'Server' ? <Server size={22} className="text-[#0D9488]" /> : getProductRecommendation().icon === 'Sparkles' ? <Sparkles size={22} className="text-[#0D9488]" /> : <ShieldCheck size={22} className="text-[#0D9488]" />} {getProductRecommendation().title}
-                            </h3>
-                            <p className="text-[#0D9488] font-bold text-xs sm:text-sm mt-1">
-                              {getProductRecommendation().tagline}
-                            </p>
-                          </div>
-                          
-                          <div className="bg-[#0D9488]/15 text-[#0D9488] border border-[#0D9488]/20 px-3 py-1.5 rounded-full font-bold text-xs shrink-0 w-fit">
-                            {getProductRecommendation().badge}
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                          <div className="lg:col-span-7 space-y-4">
-                            <p className="text-sm dark:text-slate-300 text-slate-600 leading-relaxed font-medium">
-                              {getProductRecommendation().description}
-                            </p>
-                            
-                            <div className="bg-white/80 p-4.5 rounded-2xl border border-[#0D9488]/10 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2 shadow-sm">
-                              <span className="font-bold text-[#0D9488] block">Ihr Daten-Vorteil:</span>
-                              Laut Ihrer Antwort auf Frage 6 ist Ihnen die PVS-Schnittstelle {answers[6]?.toLowerCase().includes('ja') ? 'zwingend wichtig' : answers[6]?.toLowerCase().includes('nein') ? 'nicht zwingend notwendig' : 'optional wichtig'}. Unser Produkt <span className="font-semibold text-slate-900">{getProductRecommendation().title}</span> wurde dafür maßgeschneidert.
-                            </div>
-                          </div>
-
-                          <div className="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm">
-                            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">Produkt-Highlights:</h4>
-                            <ul className="space-y-2.5">
-                              {getProductRecommendation().features.map((feat, idx) => (
-                                <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-600">
-                                  <div className="p-0.5 rounded-full bg-emerald-50 text-emerald-600 shrink-0 mt-0.5">
-                                    <Check size={12} strokeWidth={3} />
-                                  </div>
-                                  <span className="leading-tight">{feat}</span>
+                            <div className="border-t border-slate-100 pt-3">
+                              <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 font-sans">Mathematischer Rechenweg</p>
+                              <ul className="space-y-3 text-slate-700">
+                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                  <span className="font-semibold text-slate-900 shrink-0">1. KI-Minuten:</span>
+                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                    {savings.anrufe_tag} * 0.80 * 4 Min * {savings.workingDays} Tage = {savings.ki_minuten} Min. / Monat
+                                  </span>
                                 </li>
-                              ))}
-                            </ul>
+                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                  <span className="font-semibold text-slate-900 shrink-0">2. Rüstzeit-bereinigter Zeitgewinn MFA:</span>
+                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                    {savings.ki_minuten} Min. / 33 Min. = {savings.zeitgewinn_stunden} Std. / Monat
+                                  </span>
+                                </li>
+                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                  <span className="font-semibold text-slate-900 shrink-0">3. Budget-Entlastung:</span>
+                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                    {savings.zeitgewinn_stunden} Std. * 25,00 € = {savings.brutto_ersparnis}
+                                  </span>
+                                </li>
+                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                  <span className="font-semibold text-slate-900 shrink-0">4. Reale Netto-Ersparnis:</span>
+                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                    {savings.brutto_ersparnis} - {savings.systemkosten} € Systemkosten = {savings.netto_ersparnis}
+                                  </span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          <div className="bg-[#EEF5F4]/60 p-4.5 rounded-xl border border-[#0D9488]/15 text-xs sm:text-sm text-slate-705">
+                            <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von 25,- € pro Stunde. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> zurück. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
                           </div>
                         </div>
                       </div>
 
-                      {/* Split detail cards */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                        {/* Quality Promise */}
-                        <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6 sm:p-7 space-y-4">
-                          <div className="flex items-center gap-2.5">
-                            <div className="p-1.5 bg-primary-light text-primary-dark rounded-xl">
-                              <Star size={18} fill="currentColor" />
-                            </div>
-                            <h3 className="font-extrabold text-slate-900 text-lg">Unser Service-Versprechen</h3>
-                          </div>
-                          
-                          <div className="space-y-3.5 text-xs sm:text-sm text-slate-600">
-                            <p className="leading-relaxed">
-                              Wir liefern eine voll funktionsfähige, professionelle KI-Infrastruktur, die Ihren Empfang ab dem ersten Tag entlastet.
-                            </p>
-                            <div className="border-l-3 border-[#0D9488] pl-3 py-0.5">
-                              <span className="font-bold text-slate-800 block mb-0.5">Sofort-Entlastungsverfahren:</span>
-                              Routine-Anrufe (wie Rezeptwünsche oder Terminabsagen) werden ab der Aktivierung vollautomatisch im Hintergrund dokumentiert. Ihr Team hat sofort wieder freien Kopf für Patienten vor Ort.
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* DSGVO Section */}
-                        <div className="bg-slate-950 text-slate-300 rounded-3xl p-6 sm:p-7 border border-slate-900">
-                          <div className="flex items-center gap-2.5 border-b border-slate-800/80 pb-4 mb-4">
-                            <div className="p-1.5 bg-[#CCFBF1]/15 text-[#0D9488] rounded-xl border border-[#CCFBF1]/20">
-                              <ShieldCheck size={20} />
-                            </div>
-                            <h3 className="font-extrabold text-white text-lg tracking-tight">🔒 Höchster Datenschutz</h3>
-                          </div>
-
-                          <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-                            Als medizinische Einrichtung tragen Sie die Verantwortung für sensible Patientendaten. Unser System wurde exakt für diese strengen Anforderungen gebaut:
+                      {/* 100% DSGVO-konformer Datenschutz */}
+                      <div className="bg-slate-950 text-slate-300 rounded-3xl p-6 sm:p-8 space-y-4 border border-slate-900">
+                        <h3 className="text-md font-black text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                          🔒 100 % DSGVO-konformer Datenschutz
+                        </h3>
+                        
+                        <div className="space-y-4 text-xs sm:text-[13px] leading-relaxed">
+                          <p>
+                            <strong className="text-emerald-400 block mb-0.5">Deutscher Server-Standort:</strong> Sämtliche Sprachverarbeitungen und Daten laufen auf hochsicheren Servern in Deutschland.
                           </p>
-
-                          <div className="space-y-3">
-                            <p className="text-xs text-slate-300 leading-relaxed">
-                              <strong className="text-white">✓ Kein autonomer Zugriff:</strong> Eine PVS-Anbindung erfolgt ausschließlich nach expliziter Freigabe mit Ihrem IT-Dienstleister.
-                            </p>
-                            <p className="text-xs text-slate-300 leading-relaxed">
-                              <strong className="text-white">✓ Server-Infrastruktur in DE:</strong> Sämtliche Sprachdaten und Verarbeitungen laufen DSGVO-konform auf Hochsicherheitsservern in Deutschland.
-                            </p>
-                            <p className="text-xs text-slate-300 leading-relaxed">
-                              <strong className="text-white">✓ Ärztliche Schweigepflicht:</strong> Vollständige systemische Einhaltung des Patientengeheimnisses zu jedem Zeitpunkt.
-                            </p>
-                          </div>
+                          <p>
+                            <strong className="text-emerald-400 block mb-0.5">Ärztliche Schweigepflicht:</strong> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses (§ 203 StGB). Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
+                          </p>
                         </div>
                       </div>
 
-                      {/* Navigation buttons */}
-                      <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                      {/* Restart Button */}
+                      <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <button
+                          type="button"
                           onClick={handleBackToStart}
-                          className="w-full sm:w-auto bg-[#0D9488] text-white font-bold px-8 py-4 rounded-2xl text-sm transition-all hover:shadow-glow hover:-translate-y-0.5 shadow-md flex items-center justify-center gap-2"
+                          className="w-full sm:w-auto bg-[#0D9488] hover:bg-[#0b7f74] text-white font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                         >
-                          Zurück zur Startseite <ArrowRight size={16} />
+                          Zurück zur Startseite <ArrowRight size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStep(1);
+                            setAnswers({});
+                            setLeadForm({ name: '', praxis: '', email: '', phone: '' });
+                          }}
+                          className="w-full sm:w-auto border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm transition-all flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          Check wiederholen
                         </button>
                       </div>
+
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -728,7 +829,7 @@ export const PraxisCheckPage: React.FC = () => {
           </div>
 
           {/* Right panel - Live Saving Calculator Sidebar (5 columns) */}
-          {step < 8 && (
+          {step < 9 && (
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
               
               {/* Profile Box */}
@@ -754,15 +855,17 @@ export const PraxisCheckPage: React.FC = () => {
                       <div className="p-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20 mb-1.5 animate-pulse">
                         <Sparkles size={16} className="text-emerald-400" />
                       </div>
-                      <span className="text-[10px] font-bold leading-normal text-emerald-400 uppercase tracking-wider block">Analyse & Berechnung aktiv</span>
-                      <p className="text-[10.5px] text-slate-300 max-w-[200px] mt-1 leading-tight text-center font-medium">Wird unmittelbar nach der Dateneingabe live freigeschaltet</p>
+                      <span className="text-[10px] font-bold leading-normal text-emerald-400 uppercase tracking-wider block">Analyse &amp; Berechnung aktiv</span>
+                      <p className="text-[10.5px] text-slate-300 max-w-[200px] mt-1 leading-tight text-center font-medium">
+                        {step === 8 ? 'Berechnung abgeschlossen! Geben Sie Ihre Daten ein.' : 'Wird nach Abschluss des Fragebogens live freigeschaltet'}
+                      </p>
                     </div>
                     
                     {/* Blurred background content to visually tease the statistics */}
                     <div className="blur-[3px] select-none pointer-events-none opacity-20 space-y-1">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block animate-pulse">Geschätzte Zeiteinsparung</span>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Geschätzte Zeiteinsparung</span>
                       <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-2xl font-black text-white tracking-tight">18 Std.</span>
+                        <span className="text-2xl font-black text-white tracking-tight">51 Std.</span>
                         <span className="text-xs text-slate-400">/ Woche</span>
                       </div>
                       <span className="text-xs text-[#0D9488] font-bold block">✓ Entlastung für Ihr Empfangsteam</span>
@@ -771,33 +874,35 @@ export const PraxisCheckPage: React.FC = () => {
 
                   {/* Dynamic metric 2: Answered properties */}
                   <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5">Erfasste Parameter</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2.5 font-sans">Erfasste Parameter</span>
                     <div className="space-y-2.5">
                       <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
-                        <span className="text-slate-400 font-medium">Anrufaufkommen:</span>
-                        <span className="text-white font-bold text-right">{answers[1] || 'Ausstehend...'}</span>
+                        <span className="text-slate-400 font-medium font-sans">Anrufaufkommen:</span>
+                        <span className="text-white font-bold text-right font-sans">{answers[1] || 'Ausstehend...'}</span>
                       </div>
                       <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
-                        <span className="text-slate-400 font-medium">Zeitfresser:</span>
-                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1">{answers[2] || 'Ausstehend...'}</span>
+                        <span className="text-slate-400 font-medium font-sans">Zeitfresser:</span>
+                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1 font-sans">{answers[2] || 'Ausstehend...'}</span>
                       </div>
                       <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
-                        <span className="text-slate-400 font-medium">Stoßzeiten-Fluss:</span>
-                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1">{answers[3] || 'Ausstehend...'}</span>
+                        <span className="text-slate-400 font-medium font-sans">Stoßzeiten-Fluss:</span>
+                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1 font-sans">{answers[3] || 'Ausstehend...'}</span>
                       </div>
                       <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
-                        <span className="text-slate-400 font-medium">Team-Stressfaktor:</span>
-                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1">{answers[4] || 'Ausstehend...'}</span>
+                        <span className="text-slate-400 font-medium font-sans">Team-Stressfaktor:</span>
+                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1 font-sans">{answers[4] || 'Ausstehend...'}</span>
                       </div>
                       <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
-                        <span className="text-slate-400 font-medium">Praxissoftware (PVS):</span>
-                        <span className="text-white font-bold text-right">{answers[5] || 'Ausstehend...'}</span>
+                        <span className="text-slate-400 font-medium font-sans">Praxissoftware (PVS):</span>
+                        <span className="text-white font-bold text-right font-sans">{answers[5] || 'Ausstehend...'}</span>
+                      </div>
+                      <div className="flex justify-between items-start text-xs border-b border-slate-800/40 pb-2">
+                        <span className="text-slate-400 font-medium font-sans">Daten-Weg:</span>
+                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1 font-sans">{answers[6] || 'Ausstehend...'}</span>
                       </div>
                       <div className="flex justify-between items-start text-xs pb-1">
-                        <span className="text-slate-400 font-medium">PVS-Schnittstelle:</span>
-                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1">
-                          {answers[6] ? (answers[6].includes('Ja') ? 'Zwingend' : answers[6].includes('Nein') ? 'Autark' : 'Optional') : 'Ausstehend...'}
-                        </span>
+                        <span className="text-slate-400 font-medium font-sans">Einsatzzeit:</span>
+                        <span className="text-white font-bold text-right max-w-[150px] line-clamp-1 font-sans">{answers[7] || 'Ausstehend...'}</span>
                       </div>
                     </div>
                   </div>
@@ -805,7 +910,7 @@ export const PraxisCheckPage: React.FC = () => {
               </div>
 
               {/* Security Shield Info Badge */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+              <div className="bg-white rounded-3xl p-6 border border-slate-200/60 shadow-sm space-y-4">
                 <div className="flex items-center gap-2 text-slate-900 border-b border-slate-100 pb-3">
                   <div className="p-1 px-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
                     <Shield size={16} />
@@ -815,15 +920,15 @@ export const PraxisCheckPage: React.FC = () => {
 
                 <ul className="space-y-3 text-xs text-slate-500 leading-relaxed">
                   <li className="flex items-start gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0D9488] shrink-0 mt-1.5" />
                     <span>Verarbeitung ausschließlich auf hochsicheren Servern in Deutschland.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0D9488] shrink-0 mt-1.5" />
                     <span>Konform mit KBV-Richtlinien und DSGVO Patientengeheimnis.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0D9488] shrink-0 mt-1.5" />
                     <span>Kein Ausspähen von Daten. Keine direkte Installation in Ihrer Praxis-IT erforderlich.</span>
                   </li>
                 </ul>
