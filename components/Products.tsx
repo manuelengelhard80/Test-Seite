@@ -85,6 +85,8 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 <PhoneCall className="text-primary-dark" size={28} strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Voice</h3>
+              
+
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
                 <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
@@ -146,7 +148,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
             {/* 2. Auxilium Assist (Bestseller) */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10 group">
                <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
                  <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
                </div>
@@ -155,6 +157,18 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 <CalendarCheck2 className="text-primary-dark" size={28} strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Assist</h3>
+              
+              {/* Product Image */}
+              <div className="relative mb-6 -mx-8 w-[calc(100%+4rem)] overflow-hidden aspect-[1.618] bg-slate-50 relative z-10 border-y border-slate-100">
+                <img 
+                  src="/auxilium-assist.png" 
+                  alt="Auxilium Assist" 
+                  className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-130 hover:scale-130"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              
+
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
                 <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
@@ -218,6 +232,8 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 <Activity className="text-primary-dark animate-pulse" size={28} strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Pulse</h3>
+              
+
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
                 <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">

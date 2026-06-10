@@ -41,9 +41,10 @@ export const FeatureFocus: React.FC = () => {
             
             <div className="relative rounded-xl overflow-hidden shadow-xl border border-slate-100 group w-full transition-all duration-500">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0915/3334/5117/files/Design_ohne_Titel_28_557698dd-c814-4bcc-8784-abee4d5bd451.png?v=1764084708" 
-                alt="Glückliche Patientin am Empfang" 
+                src="https://cdn.shopify.com/s/files/1/0915/3334/5117/files/Design_ohne_Titel_26_5f61db45-d5c6-4aa5-991c-5adaadae2170.png?v=1763989210" 
+                alt="Auxilium Dashboard im Überblick" 
                 className="w-full h-auto object-cover"
+                referrerPolicy="no-referrer"
               />
               
               {/* Floating Badge (Restored) */}
