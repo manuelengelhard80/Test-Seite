@@ -1,8 +1,71 @@
 
 import React, { useRef, useState } from 'react';
 import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus } from 'lucide-react';
-// @ts-ignore
-import auxiliumAssistImg from './auxilium-assist.png';
+
+interface ZoomableImageProps {
+  src: string;
+  alt: string;
+  onError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  containerClassName?: string;
+}
+
+const ZoomableImage: React.FC<ZoomableImageProps> = ({ 
+  src, 
+  alt, 
+  onError, 
+  containerClassName = "" 
+}) => {
+  const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({
+    transform: 'scale(1)',
+    transformOrigin: 'center top'
+  });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const xPercent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    const yPercent = Math.max(0, Math.min(100, (y / rect.height) * 100));
+
+    setZoomStyle({
+      transform: 'scale(2)',
+      transformOrigin: `${xPercent}% ${yPercent}%`,
+    });
+  };
+
+  const handlePointerReset = () => {
+    setZoomStyle({
+      transform: 'scale(1)',
+      transformOrigin: 'center top',
+    });
+  };
+
+  return (
+    <div 
+      ref={containerRef}
+      onPointerDown={handlePointerMove}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerReset}
+      onPointerUp={handlePointerReset}
+      onPointerCancel={handlePointerReset}
+      className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 cursor-zoom-in touch-none select-none ${containerClassName}`}
+    >
+      <img 
+        src={src} 
+        alt={alt} 
+        style={zoomStyle}
+        className="w-full h-full object-cover object-top transition-transform duration-100 ease-out"
+        referrerPolicy="no-referrer"
+        onError={onError}
+      />
+    </div>
+  );
+};
 
 interface ProductsProps {
   onNavigate?: (view: string) => void;
@@ -81,12 +144,27 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             
             {/* 1. Auxilium Voice */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
               
-              <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <PhoneCall className="text-primary-dark" size={28} strokeWidth={1.5} />
+              {/* Product Image with Interactive 200% Pointer Zoom */}
+              <ZoomableImage 
+                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-voice.png"
+                alt="Auxilium Voice"
+                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-8"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-voice.png';
+                  }
+                }}
+              />
+
+              <div className="flex items-center gap-4 mb-6 relative z-10">
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <PhoneCall className="text-primary-dark" size={24} strokeWidth={1.5} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Voice</h3>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Voice</h3>
               
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
@@ -155,19 +233,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                  <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
                </div>
               
-              <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <CalendarCheck2 className="text-primary-dark" size={28} strokeWidth={1.5} />
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Assist</h3>
-              
-              {/* Product Image */}
-              <div className="relative mb-6 -mx-8 w-[calc(100%+4rem)] overflow-hidden aspect-[1.618] bg-slate-50 relative z-10 border-y border-slate-100">
-                <img 
-                  src={auxiliumAssistImg} 
-                  alt="Auxilium Assist" 
-                  className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-130 hover:scale-130"
-                  referrerPolicy="no-referrer"
-                />
+              {/* Product Image with Interactive 200% Pointer Zoom */}
+              <ZoomableImage 
+                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-assist.png"
+                alt="Auxilium Assist"
+                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-4"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-assist.png';
+                  }
+                }}
+              />
+
+              <div className="flex items-center gap-4 mb-6 relative z-10">
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <CalendarCheck2 className="text-primary-dark" size={24} strokeWidth={1.5} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Assist</h3>
               </div>
               
 
@@ -228,12 +311,27 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
             {/* 3. Auxilium Pulse */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
-               <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity"></div>
+               <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
 
-              <div className="w-14 h-14 bg-primary-light rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
-                <Activity className="text-primary-dark animate-pulse" size={28} strokeWidth={1.5} />
+              {/* Product Image with Interactive 200% Pointer Zoom */}
+              <ZoomableImage 
+                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse.png"
+                alt="Auxilium Pulse"
+                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-8"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-pulse.png';
+                  }
+                }}
+              />
+
+              <div className="flex items-center gap-4 mb-6 relative z-10">
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <Activity className="text-primary-dark animate-pulse" size={24} strokeWidth={1.5} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Pulse</h3>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2 relative z-10">Auxilium Pulse</h3>
               
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
