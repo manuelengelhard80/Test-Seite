@@ -1,6 +1,8 @@
 
 import React, { useRef, useState } from 'react';
 import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus } from 'lucide-react';
+// @ts-ignore
+import auxiliumAssistImg from './auxilium-assist.png';
 
 interface ProductsProps {
   onNavigate?: (view: string) => void;
@@ -161,7 +163,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               {/* Product Image */}
               <div className="relative mb-6 -mx-8 w-[calc(100%+4rem)] overflow-hidden aspect-[1.618] bg-slate-50 relative z-10 border-y border-slate-100">
                 <img 
-                  src="/auxilium-assist.png" 
+                  src={auxiliumAssistImg} 
                   alt="Auxilium Assist" 
                   className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-130 hover:scale-130"
                   referrerPolicy="no-referrer"
