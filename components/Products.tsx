@@ -7,13 +7,15 @@ interface ZoomableImageProps {
   alt: string;
   onError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   containerClassName?: string;
+  objectPosition?: string;
 }
 
 const ZoomableImage: React.FC<ZoomableImageProps> = ({ 
   src, 
   alt, 
   onError, 
-  containerClassName = "" 
+  containerClassName = "",
+  objectPosition = "center top"
 }) => {
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({
     transform: 'scale(1)',
@@ -58,8 +60,8 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
       <img 
         src={src} 
         alt={alt} 
-        style={zoomStyle}
-        className="w-full h-full object-cover object-top transition-transform duration-100 ease-out"
+        style={{ ...zoomStyle, objectPosition }}
+        className="w-full h-full object-cover transition-transform duration-100 ease-out"
         referrerPolicy="no-referrer"
         onError={onError}
       />
@@ -143,14 +145,22 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
           >
             
             {/* 1. Auxilium Voice */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-10 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
               
+              <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Voice</h3>
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <PhoneCall className="text-primary-dark" size={24} strokeWidth={1.5} />
+                </div>
+              </div>
+
               {/* Product Image with Interactive 200% Pointer Zoom */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-voice.png"
                 alt="Auxilium Voice"
-                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-8"
+                containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
+                objectPosition="center -10px"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
@@ -158,13 +168,6 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                   }
                 }}
               />
-
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <PhoneCall className="text-primary-dark" size={24} strokeWidth={1.5} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Voice</h3>
-              </div>
               
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
@@ -227,17 +230,25 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* 2. Auxilium Assist (Bestseller) */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10 group">
+                        {/* 2. Auxilium Assist (Bestseller) */}
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-14 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10 group">
                <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
-                 <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
+                  <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
                </div>
               
+              <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-2">
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Assist</h3>
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <CalendarCheck2 className="text-primary-dark" size={24} strokeWidth={1.5} />
+                </div>
+              </div>
+
               {/* Product Image with Interactive 200% Pointer Zoom */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-assist.png"
                 alt="Auxilium Assist"
-                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-4"
+                containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
+                objectPosition="center -10px"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
@@ -245,14 +256,6 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                   }
                 }}
               />
-
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <CalendarCheck2 className="text-primary-dark" size={24} strokeWidth={1.5} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Assist</h3>
-              </div>
-              
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
@@ -310,14 +313,22 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
             {/* 3. Auxilium Pulse */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-16 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-10 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
+ 
+              <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
+                <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Pulse</h3>
+                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                  <Activity className="text-primary-dark animate-pulse" size={24} strokeWidth={1.5} />
+                </div>
+              </div>
 
               {/* Product Image with Interactive 200% Pointer Zoom */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse.png"
                 alt="Auxilium Pulse"
-                containerClassName="mb-6 -mx-8 w-[calc(100%+4rem)] -mt-8"
+                containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
+                objectPosition="center -10px"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
@@ -325,14 +336,6 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                   }
                 }}
               />
-
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <Activity className="text-primary-dark animate-pulse" size={24} strokeWidth={1.5} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 leading-tight">Auxilium Pulse</h3>
-              </div>
-              
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
@@ -390,10 +393,10 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
             {/* 4. Enterprise (Price on request) */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-slate-50 px-8 pb-8 pt-16 rounded-3xl border border-slate-200/60 shadow-none hover:shadow-sm transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-slate-50 px-8 pb-8 pt-10 rounded-3xl border border-slate-200/60 shadow-none hover:shadow-sm transition-all duration-300 flex flex-col relative overflow-hidden group">
               {/* No top gradient strip for subtle look */}
               
-              <div className="w-14 h-14 bg-slate-200 rounded-2xl flex items-center justify-center mb-6 mt-2 relative z-10">
+              <div className="w-14 h-14 bg-slate-200 rounded-2xl flex items-center justify-center mb-4 mt-1 relative z-10">
                 <Globe className="text-slate-600" size={28} strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold text-slate-700 mb-4 relative z-10">Enterprise</h3>
