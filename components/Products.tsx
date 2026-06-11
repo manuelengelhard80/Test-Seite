@@ -8,6 +8,10 @@ interface ZoomableImageProps {
   onError: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   containerClassName?: string;
   objectPosition?: string;
+  hoverSrc?: string;
+  onHoverError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  disableZoom?: boolean;
+  hoverObjectPosition?: string;
 }
 
 const ZoomableImage: React.FC<ZoomableImageProps> = ({ 
@@ -15,15 +19,23 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
   alt, 
   onError, 
   containerClassName = "",
-  objectPosition = "center top"
+  objectPosition = "center top",
+  hoverSrc,
+  onHoverError,
+  disableZoom = false,
+  hoverObjectPosition = "center center"
 }) => {
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({
     transform: 'scale(1)',
     transformOrigin: 'center top'
   });
+  const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsHovered(true);
+    if (disableZoom) return;
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -41,6 +53,8 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
   };
 
   const handlePointerReset = () => {
+    setIsHovered(false);
+    if (disableZoom) return;
     setZoomStyle({
       transform: 'scale(1)',
       transformOrigin: 'center top',
@@ -55,16 +69,26 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
       onPointerLeave={handlePointerReset}
       onPointerUp={handlePointerReset}
       onPointerCancel={handlePointerReset}
-      className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 cursor-zoom-in touch-none select-none ${containerClassName}`}
+      className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 ${disableZoom ? 'cursor-pointer' : 'cursor-zoom-in'} touch-none select-none ${containerClassName}`}
     >
       <img 
         src={src} 
         alt={alt} 
         style={{ ...zoomStyle, objectPosition }}
-        className="w-full h-full object-cover transition-transform duration-100 ease-out"
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isHovered && hoverSrc ? 'opacity-0' : 'opacity-100'}`}
         referrerPolicy="no-referrer"
         onError={onError}
       />
+      {hoverSrc && (
+        <img 
+          src={hoverSrc} 
+          alt={`${alt} Hover`} 
+          style={{ ...zoomStyle, objectPosition: hoverObjectPosition }}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+          referrerPolicy="no-referrer"
+          onError={onHoverError}
+        />
+      )}
     </div>
   );
 };
@@ -243,16 +267,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Product Image with Interactive 200% Pointer Zoom */}
+              {/* Product Image with Hover Image Swap */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-assist.png"
                 alt="Auxilium Assist"
                 containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
                 objectPosition="center -10px"
+                disableZoom={true}
+                hoverSrc="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-assist2.png"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
                     img.src = 'http://2bmedia-marketing.de/bilder/auxilium-assist.png';
+                  }
+                }}
+                onHoverError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-assist2.png';
                   }
                 }}
               />
