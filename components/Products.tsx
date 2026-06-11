@@ -33,6 +33,7 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return;
     setIsHovered(true);
     if (disableZoom) return;
 
@@ -52,7 +53,8 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
     });
   };
 
-  const handlePointerReset = () => {
+  const handlePointerReset = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return;
     setIsHovered(false);
     if (disableZoom) return;
     setZoomStyle({
@@ -69,11 +71,15 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
       onPointerLeave={handlePointerReset}
       onPointerUp={handlePointerReset}
       onPointerCancel={handlePointerReset}
-      className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 ${disableZoom ? 'cursor-pointer' : 'cursor-zoom-in'} touch-none select-none ${containerClassName}`}
+      onContextMenu={(e) => e.preventDefault()}
+      style={{ WebkitTouchCallout: 'none' }}
+      className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 ${disableZoom ? 'cursor-pointer' : 'cursor-zoom-in'} select-none ${containerClassName}`}
     >
       <img 
         src={src} 
         alt={alt} 
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
         style={{ ...zoomStyle, objectPosition }}
         className={`w-full h-full object-cover transition-opacity duration-300 ${isHovered && hoverSrc ? 'opacity-0' : 'opacity-100'}`}
         referrerPolicy="no-referrer"
@@ -83,6 +89,8 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
         <img 
           src={hoverSrc} 
           alt={`${alt} Hover`} 
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
           style={{ ...zoomStyle, objectPosition: hoverObjectPosition }}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
           referrerPolicy="no-referrer"
