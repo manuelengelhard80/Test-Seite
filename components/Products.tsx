@@ -204,16 +204,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Product Image with Interactive 200% Pointer Zoom */}
+              {/* Product Image with Hover Image Swap */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-voice.png"
                 alt="Auxilium Voice"
                 containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
                 objectPosition="center -10px"
+                disableZoom={true}
+                hoverSrc="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-voice2.png"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
                     img.src = 'http://2bmedia-marketing.de/bilder/auxilium-voice.png';
+                  }
+                }}
+                onHoverError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-voice2.png';
                   }
                 }}
               />
@@ -380,16 +388,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Product Image with Interactive 200% Pointer Zoom */}
+              {/* Product Image with Hover Image Swap */}
               <ZoomableImage 
                 src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse.png"
                 alt="Auxilium Pulse"
                 containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
                 objectPosition="center -10px"
+                disableZoom={true}
+                hoverSrc="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse2.png"
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
                     img.src = 'http://2bmedia-marketing.de/bilder/auxilium-pulse.png';
+                  }
+                }}
+                onHoverError={(e) => {
+                  const img = e.currentTarget;
+                  if (img.src.includes('weserv.nl')) {
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-pulse2.png';
                   }
                 }}
               />
