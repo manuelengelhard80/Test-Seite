@@ -33,9 +33,9 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return;
     setIsHovered(true);
     if (disableZoom) return;
-    if (e.pointerType === 'touch') return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -54,12 +54,25 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
   };
 
   const handlePointerReset = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'touch') return;
     setIsHovered(false);
     if (disableZoom) return;
     setZoomStyle({
       transform: 'scale(1)',
       transformOrigin: 'center top',
     });
+  };
+
+  const handleTouchStart = () => {
+    setIsHovered(true);
+  };
+
+  const handleTouchMove = () => {
+    setIsHovered(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -71,6 +84,10 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
       onPointerLeave={handlePointerReset}
       onPointerUp={handlePointerReset}
       onPointerCancel={handlePointerReset}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
       onContextMenu={(e) => e.preventDefault()}
       style={{ WebkitTouchCallout: 'none' }}
       className={`relative overflow-hidden aspect-[1.618] bg-slate-50 z-10 border-b border-slate-100 ${disableZoom ? 'cursor-pointer' : 'cursor-zoom-in'} select-none ${containerClassName}`}
