@@ -15,6 +15,7 @@ interface Question {
   options?: string[];
   placeholder?: string;
   hint?: string;
+  optional?: boolean;
 }
 
 const quizQuestions: Question[] = [
@@ -62,22 +63,6 @@ const quizQuestions: Question[] = [
   },
   {
     id: 5,
-    title: 'Welches Praxisverwaltungssystem (PVS) nutzen Sie aktuell?',
-    type: 'text',
-    placeholder: 'z.B. Turbomed, CGM Albis, Medatixx, etc.',
-    hint: 'Hinweis: Unser KI-Telefonsystem lässt sich dank offener API-Schnittstelle an nahezu jede gängige Praxissoftware anbinden.',
-  },
-  {
-    id: 6,
-    title: 'Wie möchte Ihr Team die von der KI dokumentierten Anrufe (z.B. Rezeptwünsche) erhalten?',
-    type: 'select',
-    options: [
-      'Direkt synchronisiert in unserer Praxissoftware (via offener API)',
-      'Übersichtlich aufbereitet als tägliche E-Mail-Zusammenfassung',
-    ],
-  },
-  {
-    id: 7,
     title: 'Wann soll der KI-Telefonassistent Ihr Team idealerweise entlasten?',
     type: 'select',
     options: [
@@ -85,6 +70,24 @@ const quizQuestions: Question[] = [
       'Nur außerhalb die Sprechzeiten (Mittagspause, Abende, Wochenende) anstelle des ABs',
       'Flexibel im Hybrid-Modell (vormittags das Team, nachmittags die KI)',
       'Rund um die Uhr (24/7), um maximale Erreichbarkeit zu garantieren',
+    ],
+  },
+  {
+    id: 6,
+    title: 'Welches Praxisverwaltungssystem (PVS) nutzen Sie aktuell? (optional)',
+    type: 'text',
+    placeholder: 'z.B. Turbomed, CGM Albis, Medatixx, etc.',
+    hint: 'Hinweis: Unser KI-Telefonsystem lässt sich dank offener API-Schnittstelle an nahezu jede gängige Praxissoftware anbinden.',
+    optional: true,
+  },
+  {
+    id: 7,
+    title: 'Wie sollen Termine über den KI-Telefonassistenten gebucht bzw. synchronisiert werden?',
+    type: 'select',
+    options: [
+      'Über unsere Praxissoftware (z.B. Doctolib, tomedo etc. via API-Schnittstelle)',
+      'Über einen externen Cloud-Kalender (z.B. Google/Microsoft)',
+      'Keine automatische Terminbuchung benötigt',
     ],
   },
 ];
@@ -141,19 +144,20 @@ export const PraxisCheckPage: React.FC = () => {
     const netto_ersparnis = Math.round(brutto_ersparnis - systemkosten);
     const roi = Math.round((netto_ersparnis / systemkosten) * 100);
 
-    // LOGIK 2: ERMITTLUNG DES INSTALLATIONS-PRODUKTS (Basis: Funktionale Fragen)
-    const isPuls = answers[6] === 'Direkt synchronisiert in unserer Praxissoftware (via offener API)';
-    const q2Answers = answers[2] || '';
-    const isAssist = !isPuls && q2Answers.includes('Terminvereinbarungen & -absagen');
-    
-    let hauptprodukt = 'Auxilium Voice';
+    // LOGIK 2: ERMITTLUNG DES INSTALLATIONS-PRODUKTS (Basis: Frage 7)
+    const q7 = answers[7] || '';
+    let hauptprodukt = 'Voice';
     let link = 'https://auxilium-assist.de/voice-kaufen';
-    if (isPuls) {
-      hauptprodukt = 'Auxilium Puls';
+    
+    if (q7.includes('Praxissoftware') || q7.includes('API-Schnittstelle')) {
+      hauptprodukt = 'Puls';
       link = 'https://auxilium-assist.de/puls-kaufen';
-    } else if (isAssist) {
-      hauptprodukt = 'Auxilium Assist';
+    } else if (q7.includes('externen') || q7.includes('Cloud-Kalender') || q7.includes('Google') || q7.includes('Microsoft')) {
+      hauptprodukt = 'Assist';
       link = 'https://auxilium-assist.de/assist-kaufen';
+    } else {
+      hauptprodukt = 'Voice';
+      link = 'https://auxilium-assist.de/voice-kaufen';
     }
 
     return {
@@ -391,8 +395,10 @@ export const PraxisCheckPage: React.FC = () => {
                                 className="w-full pl-11 pr-4 py-4 rounded-2xl border border-slate-200 focus:border-[#0D9488] focus:ring-2 focus:ring-[#0D9488]/15 outline-none text-slate-800 transition-all shadow-sm"
                                 autoFocus
                                 onKeyDown={(e) => {
-                                  if (e.key === 'Enter' && answers[step]?.trim()) {
-                                    setStep((curr) => curr + 1);
+                                  if (e.key === 'Enter') {
+                                    if (quizQuestions[step - 1].optional || answers[step]?.trim()) {
+                                      setStep((curr) => curr + 1);
+                                    }
                                   }
                                 }}
                               />
@@ -412,7 +418,7 @@ export const PraxisCheckPage: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => setStep((curr) => curr + 1)}
-                                disabled={!answers[step]?.trim()}
+                                disabled={!quizQuestions[step - 1].optional && !answers[step]?.trim()}
                                 className="bg-[#0D9488] hover:bg-[#0b7f74] disabled:opacity-50 disabled:pointer-events-none text-white font-bold py-3 px-8 rounded-full shadow-md transition-all flex items-center gap-2 cursor-pointer"
                               >
                                 Weiter <ArrowRight size={16} />
@@ -580,32 +586,34 @@ export const PraxisCheckPage: React.FC = () => {
                         {/* Background light rays */}
                         <div className="absolute -right-16 -top-16 w-64 h-64 bg-[#0D9488] opacity-10 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
                         
-                        <div className="flex flex-col lg:flex-row justify-between items-stretch gap-6 relative z-10">
-                          <div className="space-y-3 flex-1">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 font-extrabold text-[10px] uppercase tracking-wider rounded-full border border-emerald-500/20">
-                              🏆 Empfohlene Infrastruktur
-                            </span>
-                            <div className="space-y-1.5 pt-1">
-                              <h2 className="text-2.5xl sm:text-3.5xl font-black tracking-tight leading-tight text-white">
-                                {savings.hauptprodukt} + <span className="text-[#0D9488]">{savings.tarif}</span>
+                        <div className="space-y-6 relative z-10">
+                          {/* Banner Table Header representation */}
+                          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-3 flex items-center gap-1.5">
+                            <span className="text-sm">🏆</span> EMPFOHLENE INFRASTRUKTUR
+                          </div>
+                          
+                          <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-6">
+                            <div className="space-y-2 flex-1">
+                              <h2 className="text-2.5xl sm:text-3xl font-black tracking-tight leading-tight text-white">
+                                <span className="text-white">{savings.hauptprodukt}</span> + <span className="text-[#0D9488]">{savings.tarif}</span>
                               </h2>
-                              <p className="text-slate-400 text-sm sm:text-base font-medium leading-relaxed">
+                              <p className="text-slate-400 text-sm sm:text-base font-medium leading-relaxed italic">
                                 *Exakt abgestimmt auf Ihre funktionale Struktur und Ihr monatliches Anrufvolumen.*
                               </p>
                             </div>
-                          </div>
 
-                          <div className="flex items-center justify-center lg:justify-end shrink-0 pt-2 lg:pt-0">
-                            <a
-                              href={savings.link}
-                              target="_blank"
-                              referrerPolicy="no-referrer"
-                              className="w-full sm:w-auto text-center bg-gradient-to-r from-emerald-500 to-[#0D9488] hover:from-emerald-400 hover:to-[#0fab9d] text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
-                              id="btn-buy-recommendation"
-                            >
-                              🚀 JETZT AKTIVIEREN & EINRICHTEN
-                              <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                            </a>
+                            <div className="flex items-center justify-center lg:justify-end shrink-0 pt-2 lg:pt-0">
+                              <a
+                                href={savings.link}
+                                target="_blank"
+                                referrerPolicy="no-referrer"
+                                className="w-full sm:w-auto text-center bg-gradient-to-r from-emerald-500 to-[#0D9488] hover:from-emerald-400 hover:to-[#0fab9d] text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:shadow-[#0D9488]/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
+                                id="btn-buy-recommendation"
+                              >
+                                🚀 JETZT AKTIVIEREN & EINRICHTEN
+                                <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -710,6 +718,7 @@ export const PraxisCheckPage: React.FC = () => {
                               id="btn-direct-access-link"
                             >
                               👉 Dieses System direkt für die Praxis buchen
+                              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                             </a>
                           </div>
                         </div>
@@ -719,7 +728,7 @@ export const PraxisCheckPage: React.FC = () => {
                       <div className="flex items-start gap-2.5 bg-slate-50 p-4.5 rounded-2xl border border-slate-200">
                         <span className="text-base text-slate-400 shrink-0 mt-0.5">ℹ️</span>
                         <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten.
+                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten. Sonstige Anrufanliegen (wie Rezepte) werden standardmäßig per E-Mail dokumentiert.
                         </p>
                       </div>
 
@@ -777,7 +786,7 @@ export const PraxisCheckPage: React.FC = () => {
                             </div>
                           </div>
 
-                          <div className="bg-[#EEF5F4]/60 p-4.5 rounded-xl border border-[#0D9488]/15 text-xs sm:text-sm text-slate-705">
+                          <div className="bg-sky-50/60 p-4.5 rounded-xl border border-[#3ba2d8]/15 text-xs sm:text-sm text-slate-705">
                             <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von 25,- € pro Stunde. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> zurück. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
                           </div>
                         </div>
@@ -791,10 +800,10 @@ export const PraxisCheckPage: React.FC = () => {
                         
                         <div className="space-y-4 text-xs sm:text-[13px] leading-relaxed">
                           <p>
-                            <strong className="text-emerald-400 block mb-0.5">Deutscher Server-Standort:</strong> Sämtliche Sprachverarbeitungen und Daten laufen auf hochsicheren Servern in Deutschland.
+                            <strong className="text-sky-400 block mb-0.5">Deutscher Server-Standort:</strong> Sämtliche Sprachverarbeitungen und Daten laufen auf hochsicheren Servern in Deutschland.
                           </p>
                           <p>
-                            <strong className="text-emerald-400 block mb-0.5">Ärztliche Schweigepflicht:</strong> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses (§ 203 StGB). Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
+                            <strong className="text-sky-400 block mb-0.5">Ärztliche Schweigepflicht:</strong> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses (§ 203 StGB). Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
                           </p>
                         </div>
                       </div>
@@ -804,7 +813,7 @@ export const PraxisCheckPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={handleBackToStart}
-                          className="w-full sm:w-auto bg-[#0D9488] hover:bg-[#0b7f74] text-white font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full sm:w-auto bg-[#3ba2d8] hover:bg-[#2c8fc7] text-white font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                         >
                           Zurück zur Startseite <ArrowRight size={14} />
                         </button>

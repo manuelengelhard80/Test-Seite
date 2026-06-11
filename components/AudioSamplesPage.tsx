@@ -117,23 +117,48 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
                 <div className="bg-white rounded-xl p-4 border border-slate-100 flex items-center gap-4">
                   <button 
                     onClick={() => togglePlay(idx)}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md transition-all ${playingIndex === idx ? 'bg-secondary' : 'bg-primary hover:bg-primary-hover hover:scale-105'}`}
+                    className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white shadow-md transition-all ${playingIndex === idx ? 'bg-[#298cc4] scale-105' : 'bg-[#13a09e] hover:bg-[#0f8280] hover:scale-105'}`}
                   >
                     {playingIndex === idx ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-1" />}
                   </button>
                   
-                  {/* Fake Waveform */}
-                  <div className="flex-1 h-8 flex items-center gap-0.5 opacity-50">
-                    {[...Array(12)].map((_, i) => (
-                      <div 
-                        key={i} 
-                        className={`w-1 rounded-full bg-slate-800 transition-all duration-300 ${playingIndex === idx ? 'animate-pulse' : ''}`}
-                        style={{ 
-                          height: `${Math.max(20, Math.random() * 100)}%`,
-                          animationDelay: `${i * 0.1}s` 
-                        }} 
-                      ></div>
-                    ))}
+                  {/* Waveform Visualization styled like the user's uploaded image with precise colors and heights */}
+                  <div className="flex-1 h-9 flex items-center gap-[3px]">
+                    <style dangerouslySetInnerHTML={{__html: `
+                      @keyframes hoverWave {
+                        0%, 100% { transform: scaleY(1); }
+                        50% { transform: scaleY(0.35); }
+                      }
+                      .animate-wave-bar {
+                        animation: hoverWave 1.2s ease-in-out infinite;
+                        transform-origin: center;
+                      }
+                    `}} />
+                    {(() => {
+                      const presets = [
+                        [10, 42, 60, 82, 50, 38, 85, 96, 68, 48, 56, 32, 68, 52, 45, 38, 74, 30], // Terminvereinbarung
+                        [15, 28, 45, 70, 88, 55, 35, 78, 92, 60, 42, 50, 38, 62, 48, 30, 45, 20], // Rezeptbestellung
+                        [10, 32, 50, 68, 45, 78, 95, 82, 52, 60, 40, 52, 70, 48, 35, 58, 42, 22]  // Notfall-Triage
+                      ];
+                      const heights = presets[idx % presets.length];
+                      return heights.map((height, i) => {
+                        const ratio = i / (heights.length - 1 || 1);
+                        const r = Math.round(59 - 40 * ratio);
+                        const g = Math.round(162 - 2 * ratio);
+                        const b = Math.round(216 - 58 * ratio);
+                        return (
+                          <div 
+                            key={i} 
+                            className={`flex-1 rounded-full transition-all duration-300 ${playingIndex === idx ? 'animate-wave-bar' : ''}`}
+                            style={{ 
+                              height: `${height}%`,
+                              backgroundColor: `rgb(${r}, ${g}, ${b})`,
+                              animationDelay: `${i * 0.06}s` 
+                            }} 
+                          ></div>
+                        );
+                      });
+                    })()}
                   </div>
 
                   <audio 

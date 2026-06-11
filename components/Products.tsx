@@ -390,7 +390,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
               {/* Product Image with Hover Image Swap */}
               <ZoomableImage 
-                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse.png"
+                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-pulse.png?v=2"
                 alt="Auxilium Pulse"
                 containerClassName="mb-5 -mx-8 w-[calc(100%+4rem)] -mt-4 shadow-inner"
                 objectPosition="center -10px"
@@ -399,7 +399,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 onError={(e) => {
                   const img = e.currentTarget;
                   if (img.src.includes('weserv.nl')) {
-                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-pulse.png';
+                    img.src = 'http://2bmedia-marketing.de/bilder/auxilium-pulse.png?v=2';
                   }
                 }}
                 onHoverError={(e) => {
