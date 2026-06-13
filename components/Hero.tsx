@@ -55,9 +55,9 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Headline */}
-        <h1 className="font-bold tracking-tight text-slate-900 mb-6 max-w-6xl mx-auto leading-[1.1]">
-          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-bold">Endlich Ruhe am Telefon...</span>
-          <span className="text-gradient text-3xl md:text-5xl font-bold">und mehr Zeit für Ihre Patienten.</span>
+        <h1 className="font-extrabold tracking-tight text-slate-900 mb-6 max-w-6xl mx-auto leading-[1.25]">
+          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-extrabold">Endlich Ruhe am Telefon...</span>
+          <span className="text-gradient text-3xl md:text-4xl font-extrabold">und mehr Zeit für Ihre Patienten.</span>
         </h1>
 
         {/* Subheadline/Body Copy */}
@@ -134,15 +134,18 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* DSGVO / Trust Banner */}
-        <div className="flex justify-center mb-0">
+        <div className="flex flex-col items-center gap-3 mt-4 text-center max-w-xl mx-auto">
           <div className="inline-flex items-center gap-5 bg-white px-8 py-3 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
             <ShieldCheck size={32} className="text-[#0D9488]" />
-            <div className="flex flex-col items-start justify-center">
-              <span className="text-sm font-bold text-slate-900 leading-none mb-1.5">100% DSGVO konform</span>
+            <div className="flex flex-col items-start justify-center text-left">
+              <span className="text-sm font-bold text-slate-900 leading-none mb-1.5">100% DSGVO-konform</span>
               <div className="w-full h-[4px] bg-[linear-gradient(90deg,black_33%,#DD0000_33%,#DD0000_66%,#FFCE00_66%)] rounded-full"></div>
               <span className="text-sm font-bold text-slate-900 leading-none mt-1.5">Serverstandort Deutschland</span>
             </div>
           </div>
+          <p className="text-[11px] sm:text-xs text-slate-500 font-medium leading-relaxed max-w-lg">
+            <span className="text-[#0D9488] font-bold">Ärztliche Schweigepflicht (§ 203 StGB):</span> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses. Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
+          </p>
         </div>
 
       </div>

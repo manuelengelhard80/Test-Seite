@@ -258,7 +258,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                  <span>Automatische E-Mail-Weiterleitung</span>
+                  <span>Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700">
                   <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />

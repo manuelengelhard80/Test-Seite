@@ -30,8 +30,8 @@ export const AllFeatures: React.FC<AllFeaturesProps> = ({ preview = false, onNav
     },
     {
       icon: Mail,
-      title: "E-Mail-Weiterleitung",
-      benefit: "Leitet Anliegen inklusive Transkript direkt an den richtigen Ansprechpartner."
+      title: "E-Mail-Benachrichtigung",
+      benefit: "Benachrichtigt sofort über neue Termine, Rückrufe & Rezepte – medizinische Details bleiben geschützt im Dashboard."
     },
     {
       icon: HelpCircle,

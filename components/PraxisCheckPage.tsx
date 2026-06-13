@@ -4,7 +4,7 @@ import {
   X, ArrowRight, ArrowLeft, Check, Sparkles, Lock, 
   ShieldCheck, Server, FileText, CheckCircle2, AlertCircle,
   Building, Mail, Phone, User, Star, Flame, Award, Heart, Shield, Landmark,
-  TrendingUp, Clock, Euro, ArrowUpRight
+  TrendingUp, Clock, Euro, ArrowUpRight, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -103,6 +103,7 @@ export const PraxisCheckPage: React.FC = () => {
     phone: '',
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [showTransparency, setShowTransparency] = useState<boolean>(false);
 
   // Calculations based on Question 1 answers
   const calculatePotentialSavings = () => {
@@ -576,7 +577,7 @@ export const PraxisCheckPage: React.FC = () => {
                             <CheckCircle2 size={12} className="text-[#0D9488]" /> Live-Auswertung abgeschlossen
                           </span>
                           <h1 className="text-3xl sm:text-4.5xl font-black text-slate-950 tracking-tight leading-none">
-                            📊 Ihr Praxis-Effizienz-Dashboard
+                            Ihr Praxis-Effizienz-Dashboard
                           </h1>
                         </div>
                       </div>
@@ -589,28 +590,168 @@ export const PraxisCheckPage: React.FC = () => {
                         <div className="space-y-6 relative z-10">
                           {/* Banner Table Header representation */}
                           <div className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-3 flex items-center gap-1.5">
-                            <span className="text-sm">🏆</span> EMPFOHLENE INFRASTRUKTUR
+                            <Award size={14} className="text-[#2DD4BF] shrink-0" /> EMPFOHLENE SYSTEMLÖSUNG
                           </div>
-                          
-                          <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-6">
-                            <div className="space-y-2 flex-1">
-                              <h2 className="text-2.5xl sm:text-3xl font-black tracking-tight leading-tight text-white">
-                                <span className="text-white">{savings.hauptprodukt}</span> + <span className="text-[#0D9488]">{savings.tarif}</span>
-                              </h2>
-                              <p className="text-slate-400 text-sm sm:text-base font-medium leading-relaxed italic">
-                                *Exakt abgestimmt auf Ihre funktionale Struktur und Ihr monatliches Anrufvolumen.*
+
+                          <div className="flex flex-col lg:flex-row gap-8 items-start justify-between">
+                            {/* Linke Seite: Produktinfos & Features */}
+                            <div className="space-y-5 flex-1">
+                              <div className="flex items-center gap-3">
+                                <div className="p-3 bg-slate-800/80 rounded-2xl text-[#2DD4BF] border border-slate-700">
+                                  {savings.hauptprodukt === 'Voice' ? (
+                                    <Phone size={24} />
+                                  ) : savings.hauptprodukt === 'Assist' ? (
+                                    <Clock size={24} />
+                                  ) : (
+                                    <Sparkles size={24} />
+                                  )}
+                                </div>
+                                <div className="text-left">
+                                  <h2 className="text-2.5xl sm:text-3.5xl font-black tracking-tight leading-none text-white mb-1">
+                                    Auxilium {savings.hauptprodukt}
+                                  </h2>
+                                  <p className="text-[#2DD4BF] text-xs sm:text-sm font-semibold tracking-wide uppercase">
+                                    {savings.hauptprodukt === 'Voice' 
+                                      ? 'KI-Telefonassistent für Erreichbarkeit' 
+                                      : savings.hauptprodukt === 'Assist' 
+                                      ? 'KI-Telefonassistent mit Terminorganisation' 
+                                      : 'Die vollintegrierte Praxis-KI'}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl text-left">
+                                {savings.hauptprodukt === 'Voice' 
+                                  ? 'Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis. Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.' 
+                                  : savings.hauptprodukt === 'Assist' 
+                                  ? 'Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung. Automatisiert Terminprozesse und reduziert den täglichen Telefonaufwand erheblich.' 
+                                  : 'Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund. Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.'}
                               </p>
+
+                              {/* Features der Startseite */}
+                              <div className="pt-2">
+                                <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 text-left">
+                                  Inbegriffene Produkt-Features:
+                                </p>
+                                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left">
+                                  {savings.hauptprodukt === 'Voice' && (
+                                    <>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>24/7 telefonische Erreichbarkeit</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Empathische Patientenkommunikation</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Notfall- & Dringlichkeitserkennung</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Rezept- & Überweisungsannahme</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>FAQ-Beantwortung (Sprechzeiten etc.)</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
+                                      </li>
+                                    </>
+                                  )}
+                                  {savings.hauptprodukt === 'Assist' && (
+                                    <>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200 font-medium">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Inklusive aller Voice-Features</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Vollautomatische Terminvergabe</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Lückensuche in der Praxissoftware</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Automatische Terminabsagen & Freigabe</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>SMS-Terminbestätigung an Patienten</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Optimierte Auslastung ohne Team-Zutun</span>
+                                      </li>
+                                    </>
+                                  )}
+                                  {savings.hauptprodukt === 'Puls' && (
+                                    <>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200 font-medium">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Inklusive aller Assist-Features</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Tiefe Praxissoftware-Schnittstelle</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>API-Anbindung für individuelle Systeme</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Automatisierter Recall-Service</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Vollständige Prozessautomatisierung</span>
+                                      </li>
+                                      <li className="flex items-start gap-2.5 text-xs text-slate-200">
+                                        <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
+                                        <span>Eigene Stimme (Voice Clone optional)</span>
+                                      </li>
+                                    </>
+                                  )}
+                                </ul>
+                              </div>
+
+                              {/* Tarifbereich - Kleiner & dezenter */}
+                              <div className="pt-4 border-t border-slate-800/80 mt-2 flex flex-col sm:flex-row sm:items-center gap-3">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800 border border-slate-700/50 rounded-xl text-xs text-slate-300">
+                                  <span className="font-bold text-[#2DD4BF]">Empfohlener Tarif:</span>
+                                  <span>{savings.tarif}</span>
+                                </div>
+                                <span className="text-slate-400 text-xs hidden sm:inline">•</span>
+                                <span className="text-slate-400 text-[11px] font-medium text-left">
+                                  Inklusive: {savings.inklusivminuten}
+                                </span>
+                              </div>
+
+                              {/* Info zum Onboarding - Klares Design */}
+                              <div className="bg-slate-800/40 border border-slate-800/80 p-3 rounded-xl flex items-start gap-2.5 text-[11px] text-slate-450 mt-2">
+                                <span className="text-xs text-[#2DD4BF] shrink-0 mt-0.5">💡</span>
+                                <p className="leading-normal text-left text-slate-300">
+                                  <strong>Wichtiger Buchungshinweis:</strong> Der monatliche Tarif wird erst im Laufe Ihres persönlichen, geführten Onboarding-Prozesses finalisiert und gebucht. Sie gehen jetzt kein Risiko ein.
+                                </p>
+                              </div>
                             </div>
 
-                            <div className="flex items-center justify-center lg:justify-end shrink-0 pt-2 lg:pt-0">
+                            {/* Rechte Seite: Call To Action Button mit modernem, passendem Design */}
+                            <div className="w-full lg:w-auto self-stretch lg:self-center shrink-0 flex items-center justify-center pt-2 lg:pt-0">
                               <a
                                 href={savings.link}
                                 target="_blank"
                                 referrerPolicy="no-referrer"
-                                className="w-full sm:w-auto text-center bg-gradient-to-r from-emerald-500 to-[#0D9488] hover:from-emerald-400 hover:to-[#0fab9d] text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:shadow-[#0D9488]/20 hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
+                                className="w-full lg:w-64 text-center bg-gradient-medical hover:shadow-glow text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
                                 id="btn-buy-recommendation"
                               >
-                                🚀 JETZT AKTIVIEREN & EINRICHTEN
+                                JETZT SYSTEM BUCHEN
                                 <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                               </a>
                             </div>
@@ -698,26 +839,26 @@ export const PraxisCheckPage: React.FC = () => {
                       </div>
 
                       {/* 3. DIREKTZUGANG BANNER */}
-                      <div className="bg-white border border-slate-200/85 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-emerald-500 to-[#0D9488]"></div>
+                      <div className="bg-gradient-to-br from-slate-50 via-white to-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#0D9488] to-[#0284C7]"></div>
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                          <div>
+                          <div className="text-left">
                             <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-wider uppercase flex items-center gap-2">
-                              🛒 IHR DIREKTZUGANG
+                              <Lock size={15} className="text-[#0D9488]" /> IHR DIREKTZUGANG
                             </h3>
                             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-2 font-medium">
                               Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:
                             </p>
                           </div>
-                          <div className="w-full md:w-auto shrink-0 flex items-center">
+                          <div className="w-full md:w-auto shrink-0 flex items-center justify-center">
                             <a
                               href={savings.link}
                               target="_blank"
                               referrerPolicy="no-referrer"
-                              className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-6 bg-[#0D9488] hover:bg-[#0b7f74] text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer"
+                              className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
                               id="btn-direct-access-link"
                             >
-                              👉 Dieses System direkt für die Praxis buchen
+                              Jetzt für die Praxis buchen
                               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                             </a>
                           </div>
@@ -728,68 +869,97 @@ export const PraxisCheckPage: React.FC = () => {
                       <div className="flex items-start gap-2.5 bg-slate-50 p-4.5 rounded-2xl border border-slate-200">
                         <span className="text-base text-slate-400 shrink-0 mt-0.5">ℹ️</span>
                         <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten. Sonstige Anrufanliegen (wie Rezepte) werden standardmäßig per E-Mail dokumentiert.
+                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten. Sonstige Anrufanliegen (wie Rezepte) erhalten eine sichere E-Mail-Benachrichtigung und werden datenschutzkonform direkt im Dashboard dokumentiert.
                         </p>
                       </div>
 
                       {/* COLLAPSIBLE OR NICE TRANSPARENCY REPORT */}
-                      <div className="bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-150 space-y-4">
-                        <h3 className="text-md sm:text-base font-bold text-slate-900 flex items-center gap-2">
-                           🔍 Transparenz-Bericht: So haben wir gerechnet
-                        </h3>
-                        
-                        <div className="space-y-4 text-slate-600 text-xs sm:text-[13px] leading-relaxed">
-                          <p>
-                            Damit Sie unser betriebswirtschaftliches Ergebnis exakt nachvollziehen können, legen wir den exakten mathematischen Rechenweg basierend auf Ihren Praxisdaten offen.
-                          </p>
-
-                          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-xs sm:text-sm space-y-4">
-                            <div>
-                              <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-2 font-sans">Ausgangsdaten Ihrer Praxis</p>
-                              <ul className="space-y-1.5 text-slate-700">
-                                <li>• Geschätztes Anrufvolumen: <strong>{savings.anrufe_tag} Anrufe / Tag</strong></li>
-                                <li>• Arbeitstage: <strong>{savings.workingDays} Tage / Monat</strong></li>
-                                <li>• KI-Abfangrate: <strong>80 %</strong> (pauschale Abfangrate)</li>
-                                <li>• Zeitaufwand pro Anruf: <strong>4 Minuten</strong> (inkl. Nachbearbeitungszeit)</li>
-                                <li>• Arbeitgeber-Stundensatz MFA (inkl. Lohnnebenkosten Stand 2026): <strong>25,00 € / Stunde</strong></li>
-                              </ul>
-                            </div>
-
-                            <div className="border-t border-slate-100 pt-3">
-                              <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 font-sans">Mathematischer Rechenweg</p>
-                              <ul className="space-y-3 text-slate-700">
-                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-                                  <span className="font-semibold text-slate-900 shrink-0">1. KI-Minuten:</span>
-                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
-                                    {savings.anrufe_tag} * 0.80 * 4 Min * {savings.workingDays} Tage = {savings.ki_minuten} Min. / Monat
-                                  </span>
-                                </li>
-                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-                                  <span className="font-semibold text-slate-900 shrink-0">2. Rüstzeit-bereinigter Zeitgewinn MFA:</span>
-                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
-                                    {savings.ki_minuten} Min. / 33 Min. = {savings.zeitgewinn_stunden} Std. / Monat
-                                  </span>
-                                </li>
-                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-                                  <span className="font-semibold text-slate-900 shrink-0">3. Budget-Entlastung:</span>
-                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
-                                    {savings.zeitgewinn_stunden} Std. * 25,00 € = {savings.brutto_ersparnis}
-                                  </span>
-                                </li>
-                                <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-                                  <span className="font-semibold text-slate-900 shrink-0">4. Reale Netto-Ersparnis:</span>
-                                  <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
-                                    {savings.brutto_ersparnis} - {savings.systemkosten} € Systemkosten = {savings.netto_ersparnis}
-                                  </span>
-                                </li>
-                              </ul>
+                      <div className="bg-slate-50 rounded-3xl border border-slate-150 overflow-hidden transition-all duration-300">
+                        <button
+                          type="button"
+                          onClick={() => setShowTransparency(!showTransparency)}
+                          className="w-full flex items-center justify-between p-6 sm:p-8 text-left hover:bg-slate-100/50 transition-colors focus:outline-none cursor-pointer"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl">🔍</span>
+                            <span className="text-sm sm:text-base font-black text-slate-900 uppercase tracking-wide">
+                              Transparenz-Bericht: So haben wir gerechnet
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline">
+                              {showTransparency ? 'Schließen' : 'Einblenden'}
+                            </span>
+                            <div className="p-1 rounded-full bg-slate-200/50 text-slate-600">
+                              {showTransparency ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                             </div>
                           </div>
+                        </button>
 
-                          <div className="bg-sky-50/60 p-4.5 rounded-xl border border-[#3ba2d8]/15 text-xs sm:text-sm text-slate-705">
-                            <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von 25,- € pro Stunde. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> zurück. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
-                          </div>
-                        </div>
+                        <AnimatePresence initial={false}>
+                          {showTransparency && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: 'easeInOut' }}
+                              className="overflow-hidden"
+                            >
+                              <div className="p-6 sm:p-8 pt-0 space-y-4 border-t border-slate-200/50">
+                                <p className="text-slate-600 text-xs sm:text-[13px] leading-relaxed">
+                                  Damit Sie unser betriebswirtschaftliches Ergebnis exakt nachvollziehen können, legen wir den exakten mathematischen Rechenweg basierend auf Ihren Praxisdaten offen.
+                                </p>
+
+                                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-xs sm:text-sm space-y-4">
+                                  <div>
+                                    <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-2 font-sans">Ausgangsdaten Ihrer Praxis</p>
+                                    <ul className="space-y-1.5 text-slate-700">
+                                      <li>• Geschätztes Anrufvolumen: <strong>{savings.anrufe_tag} Anrufe / Tag</strong></li>
+                                      <li>• Arbeitstage: <strong>{savings.workingDays} Tage / Monat</strong></li>
+                                      <li>• KI-Abfangrate: <strong>80 %</strong> (pauschale Abfangrate)</li>
+                                      <li>• Zeitaufwand pro Anruf: <strong>4 Minuten</strong> (inkl. Nachbearbeitungszeit)</li>
+                                      <li>• Arbeitgeber-Stundensatz MFA (inkl. Lohnnebenkosten Stand 2026): <strong>25,00 € / Stunde</strong></li>
+                                    </ul>
+                                  </div>
+
+                                  <div className="border-t border-slate-100 pt-3">
+                                    <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 font-sans">Mathematischer Rechenweg</p>
+                                    <ul className="space-y-3 text-slate-700">
+                                      <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                        <span className="font-semibold text-slate-900 shrink-0">1. KI-Minuten:</span>
+                                        <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                          {savings.anrufe_tag} * 0.80 * 4 Min * {savings.workingDays} Tage = {savings.ki_minuten} Min. / Monat
+                                        </span>
+                                      </li>
+                                      <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                        <span className="font-semibold text-slate-900 shrink-0">2. Rüstzeit-bereinigter Zeitgewinn MFA:</span>
+                                        <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                          {savings.ki_minuten} Min. / 33 Min. = {savings.zeitgewinn_stunden} Std. / Monat
+                                        </span>
+                                      </li>
+                                      <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                        <span className="font-semibold text-slate-900 shrink-0">3. Budget-Entlastung:</span>
+                                        <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                          {savings.zeitgewinn_stunden} Std. * 25,00 € = {savings.brutto_ersparnis}
+                                        </span>
+                                      </li>
+                                      <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+                                        <span className="font-semibold text-slate-900 shrink-0">4. Reale Netto-Ersparnis:</span>
+                                        <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
+                                          {savings.brutto_ersparnis} - {savings.systemkosten} € Systemkosten = {savings.netto_ersparnis}
+                                        </span>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+
+                                <div className="bg-emerald-50/60 p-4.5 rounded-xl border border-[#0D9488]/15 text-xs sm:text-sm text-slate-705">
+                                  <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von 25,- € pro Stunde. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> zurück. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       {/* 100% DSGVO-konformer Datenschutz */}
@@ -800,20 +970,20 @@ export const PraxisCheckPage: React.FC = () => {
                         
                         <div className="space-y-4 text-xs sm:text-[13px] leading-relaxed">
                           <p>
-                            <strong className="text-sky-400 block mb-0.5">Deutscher Server-Standort:</strong> Sämtliche Sprachverarbeitungen und Daten laufen auf hochsicheren Servern in Deutschland.
+                            <strong className="text-emerald-400 block mb-0.5">Deutscher Server-Standort:</strong> Sämtliche Sprachverarbeitungen und Daten laufen auf hochsicheren Servern in Deutschland.
                           </p>
                           <p>
-                            <strong className="text-sky-400 block mb-0.5">Ärztliche Schweigepflicht:</strong> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses (§ 203 StGB). Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
+                            <strong className="text-emerald-400 block mb-0.5">Ärztliche Schweigepflicht:</strong> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses (§ 203 StGB). Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
                           </p>
                         </div>
                       </div>
 
-                      {/* Restart Button */}
+                       {/* Restart Button */}
                       <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <button
                           type="button"
                           onClick={handleBackToStart}
-                          className="w-full sm:w-auto bg-[#3ba2d8] hover:bg-[#2c8fc7] text-white font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full sm:w-auto bg-teal-50 hover:bg-teal-100 text-[#0D9488] border border-teal-100 font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                         >
                           Zurück zur Startseite <ArrowRight size={14} />
                         </button>
@@ -824,7 +994,7 @@ export const PraxisCheckPage: React.FC = () => {
                             setAnswers({});
                             setLeadForm({ name: '', praxis: '', email: '', phone: '' });
                           }}
-                          className="w-full sm:w-auto border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm transition-all flex items-center justify-center gap-1 cursor-pointer"
+                          className="w-full sm:w-auto bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-8 rounded-2xl text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
                         >
                           Check wiederholen
                         </button>

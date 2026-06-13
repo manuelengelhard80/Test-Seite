@@ -18,7 +18,7 @@ export const FeatureFocus: React.FC = () => {
             
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight">
               Verwandeln Sie Ihr Telefon vom <br/>
-              <span className="text-gradient">Störfaktor zum Erfolgstreiber.</span>
+              <span className="text-gradient">Stressfaktor zum Erfolgstreiber.</span>
             </h2>
             
             <div className="text-lg text-slate-500 leading-relaxed space-y-4">
@@ -70,7 +70,7 @@ export const FeatureFocus: React.FC = () => {
                   <CheckCircle2 size={20} className="text-primary-dark" />
                 </div>
                 <div className="w-full">
-                  <h4 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-primary transition-colors">Kein Telefonklingeln am Empfang</h4>
+                  <h4 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-primary transition-colors">Kein unnötiges Telefonklingeln am Empfang</h4>
                   <p className="text-slate-500 leading-relaxed">Eine ruhige Atmosphäre im Wartebereich ohne ständige Unterbrechungen schafft Vertrauen und Professionalität.</p>
                 </div>
               </li>
