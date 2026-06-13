@@ -61,7 +61,7 @@ export const Hero: React.FC = () => {
         </h1>
 
         {/* Subheadline/Body Copy */}
-        <div className="text-sm sm:text-base text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed">
+        <div className="text-base sm:text-lg text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed">
           <p className="mb-4 font-medium text-slate-700">
             Das Telefon klingelt ununterbrochen, das Wartezimmer platzt aus allen Nähten<br />
             und Ihr Team arbeitet längst am Limit?
