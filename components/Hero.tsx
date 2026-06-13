@@ -61,14 +61,14 @@ export const Hero: React.FC = () => {
         </h1>
 
         {/* Subheadline/Body Copy */}
-        <div className="text-lg text-slate-500 mb-10 max-w-4xl mx-auto leading-relaxed">
+        <div className="text-sm sm:text-base text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed">
           <p className="mb-4 font-medium text-slate-700">
             Das Telefon klingelt ununterbrochen, das Wartezimmer platzt aus allen Nähten<br />
             und Ihr Team arbeitet längst am Limit?
           </p>
           <p className="mb-4">
             Stoppen Sie die ständigen Unterbrechungen und entlasten Sie jetzt Ihr Praxispersonal.<br />
-            Mit unserem smarten KI-Telefonassistenten, speziell entwickelt für die moderne Arztpraxis, verpassen Sie kein Anliegen Ihrer Patienten mehr – und Ihr Team bleibt dabei gelassen und entspannt.
+            Mit Ihrem smarten KI-Telefonassistenten, speziell entwickelt für die moderne Arztpraxis, verpassen Sie kein Anliegen Ihrer Patienten mehr – und Ihr Team bleibt dabei gelassen und entspannt.
           </p>
           <p>
             Ihr neuer KI-Telefonassistent ist 24/7 erreichbar, nimmt alle Anrufe entgegen, vereinbart automatisch Termine, kümmert sich um Rezept- und Überweisungsanfragen – damit Ihr Team endlich wieder durchatmen kann.
