@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight, ChevronDown, Stethoscope, Heart, Baby, Eye, Activity, Brain, Smile, Bone, Check, Ear, HeartPulse, BrainCircuit, Mic2, TestTube, LogIn } from 'lucide-react';
+import { Menu, X, ArrowRight, ChevronDown, Stethoscope, Heart, Baby, Eye, Activity, Brain, Smile, Bone, Check, Ear, HeartPulse, BrainCircuit, Mic2, TestTube, LogIn, Shield, Lock } from 'lucide-react';
 
 
 interface NavbarProps {
@@ -62,43 +62,46 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
     <>
       <nav className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b
-        ${scrolled ? 'bg-white border-slate-200 py-3 shadow-sm' : 'bg-white border-transparent py-5'}
+        ${scrolled ? 'bg-white border-slate-200 py-1.5 shadow-sm' : 'bg-white border-transparent py-4 lg:py-5'}
       `}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between relative h-10">
+          <div className="flex flex-col lg:items-center justify-center relative min-h-[4rem] lg:py-1.5 select-none">
             
             {/* Mobile Menu Toggle (Left aligned on mobile) */}
-            <div className="lg:hidden flex-shrink-0 z-20">
+            <div className="lg:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20">
               <button onClick={() => setMobileOpen(!mobileOpen)} className="text-slate-600 p-1">
                 {mobileOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
 
             {/* Logo */}
-            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:relative lg:left-0 lg:top-0 lg:transform-none lg:translate-x-0 lg:translate-y-0 flex items-center gap-1 z-10 cursor-pointer" onClick={() => handleNavClick('home')}>
-              <span className="relative flex h-1.5 w-1.5 mt-0.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D9488] shadow-sm"></span>
-              </span>
-              <span className="font-bold text-gradient leading-none text-lg self-center">Auxilium Assist</span>
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:relative lg:left-0 lg:top-0 lg:transform-none lg:translate-x-0 lg:translate-y-0 flex flex-col items-center z-10 cursor-pointer justify-center text-center" onClick={() => handleNavClick('home')}>
+              <div className="flex items-center gap-1.5 justify-center">
+                <span className="relative flex h-2 w-2 mt-0.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488] shadow-sm"></span>
+                </span>
+                <span className="font-extrabold text-gradient leading-none text-lg md:text-xl self-center">Auxilium Assist</span>
+              </div>
+              <span className="text-[11.5px] md:text-[12.5px] text-slate-500 mt-1 leading-none tracking-tight font-semibold text-center whitespace-nowrap hidden sm:block">Der smarte KI-Telefonassistent für die Arztpraxis</span>
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-1 absolute left-1/2 transform -translate-x-1/2 h-full">
+            <div className="hidden lg:flex items-center justify-center gap-1 w-full z-10 mt-3.5 pb-0.5">
               
               {/* Start Link */}
-              <button onClick={() => handleNavClick('home')} className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">
+              <button onClick={() => handleNavClick('home')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Start
               </button>
 
               {/* Hörproben Link */}
-              <button onClick={() => handleNavClick('audio')} className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">
+              <button onClick={() => handleNavClick('audio')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Hörproben
               </button>
 
               {/* Dropdown Menu for Lösungen */}
               <div className="relative group h-full flex items-center">
-                <button className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-slate-600 group-hover:text-teal-600 transition-colors focus:outline-none">
+                <button className="flex items-center gap-1 px-4 h-8 text-sm font-medium text-slate-600 group-hover:text-teal-600 transition-colors focus:outline-none">
                   Lösungen <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
                 </button>
                 
@@ -126,22 +129,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               </div>
 
               {/* Funktionen Link */}
-              <button onClick={() => handleNavClick('features')} className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">
+              <button onClick={() => handleNavClick('features')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Funktionen
               </button>
 
-              <button onClick={() => handleNavClick('pricing')} className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">
+              <button onClick={() => handleNavClick('pricing')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Preise
               </button>
               
-              <button onClick={() => handleNavClick('security')} className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap">
+              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap inline-flex items-center">
                 <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
                 <span>DSGVO konform</span>
               </button>
             </div>
-
-            {/* Desktop CTA removed */}
-            <div className="hidden lg:block w-10"></div>
 
             {/* Empty spacer for mobile */}
             <div className="lg:hidden w-8"></div> 

@@ -56,8 +56,8 @@ export const Hero: React.FC = () => {
 
         {/* Headline */}
         <h1 className="font-extrabold tracking-tight text-slate-900 mb-6 max-w-6xl mx-auto leading-[1.25]">
-          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-extrabold">Endlich Ruhe am Telefon...</span>
-          <span className="text-gradient text-3xl md:text-4xl font-extrabold">und mehr Zeit für Ihre Patienten.</span>
+          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-extrabold">Endlich Ruhe am Telefon.</span>
+          <span className="text-gradient text-3xl md:text-4xl font-extrabold">Mehr Zeit für Patienten.</span>
         </h1>
 
         {/* Subheadline/Body Copy */}

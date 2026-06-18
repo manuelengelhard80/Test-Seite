@@ -18,17 +18,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="bg-white border-t border-slate-100 pt-16 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10 mb-16">
           
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
-            <div className="flex items-center gap-[3px] mb-6 cursor-pointer" onClick={(e) => handleNav(e, 'home')}>
+            <div className="flex items-center gap-1.5 mb-6 cursor-pointer" onClick={(e) => handleNav(e, 'home')}>
               {/* Pulsing Dot Logo */}
-              <span className="relative flex h-1.5 w-1.5 mt-[3px]">
+              <span className="relative flex h-2 w-2 mt-[3px]">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0D9488] shadow-sm"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488] shadow-sm"></span>
               </span>
-              <span className="font-bold text-gradient text-lg leading-none">Auxilium Assist</span>
+              <span className="font-extrabold text-gradient text-xl leading-none">Auxilium Assist</span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed max-w-xs mb-6">
               Der KI-Telefonassistent für die moderne Arztpraxis. Entlastung, Erreichbarkeit und Effizienz durch intelligente Automatisierung.
@@ -79,6 +79,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={(e) => handleNav(e, 'agb')} className="hover:text-primary transition-colors text-left">AGB</button></li>
               <li><button onClick={(e) => handleNav(e, 'home')} className="hover:text-primary transition-colors text-left">Cookie-Einstellungen</button></li>
             </ul>
+          </div>
+
+          {/* DSGVO & Schweigepflicht Column */}
+          <div className="flex flex-col items-start justify-start">
+            <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Sicherheit</h4>
+            <div className="relative mt-1">
+              <img 
+                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-dsgvo.png%3Frefresh%3D202606180543&t=202606180543" 
+                alt="DSGVO & Schweigepflicht" 
+                className="h-[135px] md:h-[145px] lg:h-[155px] w-auto object-contain opacity-95 hover:opacity-100 transition-opacity" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
 
           {/* Dankeseiten Column */}
