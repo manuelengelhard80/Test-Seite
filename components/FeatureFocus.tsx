@@ -110,9 +110,10 @@ export const FeatureFocus: React.FC = () => {
               </p>
               <button 
                 onClick={() => { navigate('/praxis-check'); window.scrollTo(0, 0); }}
-                className="text-primary-dark font-bold text-lg hover:text-primary transition-colors inline-flex items-center gap-2 group cursor-pointer"
+                className="font-bold text-lg hover:opacity-80 transition-opacity inline-flex items-center gap-2 group cursor-pointer"
               >
-                Jetzt zum 3-Minuten-Praxis-Check! <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                <span className="text-gradient py-1">Jetzt zum 3-Minuten-Praxis-Check!</span>
+                <ArrowRight className="text-[#0D9488] group-hover:translate-x-1 transition-transform shrink-0" size={20} />
               </button>
             </div>
           </div>

@@ -10,6 +10,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -55,6 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       window.location.href = targetPath;
     }
     setMobileOpen(false);
+    setMobileSolutionsOpen(false);
     window.scrollTo(0,0);
   };
 
@@ -67,10 +69,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:items-center justify-center relative min-h-[4rem] lg:py-1.5 select-none">
             
-            {/* Mobile Menu Toggle (Left aligned on mobile) */}
-            <div className="lg:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20">
-              <button onClick={() => setMobileOpen(!mobileOpen)} className="text-slate-600 p-1">
-                {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+            {/* Mobile Menu Toggle (Right aligned on mobile) */}
+            <div className="lg:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20">
+              <button onClick={() => setMobileOpen(!mobileOpen)} className="text-slate-600 p-2 hover:text-slate-900 transition-colors">
+                {mobileOpen ? <X size={22} className="stroke-[2.5]" /> : <Menu size={22} className="stroke-[2.5]" />}
               </button>
             </div>
 
@@ -152,29 +154,71 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-white pt-24 px-6 animate-in fade-in slide-in-from-top-5 duration-200 overflow-y-auto pb-10">
-          <div className="flex flex-col gap-6 text-center pb-10">
-            <button onClick={() => handleNavClick('home')} className="text-2xl font-semibold text-slate-800">Start</button>
-            <button onClick={() => handleNavClick('audio')} className="text-2xl font-semibold text-slate-800">Hörproben</button>
-            <button onClick={() => handleNavClick('features')} className="text-2xl font-semibold text-slate-800">Funktionen</button>
+          <div className="flex flex-col max-w-md mx-auto pt-4 pb-10 text-left">
             
-            <div className="text-left bg-slate-50 p-6 rounded-2xl">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 block">Lösungen für</span>
-              <div className="grid grid-cols-1 gap-3">
-                 {doctorSpecialties.map((doc, idx) => (
-                    <button key={idx} onClick={() => handleNavClick(doc.id)} className="flex items-center gap-3 text-slate-700 font-medium text-left w-full">
-                      <doc.icon size={16} className="text-teal-500 shrink-0" /> {doc.name}
-                    </button>
-                 ))}
-              </div>
-            </div>
-
-            <button onClick={() => handleNavClick('pricing')} className="text-2xl font-semibold text-slate-800">Preise</button>
-
-            <button onClick={() => handleNavClick('security')} className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-1.5 whitespace-nowrap">
-              <Check size={28} className="text-emerald-500 shrink-0" strokeWidth={3} />
-              DSGVO konform
+            <button 
+              onClick={() => handleNavClick('home')} 
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Start</span>
+            </button>
+            
+            <button 
+              onClick={() => handleNavClick('audio')} 
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Hörproben</span>
             </button>
 
+            {/* Collapsible Lösungen structure */}
+            <div className="border-b border-slate-100">
+              <button 
+                onClick={() => setMobileSolutionsOpen(!mobileSolutionsOpen)} 
+                className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 w-full flex items-center justify-between outline-none"
+              >
+                <span>Lösungen für</span>
+                <ChevronDown size={14} className={`text-slate-400 transition-transform duration-250 shrink-0 ${mobileSolutionsOpen ? 'rotate-180 text-teal-600' : ''}`} />
+              </button>
+              
+              {mobileSolutionsOpen && (
+                <div className="pl-3 pr-2 pb-3.5 pt-1.5 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {doctorSpecialties
+                    .filter(doc => ['allgemeinmedizin', 'zahnmedizin', 'dermatologie', 'orthopaedie'].includes(doc.id))
+                    .map((doc, idx) => (
+                      <button 
+                        key={idx} 
+                        onClick={() => handleNavClick(doc.id)} 
+                        className="flex items-center gap-2.5 text-slate-500 hover:text-teal-600 font-semibold text-left w-full text-xs py-1 transition-colors"
+                      >
+                        <doc.icon size={13} className="text-teal-500 shrink-0" />
+                        <span>{doc.name}</span>
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            <button 
+              onClick={() => handleNavClick('features')} 
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Funktionen</span>
+            </button>
+            
+            <button 
+              onClick={() => handleNavClick('pricing')} 
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Preise</span>
+            </button>
+
+            <button 
+              onClick={() => handleNavClick('security')} 
+              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-2 w-full"
+            >
+              <Check size={14} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <span>DSGVO konform</span>
+            </button>
           </div>
         </div>
       )}
