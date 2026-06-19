@@ -89,21 +89,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center justify-center gap-1 w-full z-10 mt-3.5 pb-0.5">
+            <div className="hidden lg:flex items-center justify-center lg:gap-0.5 xl:gap-1.5 w-full z-10 mt-3.5 pb-0.5 flex-wrap xl:flex-nowrap">
               
               {/* Start Link */}
-              <button onClick={() => handleNavClick('home')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+              <button onClick={() => handleNavClick('home')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Start
               </button>
-
-              {/* Hörproben Link */}
-              <button onClick={() => handleNavClick('audio')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+ 
+               {/* Hörproben Link */}
+              <button onClick={() => handleNavClick('audio')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Hörproben
               </button>
-
-              {/* Dropdown Menu for Lösungen */}
+ 
+               {/* Dropdown Menu for Lösungen */}
               <div className="relative group h-full flex items-center">
-                <button className="flex items-center gap-1 px-4 h-8 text-sm font-medium text-slate-600 group-hover:text-teal-600 transition-colors focus:outline-none">
+                <button className="flex items-center gap-1 px-2 xl:px-4 h-8 text-[13px] xl:text-sm font-medium text-slate-600 group-hover:text-teal-600 transition-colors focus:outline-none">
                   Lösungen <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
                 </button>
                 
@@ -129,29 +129,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                   </div>
                 </div>
               </div>
-
-              {/* Funktionen Link */}
-              <button onClick={() => handleNavClick('features')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+ 
+               {/* Funktionen Link */}
+              <button onClick={() => handleNavClick('features')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Funktionen
               </button>
-
-              <button onClick={() => handleNavClick('pricing')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+ 
+               <button onClick={() => handleNavClick('pricing')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Preise
               </button>
               
-              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1.5 whitespace-nowrap inline-flex items-center">
+              <button onClick={() => handleNavClick('security')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap inline-flex items-center">
                 <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
                 <span>DSGVO-konform</span>
               </button>
-
-              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1.5 whitespace-nowrap inline-flex items-center">
+ 
+               <button onClick={() => handleNavClick('security')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap inline-flex items-center">
                 <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
                 <span>§ 203-konform</span>
               </button>
-
-              <button 
+ 
+               <button 
                 onClick={() => handleNavClick('praxis-check')} 
-                className="ml-2 font-bold underline decoration-[#0D9488] underline-offset-4 hover:opacity-80 transition-opacity whitespace-nowrap text-sm inline-flex items-center"
+                className="ml-1 xl:ml-2 font-bold underline decoration-[#0D9488] underline-offset-4 hover:opacity-80 transition-opacity whitespace-nowrap text-[13px] xl:text-sm inline-flex items-center"
               >
                 <span className="text-gradient">3-Minuten-Praxis-Check</span>
               </button>

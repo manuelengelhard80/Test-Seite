@@ -26,9 +26,9 @@ import { CookieConsent } from './components/CookieConsent';
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary-light selection:text-primary-dark">
+    <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary-light selection:text-primary-dark overflow-x-hidden w-full relative">
       <Navbar onNavigate={onNavigate} />
-      <main>
+      <main className="w-full overflow-x-hidden">
         <Outlet />
       </main>
       <Footer onNavigate={onNavigate} />
