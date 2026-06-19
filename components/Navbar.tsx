@@ -144,6 +144,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 <span>DSGVO-konform</span>
               </button>
 
+              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1.5 whitespace-nowrap inline-flex items-center">
+                <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
+                <span>§ 203-konform</span>
+              </button>
+
               <button 
                 onClick={() => handleNavClick('praxis-check')} 
                 className="ml-2 font-bold underline decoration-[#0D9488] underline-offset-4 hover:opacity-80 transition-opacity whitespace-nowrap text-sm inline-flex items-center"
@@ -226,6 +231,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             >
               <Check size={15} className="text-emerald-500 shrink-0" strokeWidth={3} />
               <span>DSGVO-konform</span>
+            </button>
+
+            <button 
+              onClick={() => handleNavClick('security')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-1.5 w-full"
+            >
+              <Check size={15} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <span>§ 203-konform</span>
             </button>
  
             <div className="py-3 border-b border-slate-100 w-full text-left">
