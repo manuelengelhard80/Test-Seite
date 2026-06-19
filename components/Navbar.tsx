@@ -77,13 +77,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             {/* Logo */}
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:relative lg:left-0 lg:top-0 lg:transform-none lg:translate-x-0 lg:translate-y-0 flex flex-col items-center z-10 cursor-pointer justify-center text-center" onClick={() => handleNavClick('home')}>
               <div className="flex items-center gap-1.5 justify-center">
-                <span className="relative flex h-2 w-2 mt-0.5">
+                <span className="relative flex h-2.5 w-2.5 mt-0.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488] shadow-sm"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
                 </span>
-                <span className="font-extrabold text-gradient leading-none text-lg md:text-xl self-center">Auxilium Assist</span>
+                <span className="font-extrabold text-gradient leading-none text-xl lg:text-2xl self-center">Auxilium Assist</span>
               </div>
-              <span className="text-[11.5px] md:text-[12.5px] text-slate-500 mt-1 leading-none tracking-tight font-semibold text-center whitespace-nowrap hidden sm:block">Der smarte KI-Telefonassistent für die Arztpraxis</span>
+              <span className="text-[8.5px] min-[375px]:text-[10px] sm:text-[11.5px] md:text-[12.5px] text-slate-500 mt-1.5 leading-none tracking-wide font-semibold text-center whitespace-nowrap">Der smarte KI-Telefonassistent für die Arztpraxis</span>
             </div>
 
             {/* Desktop Menu */}
