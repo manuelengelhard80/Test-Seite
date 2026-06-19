@@ -154,69 +154,67 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-white pt-24 px-6 animate-in fade-in slide-in-from-top-5 duration-200 overflow-y-auto pb-10">
-          <div className="flex flex-col max-w-md mx-auto pt-4 pb-10 text-left">
+          <div className="flex flex-col max-w-sm mx-auto pt-6 pb-10 text-left gap-1">
             
             <button 
               onClick={() => handleNavClick('home')} 
-              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
             >
               <span>Start</span>
             </button>
             
             <button 
               onClick={() => handleNavClick('audio')} 
-              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
             >
               <span>Hörproben</span>
             </button>
 
-            {/* Collapsible Lösungen structure */}
+            {/* Collapsible Lösungen structure showing the complete specialties list */}
             <div className="border-b border-slate-100">
               <button 
                 onClick={() => setMobileSolutionsOpen(!mobileSolutionsOpen)} 
-                className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 w-full flex items-center justify-between outline-none"
+                className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 w-full flex items-center justify-between outline-none"
               >
-                <span>Lösungen für</span>
-                <ChevronDown size={14} className={`text-slate-400 transition-transform duration-250 shrink-0 ${mobileSolutionsOpen ? 'rotate-180 text-teal-600' : ''}`} />
+                <span>Lösungen</span>
+                <ChevronDown size={16} className={`text-slate-400 transition-transform duration-250 shrink-0 ${mobileSolutionsOpen ? 'rotate-180 text-teal-600' : ''}`} />
               </button>
               
               {mobileSolutionsOpen && (
-                <div className="pl-3 pr-2 pb-3.5 pt-1.5 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {doctorSpecialties
-                    .filter(doc => ['allgemeinmedizin', 'zahnmedizin', 'dermatologie', 'orthopaedie'].includes(doc.id))
-                    .map((doc, idx) => (
-                      <button 
-                        key={idx} 
-                        onClick={() => handleNavClick(doc.id)} 
-                        className="flex items-center gap-2.5 text-slate-500 hover:text-teal-600 font-semibold text-left w-full text-xs py-1 transition-colors"
-                      >
-                        <doc.icon size={13} className="text-teal-500 shrink-0" />
-                        <span>{doc.name}</span>
-                      </button>
-                    ))}
+                <div className="pl-2 pr-1 pb-4 pt-2 grid grid-cols-2 gap-x-4 gap-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {doctorSpecialties.map((doc, idx) => (
+                    <button 
+                      key={idx} 
+                      onClick={() => handleNavClick(doc.id)} 
+                      className="flex items-center gap-2 text-slate-400 hover:text-teal-600 font-medium text-left w-full text-xs py-0.5 transition-colors"
+                    >
+                      <doc.icon size={13} className="text-teal-500 shrink-0 opacity-80" />
+                      <span className="truncate">{doc.name}</span>
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
 
             <button 
               onClick={() => handleNavClick('features')} 
-              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
             >
               <span>Funktionen</span>
             </button>
             
             <button 
               onClick={() => handleNavClick('pricing')} 
-              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
             >
               <span>Preise</span>
             </button>
 
             <button 
               onClick={() => handleNavClick('security')} 
-              className="text-xs font-extrabold uppercase tracking-wider text-slate-800 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-2 w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-2 w-full"
             >
-              <Check size={14} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <Check size={15} className="text-emerald-500 shrink-0" strokeWidth={3} />
               <span>DSGVO konform</span>
             </button>
           </div>
