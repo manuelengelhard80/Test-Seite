@@ -139,9 +139,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 Preise
               </button>
               
-              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap inline-flex items-center">
+              <button onClick={() => handleNavClick('security')} className="h-8 px-4 rounded-full text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1.5 whitespace-nowrap inline-flex items-center">
                 <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
-                <span>DSGVO konform</span>
+                <span>DSGVO-konform</span>
+              </button>
+
+              <button 
+                onClick={() => handleNavClick('praxis-check')} 
+                className="ml-2 font-bold underline decoration-[#0D9488] underline-offset-4 hover:opacity-80 transition-opacity whitespace-nowrap text-sm inline-flex items-center"
+              >
+                <span className="text-gradient">3-Minuten-Praxis-Check</span>
               </button>
             </div>
 
@@ -154,7 +161,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-white pt-24 px-6 animate-in fade-in slide-in-from-top-5 duration-200 overflow-y-auto pb-10">
-          <div className="flex flex-col max-w-sm mx-auto pt-6 pb-10 text-left gap-1">
+          <div className="flex flex-col max-w-sm mx-auto pt-4 pb-10 text-left gap-1">
+            
+            {/* HAUPTMENÜ SECTION */}
+            <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 mt-4">Hauptmenü</h4>
             
             <button 
               onClick={() => handleNavClick('home')} 
@@ -169,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             >
               <span>Hörproben</span>
             </button>
-
+ 
             {/* Collapsible Lösungen structure showing the complete specialties list */}
             <div className="border-b border-slate-100">
               <button 
@@ -195,7 +205,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 </div>
               )}
             </div>
-
+ 
             <button 
               onClick={() => handleNavClick('features')} 
               className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
@@ -209,14 +219,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             >
               <span>Preise</span>
             </button>
-
+ 
             <button 
               onClick={() => handleNavClick('security')} 
-              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-1.5 w-full"
             >
-              <span>DSGVO</span>
+              <Check size={15} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <span>DSGVO-konform</span>
             </button>
-
+ 
             <div className="py-3 border-b border-slate-100 w-full text-left">
               <button 
                 onClick={() => handleNavClick('praxis-check')} 
@@ -225,6 +236,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 <span className="text-gradient">3-Minuten-Praxis-Check</span>
               </button>
             </div>
+
+            {/* RECHTLICHES SECTION */}
+            <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 mt-8">Rechtliches</h4>
+            
+            <button 
+              onClick={() => handleNavClick('impressum')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 w-full"
+            >
+              Impressum
+            </button>
+            
+            <button 
+              onClick={() => handleNavClick('privacy')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 w-full"
+            >
+              Datenschutz
+            </button>
+
+            <button 
+              onClick={() => handleNavClick('agb')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 w-full"
+            >
+              AGB
+            </button>
+
+            <button 
+              onClick={() => handleNavClick('home')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 w-full"
+            >
+              Cookie-Einstellungen
+            </button>
           </div>
         </div>
       )}
