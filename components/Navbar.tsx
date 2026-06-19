@@ -210,6 +210,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               <span>Preise</span>
             </button>
 
+            <div className="py-3 border-b border-slate-100 w-full text-left">
+              <button 
+                onClick={() => handleNavClick('praxis-check')} 
+                className="font-bold underline decoration-[#0D9488] underline-offset-4 hover:opacity-80 transition-opacity text-left text-sm"
+              >
+                <span className="text-gradient">3-Minuten-Praxis-Check</span>
+              </button>
+            </div>
+
             <button 
               onClick={() => handleNavClick('security')} 
               className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center gap-2 w-full"
