@@ -86,9 +86,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Sicherheit</h4>
             <div className="relative mt-1">
               <img 
-                src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/auxilium-dsgvo.png%3Frefresh%3D202606180543&t=202606180543" 
+                src="https://images.weserv.nl/?url=http%3A%2F%2F2bmedia-marketing.de%2Fbilder%2Fauxilium-dsgvo.png%3Fv%3Dfresh20260619_2&nocache=fresh20260619_2" 
                 alt="DSGVO & Schweigepflicht" 
-                className="h-[135px] md:h-[145px] lg:h-[155px] w-auto object-contain opacity-95 hover:opacity-100 transition-opacity" 
+                className="h-[86px] md:h-[93px] lg:h-[99px] w-auto object-contain opacity-95 hover:opacity-100 transition-opacity" 
                 referrerPolicy="no-referrer"
               />
             </div>
