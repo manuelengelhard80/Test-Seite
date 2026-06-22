@@ -22,6 +22,7 @@ import { AGBPage } from './components/AGBPage';
 import { PrivacyPage } from './components/PrivacyPage';
 import { ThankYouPage } from './components/ThankYouPage';
 import { CookieConsent } from './components/CookieConsent';
+import { RechnerPage } from './components/RechnerPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -101,6 +102,7 @@ const AppContent: React.FC = () => {
       'audio': '/hörproben',
       'security': '/dsgvo',
       'pricing': '/preise',
+      'rechner': '/rechner',
       'impressum': '/impressum',
       'agb': '/agb',
       'privacy': '/datenschutz',
@@ -156,6 +158,8 @@ const AppContent: React.FC = () => {
         
         <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} />} />
         <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/rechner" element={<RechnerPage onBack={() => handleNavigate('home')} />} />
         
         <Route path="/impressum" element={<ImpressumPage onBack={() => handleNavigate('home')} />} />
         

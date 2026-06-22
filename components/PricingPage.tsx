@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { ArrowLeft, Tag, CheckCircle2, Rocket, Zap, Hospital, Star, Info } from 'lucide-react';
-import { SavingsCalculator } from './SavingsCalculator';
 
 interface PricingPageProps {
   onBack: () => void;
@@ -89,11 +88,6 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack }) => {
           </button>
         </div>
       </section>
-
-      {/* Wirtschaftlichkeits-Rechner - Oben positioniert */}
-      <div className="bg-white">
-        <SavingsCalculator />
-      </div>
 
       {/* Sektion: Tarifübersicht & Volumen-Pakete - Unten positioniert */}
       <section className="bg-slate-50 py-24 border-y border-slate-100">
