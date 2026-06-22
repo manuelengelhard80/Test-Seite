@@ -92,7 +92,7 @@ export const CookieConsent: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Erforderlich für Kernfunktionen ausführen, notwendig für eine korrekte Nutzung der Seite.
+                          Diese Cookies und technische Funktionen sind zwingend für den sicheren Betrieb der Website, die Speicherung Ihrer Privatsphäre-Einstellungen sowie die reibungslose Bereitstellung von Basisfunktionen wie der Seitennavigation und des Praxis-Checks erforderlich.
                         </p>
                       </div>
                       <div className="relative inline-flex items-center shrink-0">
@@ -110,7 +110,7 @@ export const CookieConsent: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Ermöglicht uns, die Nutzung anonymisiert zu messen zwecks Optimierung.
+                          Ermöglicht uns die vollkommen anonymisierte Auswertung von Website-Aufrufen, Klickpfaden und Nutzungsinteraktionen. Hierdurch können wir Fehler beheben, die Benutzerfreundlichkeit verbessern und unser Informationsangebot kontinuierlich für Sie optimieren.
                         </p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer shrink-0 select-none">
@@ -133,7 +133,7 @@ export const CookieConsent: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Ermöglicht personalisierte Werbeanzeigen und Angebote auf Plattformen von Drittanbietern sowie eine korrekte Zuordnung unserer Affiliate-Partner.
+                          Ermöglicht die Anzeige personalisierter Werbemittel und maßgeschneiderter Angebote auf Plattformen von Drittanbietern sowie die genaue Ermittlung der Effektivität unserer Werbemaßnahmen.
                         </p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer shrink-0 select-none">
