@@ -269,16 +269,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
 
             <button 
               onClick={() => handleNavClick('agb')} 
-              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 w-full"
-            >
-              AGB
-            </button>
-
-            <button 
-              onClick={() => handleNavClick('home')} 
               className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 w-full"
             >
-              Cookie-Einstellungen
+              AGB
             </button>
           </div>
         </div>

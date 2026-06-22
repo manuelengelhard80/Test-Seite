@@ -200,6 +200,45 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                   </p>
                 </section>
 
+                {/* 13. Cookies, Affiliate-Links und Retargeting-Technologien */}
+                <section>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-4">13. Cookies, Affiliate-Links und Retargeting-Technologien</h2>
+                  <p className="text-slate-600 leading-relaxed mb-4">
+                    Unsere Website nutzt verschiedene Arten von Cookies und ähnlichen Tracking-Technologien, um Kernfunktionen bereitzustellen, die Nutzung statistisch auszuwerten, Affiliate-Partnerzuordnungen vorzunehmen und gezieltes Marketing zu ermöglichen.
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">a) Notwendige &amp; Essenzielle Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Diese Cookies sind für den Betrieb der Website zwingend erforderlich (z. B. Speicherung der Cookie-Präferenzen, Funktion des Praxis-Checks, temporäre Sitzungsspeicherungen). Sie können nicht deaktiviert werden. Die Rechtsgrundlage hierfür ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am reibungslosen Betrieb der Website).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">b) Analyse- und Statistik-Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wir nutzen anonymisierte Messverfahren, um das Verhalten der Nutzer auf unserer Website besser zu verstehen (z. B. welche Abschnitte des Praxis-Checks am häufigsten genutzt werden). Dies hilft uns, die Struktur und Inhalte kontinuierlich zu optimieren. Die Speicherung erfolgt nur nach Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">c) Affiliate-Cookies (Partner-Tracking)</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Auf unserer Website befinden sich Links zu unserem Partner <strong className="text-slate-800">fonio.ai</strong> (z. B. der Link mit dem Tracking-Parameter <code className="bg-slate-100 px-1 py-0.5 rounded text-xs text-primary font-mono">ac=ICTDD9L82N</code>). Wenn Sie diesen Links folgen und dort eine Bestellung oder ein Onboarding starten, wird ein sogenanntes <strong>Affiliate-Cookie</strong> gesetzt. 
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Dieses Cookie dient ausschließlich dazu, festzustellen, dass Sie über unsere Empfehlung zu fonio.ai gelangt sind, um eine etwaige Vermittlungsprovision (Affiliate-Zuordnung) korrekt abrechnen zu können. Es werden keine sensiblen persönlichen Daten verarbeitet oder Profile über Ihr Surfverhalten erstellt. Die Rechtsgrundlage für den Einsatz dieses Cookies ist Ihre Einwilligung bzw. unser berechtigtes Interesse an der kommerziellen Abwicklung von Affiliate-Partnerschaften (Art. 6 Abs. 1 lit. f bzw. lit. a DSGVO).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">d) Retargeting- und Marketing-Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wir setzen Retargeting-Technologien (wie Werbepixel oder Remarketing-Dienste) ein. Diese ermöglichen es, Besucher unserer Website auf Plattformen von Drittanbietern (z. B. Google, Meta) mit personalisierten Werbeanzeigen anzusprechen. 
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Dadurch wird sichergestellt, dass Ihnen Angebote angezeigt werden, die Ihren tatsächlichen Interessen entsprechen (z. B. spezifische Telefonassistenz-Tarife, die Sie sich zuvor angesehen haben). Die Datenverarbeitung erfolgt ausschließlich auf Grundlage Ihrer freiwilligen Einwilligung über das Cookie-Consent-Banner (Art. 6 Abs. 1 lit. a DSGVO). Sie können diese Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">e) Widerruf und Cookie-Einstellungen</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm">
+                    Sie können Ihre Cookie-Einstellungen jederzeit über das Cookie-Consent-Banner am unteren Bildschirmrand anpassen oder verändern sowie die gesetzten Cookies in den Systemeinstellungen Ihres Browsers löschen.
+                  </p>
+                </section>
+
               </div>
 
             </div>
