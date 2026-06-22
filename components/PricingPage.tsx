@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface PricingPageProps {
@@ -9,6 +9,42 @@ interface PricingPageProps {
 
 export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) => {
   const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const cardWidth = container.firstElementChild ? (container.firstElementChild as HTMLElement).offsetWidth : 0;
+      const gap = 24; // gap-6 is 1.5rem = 24px
+      container.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const cardWidth = container.firstElementChild ? (container.firstElementChild as HTMLElement).offsetWidth : 0;
+      const gap = 24; // gap-6 is 1.5rem = 24px
+      container.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+    }
+  };
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const card = container.firstElementChild as HTMLElement;
+      if (!card) return;
+      
+      const cardWidth = card.offsetWidth;
+      const gap = 24; // gap-6
+      const scrollPos = container.scrollLeft;
+      
+      // Calculate current index
+      const index = Math.round(scrollPos / (cardWidth + gap));
+      setActiveIndex(index);
+    }
+  };
 
   const usagePackages = [
     { 
@@ -140,86 +176,127 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
             <p className="text-slate-500 font-medium italic">Wählen Sie das passende Kontingent für Ihre monatlichen Gesprächsminuten</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-6">
-            {usagePackages.map((pkg, idx) => (
-              <div 
-                key={idx} 
-                className={`w-full bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group ${
-                  pkg.highlight 
-                    ? 'border-2 border-primary/20 shadow-xl pt-14 lg:scale-105 z-10' 
-                    : 'border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 pt-10'
-                }`}
-              >
-                {/* Visual Accent Bar */}
-                {pkg.badge ? (
-                  <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
-                    <span className="text-white text-xs font-bold uppercase tracking-widest">{pkg.badge}</span>
-                  </div>
-                ) : (
-                  <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
-                )}
-                
-                <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
-                  <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">{pkg.name}</h3>
-                  <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                    <pkg.icon className="text-primary-dark" size={24} strokeWidth={1.5} />
-                  </div>
-                </div>
+          <div className="relative">
+            {/* Desktop Left Arrow (Visible on LG+) */}
+            <button 
+              onClick={scrollLeft}
+              className="hidden lg:flex absolute -left-4 lg:-left-12 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg border border-slate-100 items-center justify-center text-slate-600 hover:text-primary hover:scale-110 transition-all duration-300"
+              aria-label="Previous product"
+            >
+              <ChevronLeft size={24} />
+            </button>
 
-                <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
-                  <p>{pkg.description}</p>
-                  <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic text-xs">
-                    {pkg.quote}
-                  </div>
-                </div>
-
-                <div className="space-y-6 flex-grow relative z-10 mb-8">
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Inkludiert</p>
-                    <ul className="space-y-3">
-                      {pkg.included.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-xs text-slate-700">
-                          <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
-                          <span className="font-semibold">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Features</p>
-                    <ul className="space-y-3">
-                      {pkg.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-xs text-slate-600">
-                          <Plus size={14} className="text-primary shrink-0 mt-0.5" />
-                          <span className="font-medium">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Monatlicher Paketpreis</p>
-                  <div className="flex items-start flex-row justify-between mb-4 w-full">
-                    <span className="text-xs font-bold text-[#13a09e] bg-[#13a09e]/5 px-2.5 py-1 rounded-full border border-[#13a09e]/20 mt-1 whitespace-nowrap">
-                      Flexible Minutennutzung
-                    </span>
-                    <div className="flex flex-col items-end text-right font-sans">
-                      <span className="text-3xl font-bold text-[#13a09e] block leading-none">{pkg.price}</span>
-                      <span className="text-[10px] text-slate-400 uppercase tracking-[0.05em] font-bold block mt-1.5">{pkg.sub} zzgl. MwSt.</span>
+            {/* Carousel Container */}
+            <div 
+              ref={scrollRef}
+              onScroll={handleScroll}
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
+            >
+              {usagePackages.map((pkg, idx) => (
+                <div 
+                  key={idx} 
+                  className={`w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group ${
+                    pkg.highlight 
+                      ? 'border-2 border-primary/20 shadow-xl pt-14 lg:scale-105 z-10' 
+                      : 'border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 pt-10'
+                  }`}
+                >
+                  {/* Visual Accent Bar */}
+                  {pkg.badge ? (
+                    <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
+                      <span className="text-white text-xs font-bold uppercase tracking-widest">{pkg.badge}</span>
+                    </div>
+                  ) : (
+                    <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
+                  )}
+                  
+                  <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
+                    <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">{pkg.name}</h3>
+                    <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
+                      <pkg.icon className="text-primary-dark" size={24} strokeWidth={1.5} />
                     </div>
                   </div>
-                  
-                  <div className="mt-4 p-3.5 bg-slate-50 border border-slate-150 rounded-xl text-center">
-                    <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                      Die Tarife können erst während des Onboardingprozesses gebucht werden. Bitte buchen Sie zuerst das passende KI-Telefonassistenz-Paket.
-                    </p>
-                  </div>
-                </div>
 
-              </div>
-            ))}
+                  <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
+                    <p>{pkg.description}</p>
+                    <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic text-xs">
+                      {pkg.quote}
+                    </div>
+                  </div>
+
+                  <div className="space-y-6 flex-grow relative z-10 mb-8">
+                    <div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Inkludiert</p>
+                      <ul className="space-y-3">
+                        {pkg.included.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2.5 text-xs text-slate-700">
+                            <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
+                            <span className="font-semibold">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Features</p>
+                      <ul className="space-y-3">
+                        {pkg.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-2.5 text-xs text-slate-600">
+                            <Plus size={14} className="text-primary shrink-0 mt-0.5" />
+                            <span className="font-medium">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Monatlicher Paketpreis</p>
+                    <div className="flex items-start flex-row justify-between mb-4 w-full">
+                      <span className="text-xs font-bold text-[#13a09e] bg-[#13a09e]/5 px-2.5 py-1 rounded-full border border-[#13a09e]/20 mt-1 whitespace-nowrap">
+                        Flexible Minutennutzung
+                      </span>
+                      <div className="flex flex-col items-end text-right font-sans">
+                        <span className="text-3xl font-bold text-[#13a09e] block leading-none">{pkg.price}</span>
+                        <span className="text-[10px] text-slate-400 uppercase tracking-[0.05em] font-bold block mt-1.5">{pkg.sub} zzgl. MwSt.</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 p-3.5 bg-slate-50 border border-slate-150 rounded-xl text-center">
+                      <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                        Die Tarife können erst während des Onboardingprozesses gebucht werden. Bitte buchen Sie zuerst das passende KI-Telefonassistenz-Paket.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Right Arrow (Visible on LG+) */}
+            <button 
+              onClick={scrollRight}
+              className="hidden lg:flex absolute -right-4 lg:-right-12 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg border border-slate-100 items-center justify-center text-slate-600 hover:text-primary hover:scale-110 transition-all duration-300"
+              aria-label="Next product"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+
+          {/* Mobile/Tablet Controls: Arrows Only (Visible below LG) */}
+          <div className="flex justify-center gap-6 lg:hidden mt-6">
+             <button 
+              onClick={scrollLeft}
+              className="w-12 h-12 bg-white rounded-full shadow-md border border-slate-100 flex items-center justify-center text-slate-600 active:scale-95 hover:scale-110 hover:text-primary hover:border-primary/30 transition-all duration-300"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={scrollRight}
+              className="w-12 h-12 bg-white rounded-full shadow-md border border-slate-100 flex items-center justify-center text-slate-600 active:scale-95 hover:scale-110 hover:text-primary hover:border-primary/30 transition-all duration-300"
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
 
           <div className="mt-8 mb-16 text-center">
