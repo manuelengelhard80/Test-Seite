@@ -23,6 +23,7 @@ import { PrivacyPage } from './components/PrivacyPage';
 import { ThankYouPage } from './components/ThankYouPage';
 import { CookieConsent } from './components/CookieConsent';
 import { RechnerPage } from './components/RechnerPage';
+import { ContactPage } from './components/ContactPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -106,6 +107,8 @@ const AppContent: React.FC = () => {
       'impressum': '/impressum',
       'agb': '/agb',
       'privacy': '/datenschutz',
+      'kontakt': '/kontakt',
+      'contact': '/kontakt',
       'thankyou-voice': '/danke-voice',
       'thankyou-assist': '/danke-assist',
       'thankyou-pulse': '/danke-pulse',
@@ -167,6 +170,9 @@ const AppContent: React.FC = () => {
         
         <Route path="/datenschutz" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
         <Route path="/privacy" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
+
+        <Route path="/kontakt" element={<ContactPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/contact" element={<ContactPage onBack={() => handleNavigate('home')} />} />
         
         {/* Dankeseiten with German and Legacy routes */}
         <Route 

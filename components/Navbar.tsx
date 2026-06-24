@@ -47,6 +47,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         'impressum': '/impressum',
         'agb': '/agb',
         'privacy': '/datenschutz',
+        'kontakt': '/kontakt',
+        'contact': '/kontakt',
         'thankyou-voice': '/danke-voice',
         'thankyou-assist': '/danke-assist',
         'thankyou-pulse': '/danke-pulse',
@@ -269,9 +271,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
 
             <button 
               onClick={() => handleNavClick('agb')} 
-              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 w-full"
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 w-full"
             >
               AGB
+            </button>
+
+            <button 
+              onClick={() => handleNavClick('kontakt')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 w-full"
+            >
+              Kontakt
             </button>
           </div>
         </div>
