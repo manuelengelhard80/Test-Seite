@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { CTASection } from './CTASection';
 
 interface PricingPageProps {
   onBack: () => void;
@@ -57,18 +58,15 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
       quote: "Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.",
       icon: PhoneCall,
       included: [
-        "1000 Minuten inklusive",
-        "Jede weitere Minute €0,15",
-        "Keine Parallelanrufe",
-        "1 Telefonnr. (weitere €7/Monat)",
-        "KI-Assistenten inklusive",
-        "1 User inklusive"
+        { text: "1000 Minuten inklusive" },
+        { text: "Jede weitere Minute €0,15" },
+        { text: "Keine Parallelanrufe", isGray: true },
+        { text: "1 Telefonnummer" },
+        { text: "KI-Assistenten inklusive" },
+        { text: "20+ Stimmen" },
+        { text: "25+ Sprachen" }
       ],
-      features: [
-        "20+ Stimmen",
-        "25+ Sprachen",
-        "3-Wochen Intensivkurs"
-      ]
+      features: [] as string[]
     },
     { 
       name: "Praxis", 
@@ -81,18 +79,17 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
       highlight: true,
       badge: "beliebt",
       included: [
-        "3000 Minuten inklusive",
-        "Jede weitere Minute €0,12",
-        "5 gleichzeitige Anrufe",
-        "3 Telefonnr. (weitere €5/Monat)",
-        "KI-Assistenten inklusive",
-        "Unbegrenzte User"
+        { text: "3000 Minuten inklusive" },
+        { text: "Jede weitere Minute €0,12" },
+        { text: "3 gleichzeitige Anrufe" },
+        { text: "3 Telefonnummern" },
+        { text: "KI-Assistenten inklusive" },
+        { text: "20+ Stimmen" },
+        { text: "25+ Sprachen" },
+        { text: "Eigener SIP Trunk" },
+        { text: "Outbound Anrufe" }
       ],
-      features: [
-        "Alles in Auxilium Voice",
-        "Eigener SIP Trunk",
-        "Outbound Anrufe"
-      ]
+      features: [] as string[]
     },
     { 
       name: "Klinik", 
@@ -103,19 +100,17 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
       quote: "Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.",
       icon: Activity,
       included: [
-        "10.000 Minuten inklusive",
-        "Jede weitere Minute €0,10",
-        "10 gleichzeitige Anrufe",
-        "5 Telefonnr. (weitere €5/Monat)",
-        "KI-Assistenten inklusive",
-        "Unbegrenzte User"
+        { text: "Ab 5.000 Minuten" },
+        { text: "Ab €0,08 die Minute" },
+        { text: "Individuelle gleichzeitige Anrufe" },
+        { text: "Individuelle Telefonnummern" },
+        { text: "KI-Assistenten inklusive" },
+        { text: "20+ Stimmen" },
+        { text: "25+ Sprachen" },
+        { text: "Eigene Stimme (Voice Clone)" },
+        { text: "Individueller SLA" }
       ],
-      features: [
-        "Alles in Auxilium Assist",
-        "Eigene Stimme (Voice Clone)",
-        "SSO (Single Sign-On)",
-        "Individueller SLA"
-      ]
+      features: [] as string[]
     }
   ];
 
@@ -217,7 +212,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
             <div 
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory pt-6 pb-8 px-4 -mx-4 md:px-6 md:-mx-6 lg:px-4 lg:-mx-4 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
             >
               {usagePackages.map((pkg, idx) => (
                 <div 
@@ -256,25 +251,32 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Inkludiert</p>
                       <ul className="space-y-3">
                         {pkg.included.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2.5 text-xs text-slate-700">
-                            <CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" />
-                            <span className="font-semibold">{item}</span>
+                          <li key={i} className={`flex items-start gap-2.5 text-xs ${item.isGray ? 'text-slate-400 font-medium' : 'text-slate-700 font-semibold'}`}>
+                            <CheckCircle2 size={16} className={`${item.isGray ? 'text-slate-300' : 'text-[#13a09e]'} shrink-0 mt-0.5`} />
+                            <span>
+                              {item.text}
+                              {item.graySuffix && (
+                                <span className="text-slate-400 font-normal">{item.graySuffix}</span>
+                              )}
+                            </span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Features</p>
-                      <ul className="space-y-3">
-                        {pkg.features.map((feature, i) => (
-                          <li key={i} className="flex items-start gap-2.5 text-xs text-slate-600">
-                            <Plus size={14} className="text-primary shrink-0 mt-0.5" />
-                            <span className="font-medium">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    {pkg.features && pkg.features.length > 0 && (
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Features</p>
+                        <ul className="space-y-3">
+                          {pkg.features.map((feature, i) => (
+                            <li key={i} className="flex items-start gap-2.5 text-xs text-slate-600">
+                              <Plus size={14} className="text-primary shrink-0 mt-0.5" />
+                              <span className="font-medium">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
@@ -338,21 +340,29 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
             </button>
           </div>
 
-          <div className="mt-12 mb-16 text-center">
+          <div className="mt-12 mb-16 text-center flex flex-col items-center gap-2">
             <p className="text-sm text-slate-400 font-medium tracking-wide">
               Powered by <a href="https://fonio.ai/de?ac=ICTDD9L82N" target="_blank" rel="noopener noreferrer" className="text-[#13a09e] hover:underline font-bold transition-all">fonio.ai</a>
             </p>
+            <p className="text-xs text-slate-400 italic">
+              KI-Anrufe, die sich menschlich anfühlen.
+            </p>
+            <button 
+              onClick={() => {
+                navigate('/dsgvo');
+                window.scrollTo(0, 0);
+              }}
+              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/60 text-[11px] font-bold text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300 transition-all shadow-sm cursor-pointer"
+            >
+              <ShieldCheck size={13} className="stroke-[2.5]" />
+              <span>DSGVO-konform</span>
+            </button>
           </div>
 
-          <div className="mt-16 bg-blue-50 border border-blue-100 rounded-3xl p-6 flex items-start gap-4 text-blue-800 max-w-3xl mx-auto shadow-sm">
-            <Info size={24} className="shrink-0 mt-0.5" />
-            <div className="text-sm leading-relaxed font-medium">
-              <p className="font-bold mb-2">Preisinformation:</p>
-              <p>Alle hier aufgeführten Preise dienen der Orientierung. Die tatsächliche Abrechnung erfolgt basierend auf Ihrem realen Nutzungsvolumen. Alle Preise verstehen sich netto zzgl. gesetzlicher MwSt.</p>
-            </div>
-          </div>
         </div>
       </section>
+
+      <CTASection />
     </div>
   );
 };
