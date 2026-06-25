@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </p>
             </div>
             <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-auto pb-3">
-              Made in Germany
+              Serverstandort Deutschland
               <img 
                 src="https://cdn.shopify.com/s/files/1/0915/3334/5117/files/51968274-the-german-flag-round-matte-icon-isolated-on-white-background.jpg?v=1764167249" 
                 alt="Deutschland" 
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={(e) => handleNav(e, 'security')} className="hover:text-primary transition-colors text-left flex items-center gap-1.5">
+                <button onClick={(e) => handleNav(e, 'paragraph-203')} className="hover:text-primary transition-colors text-left flex items-center gap-1.5">
                   <Check size={14} className="text-emerald-500 shrink-0" strokeWidth={3} />
                   <span>§ 203-konform</span>
                 </button>

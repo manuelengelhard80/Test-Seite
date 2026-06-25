@@ -24,6 +24,7 @@ import { ThankYouPage } from './components/ThankYouPage';
 import { CookieConsent } from './components/CookieConsent';
 import { RechnerPage } from './components/RechnerPage';
 import { ContactPage } from './components/ContactPage';
+import { Paragraph203Page } from './components/Paragraph203Page';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -102,6 +103,7 @@ const AppContent: React.FC = () => {
       'features': '/funktionen',
       'audio': '/hörproben',
       'security': '/dsgvo',
+      'paragraph-203': '/paragraph-203',
       'pricing': '/preise',
       'rechner': '/rechner',
       'impressum': '/impressum',
@@ -158,6 +160,8 @@ const AppContent: React.FC = () => {
         
         <Route path="/dsgvo" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
         <Route path="/security" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/paragraph-203" element={<Paragraph203Page onBack={() => handleNavigate('home')} />} />
         
         <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} />} />
         <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} />} />
