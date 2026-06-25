@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Plus, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CTASection } from './CTASection';
 
@@ -289,7 +289,8 @@ export const TarifePage: React.FC<TarifePageProps> = ({ onBack, onNavigate }) =>
                       </div>
                     </div>
                     
-                    <div className="mt-4 p-3.5 bg-slate-50 border border-slate-150 rounded-xl text-center">
+                    <div className="mt-4 p-3.5 bg-slate-50 border border-slate-150 rounded-xl flex items-start gap-2.5 text-left">
+                      <Info className="text-slate-400 shrink-0 mt-0.5" size={16} />
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">
                         Die Tarife können erst während des Onboardingprozesses gebucht werden. Bitte buchen Sie zuerst das passende KI-Telefonassistenz-Paket.
                       </p>

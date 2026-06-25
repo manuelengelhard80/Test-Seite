@@ -622,7 +622,7 @@ export const PraxisCheckPage: React.FC = () => {
 
                               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl text-left">
                                 {savings.hauptprodukt === 'Voice' 
-                                  ? 'Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis. Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.' 
+                                  ? 'Der digitale Empfang, smarter KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis. Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.' 
                                   : savings.hauptprodukt === 'Assist' 
                                   ? 'Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung. Automatisiert Terminprozesse und reduziert den täglichen Telefonaufwand erheblich.' 
                                   : 'Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund. Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.'}

@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from 'react';
-import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus } from 'lucide-react';
+import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus, Info } from 'lucide-react';
 
 interface ZoomableImageProps {
   src: string;
@@ -228,7 +228,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
-                <p>Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
+                <p>Der digitale Empfang, smarter KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
                 <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
                   Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.
                 </div>
@@ -242,7 +242,17 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 {/* Active Features */}
                 <li className="flex items-start gap-3 text-slate-700 text-xs">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span>Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
+                    <div className="relative group/tooltip inline-block">
+                      <Info size={14} className="text-slate-400 hover:text-teal-600 cursor-pointer transition-colors" />
+                      {/* Tooltip on hover */}
+                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-3 bg-slate-900 text-white text-[11px] font-normal normal-case rounded-lg shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none">
+                        Auxilium AI nimmt jeden Anruf zeitgleich und ohne Wartezeit rund um die Uhr entgegen, auch an Feiertagen und Wochenenden.
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                      </div>
+                    </div>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3 text-slate-700 text-xs">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
