@@ -227,52 +227,93 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               />
               
 
-              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
-                <p>Der digitale Empfang, smarter KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
-                  Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.
-                </div>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10 text-center w-full mx-auto">
+                <p className="text-center max-w-md mx-auto">Ihr KI-Telefonassistent beantwortet Patientenfragen rund um die Uhr und nimmt Rezeptwünsche strukturiert auf – ohne Besetztzeichen, auch am Wochenende.</p>
               </div>
 
-              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10 text-left">
                 Smarter KI-Telefonassistent mit natürlicher Stimme
               </h4>
 
-              <ul className="space-y-3 mb-8 relative z-10 flex-grow">
+              <ul className="space-y-3 mb-8 relative z-10 flex-grow text-left w-full flex flex-col items-start">
                 {/* Active Features */}
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span>Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
-                    <div className="relative group/tooltip inline-block">
-                      <Info size={14} className="text-slate-400 hover:text-teal-600 cursor-pointer transition-colors" />
-                      {/* Tooltip on hover */}
-                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-3 bg-slate-900 text-white text-[11px] font-normal normal-case rounded-lg shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none">
-                        Auxilium AI nimmt jeden Anruf zeitgleich und ohne Wartezeit rund um die Uhr entgegen, auch an Feiertagen und Wochenenden.
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
-                      </div>
+                  <span className="leading-tight text-left">Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Auxilium AI nimmt jeden Anruf zeitgleich und ohne Wartezeit rund um die Uhr entgegen, auch an Feiertagen und Wochenenden.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
                   </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Empathische Patientenkommunikation</span>
+                  <span className="leading-tight text-left">Empathische Patientenkommunikation</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Empathisch und menschliche Patientenkommunikation mit natürlicher Stimme. Kein blechern klingender Voice Bot.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Notfall- & Dringlichkeitserkennung</span>
+                  <span className="leading-tight text-left">Notfall- & Dringlichkeitserkennung</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Ernimmt akute Anliegen sofort durch intelligente Keyword- und Stimmanalyse wahr und weist Patienten im Ernstfall auf den Notruf hin.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Rezept- & Überweisungsannahme</span>
+                  <span className="leading-tight text-left">Rezept- & Überweisungsannahme</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Nimmt Bestellungen vollkommen strukturiert auf und gleicht die Patientendaten ab, damit Sie die Dokumente nur noch freigeben müssen.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
+                  <span className="leading-tight text-left">Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Nach jedem Telefonat erhalten Sie sofort eine strukturierte Zusammenfassung per E-Mail und in Ihrem geschützten Dashboard.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Beantwortung häufiger Praxisfragen (FAQ)</span>
+                  <span className="leading-tight text-left">Beantwortung häufiger Praxisfragen (FAQ)</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Beantwortet Fragen zu Öffnungszeiten, Anfahrt, Parkplätzen oder benötigten Unterlagen direkt am Telefon.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
               </ul>
 
@@ -332,37 +373,71 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 }}
               />
 
-              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
-                <p>Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
-                  Automatisiert Terminprozesse und reduziert den täglichen Telefonaufwand erheblich.
-                </div>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10 text-center w-full mx-auto">
+                <p className="text-center max-w-md mx-auto">Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
               </div>
 
-              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10 text-left">
                 Smarter KI-Telefonassistent mit natürlicher Stimme
               </h4>
               
-              <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                <li className="flex items-start gap-3 text-slate-600 text-xs">
+              <ul className="space-y-3 mb-8 relative z-10 flex-grow text-left w-full flex flex-col items-start">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-600 text-xs w-full text-left">
                   <Plus size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="font-medium text-slate-700">Alles aus Voice</span>
+                  <span className="font-medium text-slate-700 leading-tight text-left">Alles aus Voice</span>
+                  <div className="w-[16px]"></div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Vollautomatische Terminvergabe</span>
+                  <span className="leading-tight text-left">Vollautomatische Terminvergabe</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Buchen Sie freie Termine direkt in Ihren Praxiskalender, basierend auf Ihren vordefinierten Regeln und Behandlungsarten.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Intelligente Lückensuche in Ihrer Praxissoftware</span>
+                  <span className="leading-tight text-left">Intelligente Lückensuche in Ihrer Praxissoftware</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Findet ungenutzte Zeitfenster und optimiert die Auslastung Ihrer Sprechzeiten automatisch in Echtzeit.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Automatische Terminabsagen & Freigabe</span>
+                  <span className="leading-tight text-left">Automatische Terminabsagen & Freigabe</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Patienten können Termine telefonisch stornieren. Die freigewordenen Zeiten stehen sofort wieder für andere Buchungen bereit.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>SMS-Terminbestätigung</span>
+                  <span className="leading-tight text-left">SMS-Terminbestätigung</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Versendet sofort nach der Buchung oder Stornierung eine SMS mit allen Details an den Patienten zur besseren Verbindlichkeit.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
               </ul>
 
@@ -420,37 +495,71 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 }}
               />
 
-              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
-                <p>Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
-                  Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.
-                </div>
+              <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10 text-center w-full mx-auto">
+                <p className="text-center max-w-md mx-auto">Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
               </div>
 
-              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10">
+              <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10 text-left">
                 Smarter KI-Telefonassistent mit natürlicher Stimme
               </h4>
               
-              <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                <li className="flex items-start gap-3 text-slate-600 text-xs">
+              <ul className="space-y-3 mb-8 relative z-10 flex-grow text-left w-full flex flex-col items-start">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-600 text-xs w-full text-left">
                   <Plus size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="font-medium text-slate-700">Alles aus Assist</span>
+                  <span className="font-medium text-slate-700 leading-tight text-left">Alles aus Assist</span>
+                  <div className="w-[16px]"></div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Direkte Integration in Ihre Praxissoftware</span>
+                  <span className="leading-tight text-left">Direkte Integration in Ihre Praxissoftware</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Nahtlose Echtzeit-Synchronisation mit etablierten Praxisverwaltungssystemen (PVS) wie medatixx, CGM, doctorly u.v.m.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>API-Anbindung für individuelle Systeme</span>
+                  <span className="leading-tight text-left">API-Anbindung für individuelle Systeme</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Flexible Schnittstellen für maßgeschneiderte Workflows, hauseigene Softwarelösungen oder spezielle Datenbanken.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Automatischer Recall-Service</span>
+                  <span className="leading-tight text-left">Automatischer Recall-Service</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Erinnert Patienten proaktiv an anstehende Vorsorgeuntersuchungen, Kontrolltermine oder Impfungen und vereinbart diese direkt.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span>Vollständige Prozessautomatisierung</span>
+                  <span className="leading-tight text-left">Vollständige Prozessautomatisierung</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Verknüpft administrative Schritte im Hintergrund – vom ersten Anruf über die Kalendereintragung bis zur automatischen Benachrichtigung.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
                 </li>
               </ul>
 
