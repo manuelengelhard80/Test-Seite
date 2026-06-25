@@ -141,8 +141,8 @@ export const TarifePage: React.FC<TarifePageProps> = ({ onBack, onNavigate }) =>
               <span className="text-[10px] font-bold text-[#13a09e] uppercase tracking-[0.2em]">Tarifübersicht</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] overflow-visible">
-              Unsere Tarife im <br/>
-              <span className="text-gradient py-1">Überblick.</span>
+              Transparente Tarife für <br/>
+              <span className="text-gradient py-1">maximale Entlastung.</span>
             </h1>
             <p className="text-xl text-slate-500 leading-relaxed max-w-2xl font-medium">
               Transparent, fair und auf das Anrufaufkommen Ihrer Praxis zugeschnitten. Alle Preise verstehen sich zzgl. MwSt.

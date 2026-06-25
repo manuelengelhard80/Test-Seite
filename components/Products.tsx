@@ -190,17 +190,17 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
           <div 
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pt-6 pb-8 px-4 -mx-4 md:px-6 md:-mx-6 lg:px-4 lg:-mx-4 [&::-webkit-scrollbar]:hidden scroll-smooth items-stretch"
           >
             
             {/* 1. Auxilium Voice */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-10 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group border-slate-200/80 shadow-sm hover:shadow-glass lg:hover:-translate-y-1 pt-10">
               <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
               
               <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
                 <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Voice</h3>
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <PhoneCall className="text-primary-dark" size={24} strokeWidth={1.5} />
+                <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <PhoneCall className="text-[#13a09e]" size={24} strokeWidth={1.5} />
                 </div>
               </div>
 
@@ -229,7 +229,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der intelligente KI-Telefonassistent für maximale Erreichbarkeit in Ihrer Praxis.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
                   Stellen Sie sicher, dass keine Anrufe mehr verloren gehen und Ihr Team spürbar entlastet wird.
                 </div>
               </div>
@@ -240,28 +240,28 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
                 {/* Active Features */}
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Keine verpassten Anrufe mehr (24/7 Erreichbarkeit)</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Empathische Patientenkommunikation</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Notfall- & Dringlichkeitserkennung</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Rezept- & Überweisungsannahme</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Beantwortung häufiger Praxisfragen (FAQ)</span>
                 </li>
               </ul>
@@ -288,15 +288,15 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
                         {/* 2. Auxilium Assist (Bestseller) */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-14 rounded-3xl border-2 border-primary/20 shadow-xl hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden z-10 group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group border-2 border-teal-500/30 shadow-xl pt-14 lg:scale-105 z-10">
                <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
                   <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
                </div>
               
               <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-2">
                 <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Assist</h3>
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <CalendarCheck2 className="text-primary-dark" size={24} strokeWidth={1.5} />
+                <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <CalendarCheck2 className="text-[#13a09e]" size={24} strokeWidth={1.5} />
                 </div>
               </div>
 
@@ -324,7 +324,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der KI-Telefonassistent mit intelligenter Terminorganisation für spürbare Praxisentlastung.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
                   Automatisiert Terminprozesse und reduziert den täglichen Telefonaufwand erheblich.
                 </div>
               </div>
@@ -334,24 +334,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </h4>
               
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                <li className="flex items-start gap-3 text-slate-600">
-                  <Plus size={16} className="text-slate-900 shrink-0 mt-0.5" />
-                  <span className="font-medium">Alles aus Voice</span>
+                <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <Plus size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="font-medium text-slate-700">Alles aus Voice</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Vollautomatische Terminvergabe</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Intelligente Lückensuche in Ihrer Praxissoftware</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Automatische Terminabsagen & Freigabe</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>SMS-Terminbestätigung</span>
                 </li>
               </ul>
@@ -378,13 +378,13 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
             {/* 3. Auxilium Pulse */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 pt-10 rounded-3xl border border-slate-200 shadow-sm hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group border-slate-200/80 shadow-sm hover:shadow-glass lg:hover:-translate-y-1 pt-10">
                <div className="absolute top-0 left-0 w-full h-6 bg-gradient-medical opacity-70 group-hover:opacity-100 transition-opacity z-20"></div>
  
               <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
                 <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">Auxilium Pulse</h3>
-                <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                  <Activity className="text-primary-dark animate-pulse" size={24} strokeWidth={1.5} />
+                <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <Activity className="text-[#13a09e] animate-pulse" size={24} strokeWidth={1.5} />
                 </div>
               </div>
 
@@ -412,7 +412,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                 <p>Der digitale Herzschlag Ihrer Praxis – für vollständige Integration und automatisierte Abläufe im Hintergrund.</p>
-                <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic">
+                <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
                   Verbindet Kommunikation, Prozesse und Ihre Praxissoftware zu einem nahtlosen System.
                 </div>
               </div>
@@ -422,24 +422,24 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </h4>
               
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                <li className="flex items-start gap-3 text-slate-600">
-                  <Plus size={16} className="text-slate-900 shrink-0 mt-0.5" />
-                  <span className="font-medium">Alles aus Assist</span>
+                <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <Plus size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="font-medium text-slate-700">Alles aus Assist</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Direkte Integration in Ihre Praxissoftware</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>API-Anbindung für individuelle Systeme</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Automatischer Recall-Service</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-700">
-                  <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-700 text-xs">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
                   <span>Vollständige Prozessautomatisierung</span>
                 </li>
               </ul>
@@ -466,11 +466,11 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             </div>
 
             {/* 4. Enterprise (Price on request) */}
-            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-slate-50 px-8 pb-8 pt-10 rounded-3xl border border-slate-200/60 shadow-none hover:shadow-sm transition-all duration-300 flex flex-col relative overflow-hidden group">
+            <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-slate-50 px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group border-slate-200/60 shadow-none hover:shadow-sm pt-10">
               {/* No top gradient strip for subtle look */}
               
-              <div className="w-14 h-14 bg-slate-200 rounded-2xl flex items-center justify-center mb-4 mt-1 relative z-10">
-                <Globe className="text-slate-600" size={28} strokeWidth={1.5} />
+              <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 mt-1 relative z-10 shrink-0">
+                <Globe className="text-[#13a09e]" size={24} strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold text-slate-700 mb-4 relative z-10">Enterprise</h3>
               <p className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10 min-h-[40px]">
@@ -478,20 +478,20 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </p>
               
               <ul className="space-y-3 mb-8 relative z-10 flex-grow">
-                <li className="flex items-start gap-3 text-slate-600">
-                  <CheckCircle2 size={18} className="text-slate-400 shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <CheckCircle2 size={16} className="text-slate-400 shrink-0 mt-0.5" />
                   <span>Individuelle API-Integration</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-600">
-                  <CheckCircle2 size={18} className="text-slate-400 shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <CheckCircle2 size={16} className="text-slate-400 shrink-0 mt-0.5" />
                   <span>Dedizierter Account Manager</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-600">
-                  <CheckCircle2 size={18} className="text-slate-400 shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <CheckCircle2 size={16} className="text-slate-400 shrink-0 mt-0.5" />
                   <span>White-Label Option</span>
                 </li>
-                 <li className="flex items-start gap-3 text-slate-600">
-                  <CheckCircle2 size={18} className="text-slate-400 shrink-0 mt-0.5" />
+                 <li className="flex items-start gap-3 text-slate-600 text-xs">
+                  <CheckCircle2 size={16} className="text-slate-400 shrink-0 mt-0.5" />
                   <span>On-Premise Deployment</span>
                 </li>
               </ul>
