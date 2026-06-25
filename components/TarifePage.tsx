@@ -1,15 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Info, Plus, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Tag, CheckCircle2, PhoneCall, CalendarCheck2, Activity, Plus, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CTASection } from './CTASection';
-import { Products } from './Products';
 
-interface PricingPageProps {
+interface TarifePageProps {
   onBack: () => void;
   onNavigate?: (view: string) => void;
 }
 
-export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) => {
+export const TarifePage: React.FC<TarifePageProps> = ({ onBack, onNavigate }) => {
   const navigate = useNavigate();
   const [isAnnual, setIsAnnual] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -123,7 +122,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button 
             onClick={onBack}
-            className="group inline-flex items-center gap-2 text-slate-400 hover:text-primary text-sm font-semibold transition-all"
+            className="group inline-flex items-center gap-2 text-slate-400 hover:text-[#13a09e] text-sm font-semibold transition-all"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Zurück zur Übersicht
@@ -131,22 +130,19 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
         </div>
       </section>
 
-      {/* 1. Die Produkte der Startseite */}
-      <Products onNavigate={onNavigate} />
-
       {/* Sektion: Tarifübersicht & Volumen-Pakete */}
       <section className="bg-slate-50 py-16 md:py-24 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Tarif-Header */}
           <div className="max-w-4xl mb-12">
-            <div className="inline-flex items-center gap-2 bg-primary-light/50 rounded-full px-4 py-1.5 shadow-sm mb-6 border border-primary/20">
-              <Tag size={14} className="text-primary-dark" />
-              <span className="text-[10px] font-bold text-primary-dark uppercase tracking-[0.2em]">Tarifübersicht</span>
+            <div className="inline-flex items-center gap-2 bg-[#13a09e]/10 rounded-full px-4 py-1.5 shadow-sm mb-6 border border-[#13a09e]/20">
+              <Tag size={14} className="text-[#13a09e]" />
+              <span className="text-[10px] font-bold text-[#13a09e] uppercase tracking-[0.2em]">Tarifübersicht</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] overflow-visible">
-              Transparente Tarife für <br/>
-              <span className="text-gradient py-1">maximale Entlastung.</span>
+              Unsere Tarife im <br/>
+              <span className="text-gradient py-1">Überblick.</span>
             </h1>
             <p className="text-xl text-slate-500 leading-relaxed max-w-2xl font-medium">
               Transparent, fair und auf das Anrufaufkommen Ihrer Praxis zugeschnitten. Alle Preise verstehen sich zzgl. MwSt.
@@ -178,7 +174,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
                 onClick={() => setIsAnnual(false)}
                 className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   !isAnnual 
-                    ? 'bg-white text-[#13a09e] shadow-sm border border-slate-200/50' 
+                    ? 'bg-white text-[#13a09e]' 
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -223,7 +219,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
                   key={idx} 
                   className={`w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group ${
                     pkg.highlight 
-                      ? 'border-2 border-primary/20 shadow-xl pt-14 lg:scale-105 z-10' 
+                      ? 'border-2 border-teal-500/30 shadow-xl pt-14 lg:scale-105 z-10' 
                       : 'border-slate-200/80 shadow-sm hover:shadow-glass lg:hover:-translate-y-1 pt-10'
                   }`}
                 >
@@ -238,14 +234,14 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
                   
                   <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-1">
                     <h3 className="text-2xl font-bold text-slate-900 leading-tight text-left">{pkg.name}</h3>
-                    <div className="w-12 h-12 bg-primary-light rounded-2xl flex items-center justify-center shrink-0">
-                      <pkg.icon className="text-primary-dark" size={24} strokeWidth={1.5} />
+                    <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center shrink-0">
+                      <pkg.icon className="text-[#13a09e]" size={24} strokeWidth={1.5} />
                     </div>
                   </div>
 
                   <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10">
                     <p>{pkg.description}</p>
-                    <div className="mt-4 pl-4 py-2 border-l-2 border-primary bg-primary/5 rounded-r-lg text-slate-700 italic text-xs">
+                    <div className="mt-4 pl-4 py-2 border-l-2 border-teal-500 bg-teal-50/30 rounded-r-lg text-slate-700 italic text-xs">
                       {pkg.quote}
                     </div>
                   </div>
@@ -267,20 +263,6 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onBack, onNavigate }) 
                         ))}
                       </ul>
                     </div>
-
-                    {pkg.features && pkg.features.length > 0 && (
-                      <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">Features</p>
-                        <ul className="space-y-3">
-                          {pkg.features.map((feature, i) => (
-                            <li key={i} className="flex items-start gap-2.5 text-xs text-slate-600">
-                              <Plus size={14} className="text-primary shrink-0 mt-0.5" />
-                              <span className="font-medium">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                   </div>
 
                   <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">

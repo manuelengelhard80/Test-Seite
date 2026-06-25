@@ -25,6 +25,8 @@ import { CookieConsent } from './components/CookieConsent';
 import { RechnerPage } from './components/RechnerPage';
 import { ContactPage } from './components/ContactPage';
 import { Paragraph203Page } from './components/Paragraph203Page';
+import { BewertungenPage } from './components/BewertungenPage';
+import { TarifePage } from './components/TarifePage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -46,7 +48,6 @@ const HomePage: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate
       <FeatureFocus />
       {/* "Drei starke Module" bleiben auf der Startseite als Produktvorstellung */}
       <Products onNavigate={onNavigate} />
-      <Testimonials />
       
       {/* Trust Section / Stats */}
       <section className="py-16 bg-white border-y border-slate-100">
@@ -105,6 +106,9 @@ const AppContent: React.FC = () => {
       'security': '/dsgvo',
       'paragraph-203': '/paragraph-203',
       'pricing': '/preise',
+      'tarife': '/tarife',
+      'bewertungen': '/bewertungen',
+      'bewertung': '/bewertungen',
       'rechner': '/rechner',
       'impressum': '/impressum',
       'agb': '/agb',
@@ -163,8 +167,13 @@ const AppContent: React.FC = () => {
         
         <Route path="/paragraph-203" element={<Paragraph203Page onBack={() => handleNavigate('home')} />} />
         
-        <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} />} />
-        <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        
+        <Route path="/tarife" element={<TarifePage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        
+        <Route path="/bewertungen" element={<BewertungenPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/bewertung" element={<BewertungenPage onBack={() => handleNavigate('home')} />} />
         
         <Route path="/rechner" element={<RechnerPage onBack={() => handleNavigate('home')} />} />
         

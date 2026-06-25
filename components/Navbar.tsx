@@ -45,6 +45,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         'security': '/dsgvo',
         'paragraph-203': '/paragraph-203',
         'pricing': '/preise',
+        'tarife': '/tarife',
+        'bewertungen': '/bewertungen',
+        'bewertung': '/bewertungen',
         'impressum': '/impressum',
         'agb': '/agb',
         'privacy': '/datenschutz',
@@ -141,6 +144,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                <button onClick={() => handleNavClick('pricing')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
                 Preise
               </button>
+ 
+              <button onClick={() => handleNavClick('tarife')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+                Tarife
+              </button>
+ 
+              <button onClick={() => handleNavClick('bewertungen')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all inline-flex items-center">
+                Bewertungen
+              </button>
               
               <button onClick={() => handleNavClick('security')} className="h-8 px-2 xl:px-4 rounded-full text-[13px] xl:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all flex items-center gap-1 whitespace-nowrap inline-flex items-center">
                 <Check size={16} className="text-emerald-500 shrink-0" strokeWidth={3} />
@@ -226,6 +237,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
             >
               <span>Preise</span>
+            </button>
+ 
+            <button 
+              onClick={() => handleNavClick('tarife')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Tarife</span>
+            </button>
+ 
+            <button 
+              onClick={() => handleNavClick('bewertungen')} 
+              className="text-sm font-semibold text-slate-500 hover:text-teal-600 transition-colors text-left py-3 border-b border-slate-100 flex items-center justify-between w-full"
+            >
+              <span>Bewertungen</span>
             </button>
  
             <button 
