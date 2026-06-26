@@ -81,7 +81,7 @@ export const AllFeatures: React.FC<AllFeaturesProps> = ({ preview = false, onNav
             Ein Assistent – <span className="text-gradient">Alle Funktionen.</span>
           </h2>
           <p className="text-lg text-slate-500">
-            Auxilium AI deckt den kompletten telefonischen Workflow Ihrer Praxis ab – passend zu Ihrem gewählten Paket.
+            Auxilium Assist deckt den kompletten telefonischen Workflow Ihrer Praxis ab – passend zu Ihrem gewählten Paket.
           </p>
         </div>
 

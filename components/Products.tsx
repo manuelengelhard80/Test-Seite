@@ -244,7 +244,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Auxilium AI nimmt jeden Anruf zeitgleich und ohne Wartezeit rund um die Uhr entgegen, auch an Feiertagen und Wochenenden.
+                      Der Telefonassistent nimmt jeden Anruf zeitgleich und ohne Wartezeit rund um die Uhr entgegen, auch an Feiertagen und Wochenenden.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -338,10 +338,10 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-                        {/* 2. Auxilium Assist (Bestseller) */}
+                        {/* 2. Auxilium Assist (Beliebt) */}
             <div className="w-full min-w-full md:min-w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_3rem)/3)] lg:min-w-[calc((100%_-_3rem)/3)] lg:max-w-none shrink-0 snap-center bg-white px-8 pb-8 rounded-3xl border transition-all duration-300 flex flex-col relative overflow-hidden group border-2 border-teal-500/30 shadow-xl pt-14 lg:scale-105 z-10">
                <div className="absolute top-0 left-0 w-full h-10 bg-gradient-medical flex items-center justify-center shadow-sm z-20">
-                  <span className="text-white text-xs font-bold uppercase tracking-widest">Bestseller</span>
+                  <span className="text-white text-xs font-bold uppercase tracking-widest">Beliebt</span>
                </div>
               
               <div className="flex items-center justify-between gap-4 mb-4 relative z-10 w-full mt-2">

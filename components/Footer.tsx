@@ -116,6 +116,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Centered Footer Bottom Text */}
         <div className="border-t border-slate-100 pt-5 mt-6 text-center">
+          <div className="mb-2.5 flex items-center justify-center">
+            <span className="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-semibold tracking-wider text-[#13a09e] bg-[#13a09e]/10 border border-[#13a09e]/20 uppercase">
+              EU AI Act-konform
+            </span>
+          </div>
           <p className="text-xs text-slate-400">
             Auxilium Assist © {currentYear}
           </p>

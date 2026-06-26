@@ -105,7 +105,7 @@ export const BewertungenPage: React.FC<BewertungenPageProps> = ({ onBack }) => {
               Von Ärzten <span className="text-gradient">empfohlen.</span>
             </h1>
             <p className="text-xl text-slate-500 leading-relaxed max-w-3xl">
-              Vertrauen ist gut, Erfahrung ist besser. Sehen Sie, wie Kolleginnen und Kollegen ihre Praxis mit Auxilium AI transformiert haben und den Alltag spürbar entlasten.
+              Vertrauen ist gut, Erfahrung ist besser. Sehen Sie, wie Kolleginnen und Kollegen ihre Praxis mit Auxilium Assist transformiert haben und den Alltag spürbar entlasten.
             </p>
           </div>
         </div>

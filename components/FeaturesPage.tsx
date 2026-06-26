@@ -106,7 +106,7 @@ export const FeaturesPage: React.FC<FeaturesPageProps> = ({ onBack }) => {
               <span className="text-gradient">Intelligent.</span>
             </h1>
             <p className="text-xl text-slate-500 leading-relaxed max-w-3xl">
-              Entdecken Sie alle Möglichkeiten, wie Auxilium AI Ihre Praxis entlastet – detailliert aufgeschlüsselt nach unseren Paketen.
+              Entdecken Sie alle Möglichkeiten, wie Auxilium Assist Ihre Praxis entlastet – detailliert aufgeschlüsselt nach unseren Paketen.
             </p>
           </div>
         </div>
