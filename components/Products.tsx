@@ -331,15 +331,20 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </ul>
 
               <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Exklusiver Einrichtungspreis</p>
-                <div className="flex items-start flex-row justify-between mb-4 w-full items-start">
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 mt-1 whitespace-nowrap">
-                    -20% • 202 € gespart
-                  </span>
-                  <div className="flex flex-col items-end text-right">
-                    <span className="text-sm text-slate-400 line-through decoration-slate-400/50 block leading-none mb-1">999 €</span>
-                    <span className="text-3xl font-bold text-emerald-600 block leading-none">797 €</span>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <div className="flex flex-col mb-4 w-full">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                    <span>Einrichtungspreis</span>
+                    <span className="line-through decoration-slate-400/50 text-sm">999 €</span>
+                  </div>
+                  <div className="flex items-end justify-between w-full">
+                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 whitespace-nowrap">
+                      -20% • 202 € gespart
+                    </span>
+                    <div className="flex flex-col items-end text-right">
+                      <span className="text-3xl font-bold text-emerald-600 block leading-none">797 €</span>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                    </div>
                   </div>
                 </div>
                 <button 
@@ -459,7 +464,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Das System läuft komplett autark im Hintergrund. Es ist kein Eingriff in Ihre lokale, sensible Praxissoftware (PVS) notwendig.
+                      Das System läuft komplett autark im Hintergrund. Es ist kein Eingriff in Ihre lokale Praxissoftware (PVS) notwendig.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -492,15 +497,20 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </span>
                   </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Exklusiver Einrichtungspreis</p>
-                <div className="flex items-start flex-row justify-between mb-4 w-full items-start">
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 mt-1 whitespace-nowrap">
-                    -25% • 502 € gespart
-                  </span>
-                  <div className="flex flex-col items-end text-right">
-                    <span className="text-sm text-slate-400 line-through decoration-slate-400/50 block leading-none mb-1">1.999 €</span>
-                    <span className="text-3xl font-bold text-emerald-600 block leading-none">1.497 €</span>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <div className="flex flex-col mb-4 w-full">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                    <span>Einrichtungspreis</span>
+                    <span className="line-through decoration-slate-400/50 text-sm">1.999 €</span>
+                  </div>
+                  <div className="flex items-end justify-between w-full">
+                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 whitespace-nowrap">
+                      -25% • 502 € gespart
+                    </span>
+                    <div className="flex flex-col items-end text-right">
+                      <span className="text-3xl font-bold text-emerald-600 block leading-none">1.497 €</span>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                    </div>
                   </div>
                 </div>
                 <button 
@@ -614,15 +624,20 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </ul>
 
               <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Exklusiver Einrichtungspreis</p>
-                <div className="flex items-start flex-row justify-between mb-4 w-full items-start">
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 mt-1 whitespace-nowrap">
-                    -33% • 1.002 € gespart
-                  </span>
-                  <div className="flex flex-col items-end text-right">
-                    <span className="text-sm text-slate-400 line-through decoration-slate-400/50 block leading-none mb-1">2.999 €</span>
-                    <span className="text-3xl font-bold text-emerald-600 block leading-none">1.997 €</span>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <div className="flex flex-col mb-4 w-full">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                    <span>Einrichtungspreis</span>
+                    <span className="line-through decoration-slate-400/50 text-sm">2.999 €</span>
+                  </div>
+                  <div className="flex items-end justify-between w-full">
+                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 whitespace-nowrap">
+                      -33% • 1.002 € gespart
+                    </span>
+                    <div className="flex flex-col items-end text-right">
+                      <span className="text-3xl font-bold text-emerald-600 block leading-none">1.997 €</span>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wide font-medium block mt-1">zzgl. MwSt.</span>
+                    </div>
                   </div>
                 </div>
                 <button 
