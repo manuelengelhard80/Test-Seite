@@ -347,12 +347,14 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </div>
-                <button 
-                  onClick={() => onNavigate?.('thankyou-voice')}
-                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md"
+                <a 
+                  href="https://www.digistore24.com/product/690597"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
                 >
                   Jetzt bestellen
-                </button>
+                </a>
               </div>
             </div>
 
