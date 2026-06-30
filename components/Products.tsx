@@ -446,7 +446,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">SMS-Terminbestätigung</span>
+                  <span className="leading-tight text-left">SMS-Terminbestätigung für den Patienten</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
@@ -571,20 +571,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Direkte Integration in Ihre Praxissoftware</span>
-                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
-                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
-                    {/* Tooltip on hover - clean white design */}
-                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Nahtlose Echtzeit-Synchronisation mit etablierten Praxisverwaltungssystemen (PVS) wie medatixx, CGM, doctorly u.v.m.
-                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
-                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
-                    </div>
-                  </div>
-                </li>
-                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
-                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">API-Anbindung für individuelle Systeme</span>
+                  <span className="leading-tight text-left">Direkte Integration in Ihren Praxiskalender über API-Schnittstelle</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
@@ -597,12 +584,27 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Automatischer Recall-Service</span>
+                  <span className="leading-tight text-left">Maximale & sofortige Entlastung für Ihr MFA-Team</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Erinnert Patienten proaktiv an anstehende Vorsorgeuntersuchungen, Kontrolltermine oder Impfungen und vereinbart diese direkt.
+                      Durch die vollständige Integration aller Assistenzleistungen und automatisierten Abläufe wird Ihr MFA-Team maximal entlastet.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-600 text-xs w-full text-left pt-3 mt-1 border-t border-slate-100">
+                  <Plus size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="font-medium text-slate-700 leading-tight text-left">
+                    Auxilium Care-Paket – Fortlaufende Optimierung Ihrer KI & Experten-Support (3 Monate kostenlos)
+                  </span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Kontinuierliche Anpassung der KI an Ihre Praxisabläufe sowie prioritärer Experten-Support für Ihre Praxis (regulär 99 € im Monat).
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -610,12 +612,29 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Vollständige Prozessautomatisierung</span>
+                  <span className="leading-tight text-left text-slate-600">
+                    Laufende KI-Feinabstimmung zur kontinuierlichen Optimierung
+                  </span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Verknüpft administrative Schritte im Hintergrund – vom ersten Anruf über die Kalendereintragung bis zur automatischen Benachrichtigung.
+                      Kontinuierliche Analyse und Optimierung der Sprach-Performance für fehlerfreies Patienten-Verständnis im Hintergrund.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="leading-tight text-left text-slate-600">
+                    Persönlicher Experten-Support bei Fragen und Systemanpassungen
+                  </span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Ihr persönlicher Experten-Support für schnelle Updates, Systemanpassungen und lückenlose Erreichbarkeit.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
