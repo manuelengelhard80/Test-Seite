@@ -252,12 +252,12 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Empathische Patientenkommunikation</span>
+                  <span className="leading-tight text-left">Empathische & menschliche Patientenkommunikation</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Empathisch und menschliche Patientenkommunikation mit natürlicher Stimme. Kein blechern klingender Voice Bot.
+                      Empathische und menschliche Patientenkommunikation mit natürlicher Stimme. Kein blechern klingender Voice Bot.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -265,38 +265,12 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Notfall- & Dringlichkeitserkennung</span>
+                  <span className="leading-tight text-left">Rezept- & Überweisungsanfragen</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Ernimmt akute Anliegen sofort durch intelligente Keyword- und Stimmanalyse wahr und weist Patienten im Ernstfall auf den Notruf hin.
-                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
-                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
-                    </div>
-                  </div>
-                </li>
-                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
-                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Rezept- & Überweisungsannahme</span>
-                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
-                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
-                    {/* Tooltip on hover - clean white design */}
-                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Nimmt Bestellungen vollkommen strukturiert auf und gleicht die Patientendaten ab, damit Sie die Dokumente nur noch freigeben müssen.
-                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
-                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
-                    </div>
-                  </div>
-                </li>
-                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
-                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Sichere E-Mail-Benachrichtigung (Details im Dashboard)</span>
-                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
-                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
-                    {/* Tooltip on hover - clean white design */}
-                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Nach jedem Telefonat erhalten Sie sofort eine strukturierte Zusammenfassung per E-Mail und in Ihrem geschützten Dashboard.
+                      Nimmt Rezept- & Überweisungsanfragen automatisiert an und informiert den Patienten darüber, wann er diese abholen kann.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -309,7 +283,46 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Beantwortet Fragen zu Öffnungszeiten, Anfahrt, Parkplätzen oder benötigten Unterlagen direkt am Telefon.
+                      Beantwortet wiederkehrende Fragen zu Sprechzeiten, Anfahrt, Parkmöglichkeiten oder Fragen zur Aufnahme neuer Patienten vollkommen selbstständig am Telefon.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="leading-tight text-left">Spürbare & sofortige Entlastung für Ihr MFA-Team</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Durch die automatische Beantwortung von Routineanrufen wird Ihr MFA-Team spürbar entlastet und gewinnt wertvolle Zeit für die Betreuung vor Ort.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="leading-tight text-left">Notfall- & Dringlichkeitserkennung</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Erkennt akute Anliegen sofort durch intelligente Keyword- und Stimmanalyse, weist Patienten im Ernstfall auf den Notruf hin – vollkommen DSGVO- & EU AI Act-konform.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="leading-tight text-left">DSGVO & § 203 konforme E-Mail-Benachrichtigung zu jedem Anruf</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Sie erhalten nach jedem Anruf eine sichere E-Mail-Benachrichtigung. Alle sensiblen Patientendaten können aus Datenschutzgründen ausschließlich im verschlüsselten Dashboard eingesehen werden.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -389,12 +402,12 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Vollautomatische Terminvergabe</span>
+                  <span className="leading-tight text-left">Vollautomatische, DSGVO & § 203-konforme Terminvergabe</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
                     <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
-                      Buchen Sie freie Termine direkt in Ihren Praxiskalender, basierend auf Ihren vordefinierten Regeln und Behandlungsarten.
+                      Buchen Sie freie Termine direkt und absolut datenschutzkonform in Ihren Google Workspace oder Microsoft 365 Kalender, basierend auf Ihren vordefinierten Regeln.
                       <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
                       <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
                     </div>
@@ -402,7 +415,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Intelligente Lückensuche in Ihrer Praxissoftware</span>
+                  <span className="leading-tight text-left">Intelligente Lückensuche in Ihrem Terminkalender</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
@@ -415,7 +428,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                 </li>
                 <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
                   <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
-                  <span className="leading-tight text-left">Automatische Terminabsagen & Freigabe</span>
+                  <span className="leading-tight text-left">Storno-Schutz: Terminabsagen & Wiederfreigabe</span>
                   <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
                     <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
                     {/* Tooltip on hover - clean white design */}
@@ -439,9 +452,46 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </li>
+                <li className="grid grid-cols-[16px_1fr_16px] gap-3 items-start text-slate-700 text-xs w-full text-left">
+                  <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-0.5" />
+                  <span className="leading-tight text-left">Volle Unabhängigkeit von Ihrer Praxis-Software</span>
+                  <div className="relative group/tooltip inline-flex items-center shrink-0 mt-0.5 justify-self-end">
+                    <Info size={14} className="text-slate-400 hover:text-[#13a09e] cursor-pointer transition-colors" />
+                    {/* Tooltip on hover - clean white design */}
+                    <div className="absolute right-0 bottom-full mb-2.5 w-64 p-3 bg-white border border-slate-200 text-slate-600 text-[11px] leading-relaxed font-medium normal-case rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none text-center">
+                      Das System läuft komplett autark im Hintergrund. Es ist kein Eingriff in Ihre lokale, sensible Praxissoftware (PVS) notwendig.
+                      <div className="absolute top-full right-1 border-4 border-transparent border-t-white"></div>
+                      <div className="absolute top-full right-1 border-[5px] border-transparent border-t-slate-200/50 -z-10 mt-[1px]"></div>
+                    </div>
+                  </div>
+                </li>
               </ul>
 
               <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
+                <div className="flex flex-col items-start mb-5 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs w-full transition-all duration-300 hover:shadow-md hover:border-slate-300 group/int">
+                  <div className="flex items-center mb-2.5">
+                    <span className="text-xs font-normal text-slate-600 tracking-tight">
+                      Kompatibel mit Ihrem Microsoft 365 oder Google Workspace Kalender
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2.5 pt-0.5 flex-wrap">
+                    <img 
+                      src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/365.png" 
+                      alt="Microsoft 365" 
+                      className="h-8 w-auto object-contain bg-white px-2 py-0.5 rounded-lg border border-slate-100 shadow-xs hover:border-slate-200 transition-colors" 
+                      referrerPolicy="no-referrer"
+                    />
+                    <img 
+                      src="https://images.weserv.nl/?url=http://2bmedia-marketing.de/bilder/workespace.png" 
+                      alt="Google Workspace" 
+                      className="h-8 w-auto object-contain bg-white px-2 py-0.5 rounded-lg border border-slate-100 shadow-xs hover:border-slate-200 transition-colors" 
+                      referrerPolicy="no-referrer"
+                    />
+                    <span className="text-[9px] font-bold text-[#13a09e] bg-[#13a09e]/5 border border-[#13a09e]/15 px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap shadow-xs ml-1">
+                      DSGVO & § 203-konform
+                    </span>
+                  </div>
+                </div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Exklusiver Einrichtungspreis</p>
                 <div className="flex items-start flex-row justify-between mb-4 w-full items-start">
                   <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 mt-1 whitespace-nowrap">

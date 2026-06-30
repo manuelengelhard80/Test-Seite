@@ -642,7 +642,7 @@ export const PraxisCheckPage: React.FC = () => {
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
-                                        <span>Empathische Patientenkommunikation</span>
+                                        <span>Empathische & menschliche Patientenkommunikation</span>
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
@@ -670,7 +670,7 @@ export const PraxisCheckPage: React.FC = () => {
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
-                                        <span>Vollautomatische Terminvergabe</span>
+                                        <span>Vollautomatische, DSGVO & § 203 konforme Terminvergabe (Google Workspace / M365)</span>
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
@@ -678,7 +678,7 @@ export const PraxisCheckPage: React.FC = () => {
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
-                                        <span>Automatische Terminabsagen & Freigabe</span>
+                                        <span>Storno-Schutz: Terminabsagen & Wiederfreigabe</span>
                                       </li>
                                       <li className="flex items-start gap-2.5 text-xs text-slate-200">
                                         <Check size={14} className="text-[#2DD4BF] shrink-0 mt-0.5" strokeWidth={3} />
