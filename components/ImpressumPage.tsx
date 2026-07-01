@@ -64,11 +64,11 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-slate-600">
                   <Mail size={18} className="text-slate-400" />
-                  <span>E-Mail: <a href="mailto:info@auxiliumassist.ai" className="text-primary hover:underline">info@auxiliumassist.ai</a></span>
+                  <span>E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline">info@auxilium-assist.de</a></span>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600">
                   <FileText size={18} className="text-slate-400" />
-                  <span>Web: www.auxiliumassist.ai</span>
+                  <span>Web: www.auxilium-assist.de</span>
                 </div>
               </div>
             </div>

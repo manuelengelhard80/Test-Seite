@@ -1,6 +1,6 @@
 
 import React, { useRef, useState } from 'react';
-import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus, Info } from 'lucide-react';
+import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus, Info, Minus } from 'lucide-react';
 
 interface ZoomableImageProps {
   src: string;
@@ -125,6 +125,7 @@ interface ProductsProps {
 export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showNotes, setShowNotes] = useState(false);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -515,12 +516,14 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </div>
-                <button 
-                  onClick={() => onNavigate?.('thankyou-assist')}
-                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md"
+                <a 
+                  href="https://www.digistore24.com/product/707217"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
                 >
                   Jetzt bestellen
-                </button>
+                </a>
               </div>
             </div>
 
@@ -739,6 +742,96 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
           >
             <ChevronRight size={24} />
           </button>
+        </div>
+
+        {/* Collapsible Panel: Wichtige Hinweise */}
+        <div className="mt-16 max-w-4xl mx-auto w-full px-4 md:px-0">
+          <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm transition-all duration-300">
+            <button
+              onClick={() => setShowNotes(!showNotes)}
+              className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50/50 transition-colors focus:outline-none"
+              aria-expanded={showNotes}
+            >
+              <span className="font-bold text-slate-800 text-base md:text-lg">
+                Wichtige Hinweise zu Leistungsumfang & Bereitstellung
+              </span>
+              <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 border border-slate-100 transition-colors shrink-0">
+                {showNotes ? <Minus size={18} /> : <Plus size={18} />}
+              </div>
+            </button>
+
+            {showNotes && (
+              <div className="border-t border-slate-100 bg-slate-50/20 p-6 md:p-8 space-y-8 text-slate-600 text-sm leading-relaxed text-left">
+                {/* Lieferart */}
+                <div>
+                  <h4 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
+                    Informationen zur Bereitstellung (Lieferart)
+                  </h4>
+                  <p className="text-slate-600 pl-1">
+                    Bei unseren Angeboten handelt es sich um reine Dienstleistungen, die remote erbracht werden. Es erfolgt kein physischer Versand und keine Einrichtung vor Ort. Direkt nach erfolgreicher Buchung erhalten Sie eine Bestätigungs-E-Mail mit dem Zugang zu unserem Online-Kalender, um das Onboarding-Gespräch zu terminieren. Die gesamte Kommunikation, Konfiguration und Bereitstellung des KI-Telefonassistenten erfolgt per Telefon, E-Mail und Web-Tools.
+                  </p>
+                </div>
+
+                {/* Leistungsumfang */}
+                <div>
+                  <h4 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                    Details zum Leistungsumfang
+                  </h4>
+                  <ul className="space-y-4 pl-1">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Strategisches Onboarding-Gespräch:</strong>
+                        <span>Gemeinsame telefonische Erstanalyse Ihres Praxisbedarfs zur Erfassung aller Anforderungen sowie der nahtlosen Vorbereitung Ihres Onboardings.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Konzeption der Praxis-Kommunikation:</strong>
+                        <span>Individuelles Prompt-Engineering sowie präzise Programmierung der Gesprächsstruktur, der passenden Antworten (z. B. für Terminvergaben, Rezeptwünsche oder FAQs) und der gewünschten Tonalität für Ihre Patienten. Hierbei werden auch Ihre individuellen Praxisregeln (z. B. Verhalten bei medizinischen Notfällen) direkt im System hinterlegt.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Bereitstellung der Ziel-Rufnummer:</strong>
+                        <span>Konfiguration des Assistenten inklusive Stimmenauswahl. Sie erhalten von uns eine dedizierte Telefonnummer für Ihre Praxis, an die Sie Ihren bestehenden Telefonanschluss ganz einfach per Rufumleitung anbinden können.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Testphase & Qualitätssicherung:</strong>
+                        <span>Ausführliche Funktionsprüfung und Optimierung des Assistenten vor der finalen Bereitstellung.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Übergabe & Sofort-Einsatz:</strong>
+                        <span>Bereitstellung und Übergabe des fertigen Systems. Ihr KI-Telefonassistent ist ab diesem Zeitpunkt sofort vollständig für Ihre Praxis einsatzbereit.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Optionale Anpassungen auf Kundenwunsch:</strong>
+                        <span>Falls im Nachgang noch Änderungen am System benötigt werden, reicht eine kurze Mitteilung (z. B. per E-Mail) aus. Wir setzen Ihre Änderungswünsche unkompliziert um.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-slate-800 font-semibold block mb-0.5">Abschluss-Briefing:</strong>
+                        <span>Bereitstellung aller relevanten Informationen und Anleitungen zur optimalen Nutzung des Systems für Ihr Praxisteam.</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
       </div>
