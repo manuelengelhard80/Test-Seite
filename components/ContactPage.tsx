@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Mail, Phone, MapPin, CheckCircle2, MessageSquare, Building2, User } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, CheckCircle2, MessageSquare, Building2, User, MessageCircle } from 'lucide-react';
 import { CTASection } from './CTASection';
 
 interface ContactPageProps {
@@ -100,13 +100,31 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
                   </div>
 
                   <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                      <MessageCircle size={18} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">WhatsApp Support</p>
+                      <a 
+                        href="https://wa.me/4915257344044" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2 px-3.5 rounded-xl text-xs transition-colors shadow-sm"
+                      >
+                        <MessageCircle size={14} />
+                        <span>Chat starten</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0">
                       <MapPin size={18} />
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Anschrift</p>
                       <p className="text-slate-800 font-medium text-sm leading-relaxed">
-                        <strong>2Bmedia & Marketing GbR</strong><br />
+                        <strong>Auxilium-Assist</strong><br />
                         Beeker Ring 7<br />
                         89423 Gundelfingen an der Donau<br />
                         Deutschland

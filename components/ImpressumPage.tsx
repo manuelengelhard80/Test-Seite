@@ -43,7 +43,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Angaben gemäß § 5 TMG</h2>
               <p className="text-slate-600 leading-relaxed">
-                <strong>2Bmedia & Marketing GbR</strong><br />
+                <strong>Auxilium-Assist ist ein Angebot der 2Bmedia & Marketing GbR</strong><br />
                 Beeker Ring 7<br />
                 89423 Gundelfingen an der Donau<br />
                 Deutschland

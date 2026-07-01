@@ -30,7 +30,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
               Datenschutz<span className="text-gradient">erklärung</span>
             </h1>
             <p className="text-lg text-slate-600 mb-0">
-               Auxilium – ein Angebot der 2Bmedia & Marketing GbR
+               Auxilium-Assist
             </p>
           </div>
         </div>
@@ -62,13 +62,12 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                     Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
                   </p>
                   <p className="text-slate-700 font-medium bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
-                    Auxilium ist ein Angebot der 2Bmedia & Marketing GbR<br />
+                    Auxilium-Assist<br />
                     Beeker Ring 7<br />
                     89423 Gundelfingen an der Donau<br />
                     Deutschland<br /><br />
                     Vertreten durch den geschäftsführenden Gesellschafter<br />
                     Manuel Engelhard<br /><br />
-                    Telefon: +49 1525 7344044<br />
                     E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline font-semibold">info@auxilium-assist.de</a>
                   </p>
                 </section>
