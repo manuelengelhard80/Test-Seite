@@ -8,11 +8,8 @@ interface AudioSamplesPageProps {
 
 export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) => {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const audioRefs = useRef<(HTMLAudioElement | null)[]>([]);
+  const timeoutRef = useRef<any>(null);
   
-  // Use the same sample URL for all for now as placeholder
-  const sampleUrl = "https://cdn.shopify.com/s/files/1/0915/3334/5117/files/Voicetest.mp3?v=1763726844";
-
   const samples = [
     {
       id: 0,
@@ -44,27 +41,18 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
   ];
 
   const togglePlay = (index: number) => {
-    if (playingIndex !== null && playingIndex !== index && audioRefs.current[playingIndex]) {
-      audioRefs.current[playingIndex]?.pause();
-      if (audioRefs.current[playingIndex]) {
-        audioRefs.current[playingIndex]!.currentTime = 0;
-      }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
 
-    const currentAudio = audioRefs.current[index];
-    if (currentAudio) {
-      if (playingIndex === index) {
-        currentAudio.pause();
+    if (playingIndex === index) {
+      setPlayingIndex(null);
+    } else {
+      setPlayingIndex(index);
+      timeoutRef.current = setTimeout(() => {
         setPlayingIndex(null);
-      } else {
-        currentAudio.play();
-        setPlayingIndex(index);
-      }
+      }, 4000);
     }
-  };
-
-  const handleEnded = (index: number) => {
-    setPlayingIndex(null);
   };
 
   return (
@@ -114,7 +102,7 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">{sample.title}</h3>
                 <p className="text-slate-500 text-sm mb-6 min-h-[40px]">{sample.desc}</p>
 
-                <div className="bg-white rounded-xl p-4 border border-slate-100 flex items-center gap-4">
+                <div className="bg-white rounded-xl p-4 border border-slate-100 flex items-center gap-4 min-h-[80px]">
                   <button 
                     onClick={() => togglePlay(idx)}
                     className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white shadow-md transition-all ${playingIndex === idx ? 'bg-[#298cc4] scale-105' : 'bg-[#13a09e] hover:bg-[#0f8280] hover:scale-105'}`}
@@ -122,50 +110,49 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
                     {playingIndex === idx ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-1" />}
                   </button>
                   
-                  {/* Waveform Visualization styled like the user's uploaded image with precise colors and heights */}
-                  <div className="flex-1 h-9 flex items-center gap-[3px]">
-                    <style dangerouslySetInnerHTML={{__html: `
-                      @keyframes hoverWave {
-                        0%, 100% { transform: scaleY(1); }
-                        50% { transform: scaleY(0.35); }
-                      }
-                      .animate-wave-bar {
-                        animation: hoverWave 1.2s ease-in-out infinite;
-                        transform-origin: center;
-                      }
-                    `}} />
-                    {(() => {
-                      const presets = [
-                        [10, 42, 60, 82, 50, 38, 85, 96, 68, 48, 56, 32, 68, 52, 45, 38, 74, 30], // Terminvereinbarung
-                        [15, 28, 45, 70, 88, 55, 35, 78, 92, 60, 42, 50, 38, 62, 48, 30, 45, 20], // Rezeptbestellung
-                        [10, 32, 50, 68, 45, 78, 95, 82, 52, 60, 40, 52, 70, 48, 35, 58, 42, 22]  // Notfall-Triage
-                      ];
-                      const heights = presets[idx % presets.length];
-                      return heights.map((height, i) => {
-                        const ratio = i / (heights.length - 1 || 1);
-                        const r = Math.round(59 - 40 * ratio);
-                        const g = Math.round(162 - 2 * ratio);
-                        const b = Math.round(216 - 58 * ratio);
-                        return (
-                          <div 
-                            key={i} 
-                            className={`flex-1 rounded-full transition-all duration-300 ${playingIndex === idx ? 'animate-wave-bar' : ''}`}
-                            style={{ 
-                              height: `${height}%`,
-                              backgroundColor: `rgb(${r}, ${g}, ${b})`,
-                              animationDelay: `${i * 0.06}s` 
-                            }} 
-                          ></div>
-                        );
-                      });
-                    })()}
-                  </div>
-
-                  <audio 
-                    ref={el => audioRefs.current[idx] = el}
-                    src={sampleUrl}
-                    onEnded={() => handleEnded(idx)}
-                  />
+                  {playingIndex === idx ? (
+                    <div className="flex-1 text-xs font-semibold text-[#0D9488] animate-pulse text-left leading-relaxed">
+                      Die Hörbeispiele folgen in Kürze...
+                    </div>
+                  ) : (
+                    /* Waveform Visualization styled like the user's uploaded image with precise colors and heights */
+                    <div className="flex-1 h-9 flex items-center gap-[3px]">
+                      <style dangerouslySetInnerHTML={{__html: `
+                        @keyframes hoverWave {
+                          0%, 100% { transform: scaleY(1); }
+                          50% { transform: scaleY(0.35); }
+                        }
+                        .animate-wave-bar {
+                          animation: hoverWave 1.2s ease-in-out infinite;
+                          transform-origin: center;
+                        }
+                      `}} />
+                      {(() => {
+                        const presets = [
+                          [10, 42, 60, 82, 50, 38, 85, 96, 68, 48, 56, 32, 68, 52, 45, 38, 74, 30], // Terminvereinbarung
+                          [15, 28, 45, 70, 88, 55, 35, 78, 92, 60, 42, 50, 38, 62, 48, 30, 45, 20], // Rezeptbestellung
+                          [10, 32, 50, 68, 45, 78, 95, 82, 52, 60, 40, 52, 70, 48, 35, 58, 42, 22]  // Notfall-Triage
+                        ];
+                        const heights = presets[idx % presets.length];
+                        return heights.map((height, i) => {
+                          const ratio = i / (heights.length - 1 || 1);
+                          const r = Math.round(59 - 40 * ratio);
+                          const g = Math.round(162 - 2 * ratio);
+                          const b = Math.round(216 - 58 * ratio);
+                          return (
+                            <div 
+                              key={i} 
+                              className="flex-1 rounded-full transition-all duration-300"
+                              style={{ 
+                                height: `${height}%`,
+                                backgroundColor: `rgb(${r}, ${g}, ${b})`
+                              }} 
+                            ></div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

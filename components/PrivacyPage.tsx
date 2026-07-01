@@ -68,7 +68,8 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                     Deutschland<br /><br />
                     Vertreten durch den geschäftsführenden Gesellschafter<br />
                     Manuel Engelhard<br /><br />
-                    E-Mail: <a href="mailto:info@auxiliumassist.ai" className="text-primary hover:underline font-semibold">info@auxiliumassist.ai</a>
+                    Telefon: +49 1525 73440044<br />
+                    E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline font-semibold">info@auxilium-assist.de</a>
                   </p>
                 </section>
 
@@ -236,6 +237,35 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                   <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">e) Widerruf und Cookie-Einstellungen</h3>
                   <p className="text-slate-600 leading-relaxed text-sm">
                     Sie können Ihre Cookie-Einstellungen jederzeit über das Cookie-Consent-Banner am unteren Bildschirmrand anpassen oder verändern sowie die gesetzten Cookies in den Systemeinstellungen Ihres Browsers löschen.
+                  </p>
+                </section>
+
+                {/* 14. WhatsApp Kommunikation */}
+                <section>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-4">14. Kommunikation via WhatsApp (WhatsApp Business)</h2>
+                  <p className="text-slate-600 leading-relaxed mb-4">
+                    Wir bieten Ihnen die Möglichkeit, schnell und unkompliziert per WhatsApp mit uns in Kontakt zu treten. Hierfür nutzen wir die Business-Version von WhatsApp. Anbieter des Dienstes ist die WhatsApp Ireland Limited, 4 Grand Canal Square, Grand Canal Harbour, Dublin 2, Irland (Muttergesellschaft: Meta Platforms Inc., USA).
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">a) Zweck und Rechtsgrundlage der Datenverarbeitung</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wenn Sie uns eine Anfrage per WhatsApp senden, verarbeiten wir Ihre Mobilfunknummer, Ihren WhatsApp-Benutzernamen (sofern angegeben) sowie den Inhalt Ihrer Nachricht und etwaige übermittelte Medien ausschließlich zur Beantwortung Ihrer Anfrage bzw. zur persönlichen Beratung.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Die Rechtsgrundlage für diese Datenverarbeitung ist Ihre ausdrückliche Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO, die Sie uns durch die aktive Kontaktaufnahme übermitteln, sowie Art. 6 Abs. 1 lit. b DSGVO zur Durchführung vorvertraglicher Maßnahmen oder zur Beantwortung vertraglicher Anfragen.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">b) Ende-zu-Ende-Verschlüsselung und Drittlandstransfer</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    WhatsApp verwendet eine Ende-zu-Ende-Verschlüsselung. Das bedeutet, dass die Inhalte der Nachrichten für WhatsApp selbst oder sonstige Dritte nicht einsehbar sind. Allerdings erfasst WhatsApp sogenannte Metadaten (z. B. IP-Adresse, Informationen über das verwendete Gerät, Absender- und Empfängernummer, Uhrzeit des Versands), die an Server von Meta Platforms Inc. in den USA übertragen werden können.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Die Datenübertragung in die USA wird durch Standardvertragsklauseln der EU-Kommission sowie das EU-US Data Privacy Framework abgesichert, für das Meta zertifiziert ist, um ein angemessenes Datenschutzniveau zu garantieren.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">c) Speicherdauer und Widerruf</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm">
+                    Wir löschen Ihre WhatsApp-Nachrichten und die damit verbundenen Daten, sobald Ihre Anfrage abschließend geklärt ist und keine gesetzlichen Aufbewahrungspflichten (z. B. aus dem Handels- oder Steuerrecht) einer Löschung entgegenstehen. Sie können Ihre erteilte Einwilligung zur Datenverarbeitung jederzeit mit Wirkung für die Zukunft per formloser Nachricht (z. B. via E-Mail an info@auxilium-assist.de oder direkt im Chat) widerrufen.
                   </p>
                 </section>
 

@@ -93,8 +93,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">E-Mail</p>
-                      <a href="mailto:info@auxiliumassist.ai" className="text-slate-900 font-bold hover:text-[#0D9488] transition-colors text-sm break-all">
-                        info@auxiliumassist.ai
+                      <a href="mailto:info@auxilium-assist.de" className="text-slate-900 font-bold hover:text-[#0D9488] transition-colors text-sm break-all">
+                        info@auxilium-assist.de
                       </a>
                     </div>
                   </div>

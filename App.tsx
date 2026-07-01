@@ -27,6 +27,7 @@ import { ContactPage } from './components/ContactPage';
 import { Paragraph203Page } from './components/Paragraph203Page';
 import { BewertungenPage } from './components/BewertungenPage';
 import { TarifePage } from './components/TarifePage';
+import { WhatsAppWidget } from './components/WhatsAppWidget';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -37,6 +38,7 @@ const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }
         <Outlet />
       </main>
       <Footer onNavigate={onNavigate} />
+      <WhatsAppWidget />
     </div>
   );
 };
