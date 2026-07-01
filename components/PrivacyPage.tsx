@@ -68,7 +68,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                     Deutschland<br /><br />
                     Vertreten durch den geschäftsführenden Gesellschafter<br />
                     Manuel Engelhard<br /><br />
-                    Telefon: +49 1525 73440044<br />
+                    Telefon: +49 1525 7344044<br />
                     E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline font-semibold">info@auxilium-assist.de</a>
                   </p>
                 </section>

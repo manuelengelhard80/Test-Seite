@@ -502,7 +502,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
                     
                     <div className="flex flex-col gap-1.5 pt-1">
                       <a 
-                        href="https://wa.me/+49152573440044" 
+                        href="https://wa.me/4915257344044" 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-colors shadow-md w-full"
@@ -516,7 +516,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
 VERSION:3.0
 FN:Manuel Engelhard (Auxilium Support)
 ORG:Auxilium Assist
-TEL;TYPE=CELL,VOICE:+49152573440044
+TEL;TYPE=CELL,VOICE:+4915257344044
 EMAIL;TYPE=PREF,INTERNET:onboarding@auxilium-assist.de
 URL:https://www.auxilium-assist.de
 END:VCARD`)}`}
@@ -530,7 +530,7 @@ END:VCARD`)}`}
                     <div className="pt-1.5 border-t border-slate-150">
                       {showPhoneNum ? (
                         <span className="text-xs font-mono text-slate-700 font-bold block pt-0.5">
-                          +49 1525 73440044
+                          +49 1525 7344044
                         </span>
                       ) : (
                         <button 
