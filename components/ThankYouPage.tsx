@@ -206,6 +206,11 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
           </p>
         </div>
 
+        {/* Digistore24 notice banner */}
+        <div className="max-w-3xl mx-auto mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-sm font-semibold text-center shadow-sm">
+          Kostenpflichtiges Produkt: „Die Abbuchung erfolgt durch Digistore24 GmbH (Deutschland)“
+        </div>
+
         {/* Responsive Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           
@@ -431,6 +436,11 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
                   <FileText size={15} className="text-slate-400" />
                   <span>Leistungsumfang (PDF)</span>
                 </a>
+              </div>
+
+              {/* Digistore24 order billing notice */}
+              <div className="mt-5 p-3 bg-amber-50/50 border border-amber-100 rounded-xl text-center text-[11px] text-amber-900 font-semibold leading-relaxed">
+                Kostenpflichtiges Produkt: „Die Abbuchung erfolgt durch Digistore24 GmbH (Deutschland)“
               </div>
             </div>
 

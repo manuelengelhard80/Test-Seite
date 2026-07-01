@@ -98,6 +98,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={(e) => handleNav(e, 'agb')} className="hover:text-primary transition-colors text-left">AGB</button></li>
               <li><button onClick={(e) => handleNav(e, 'kontakt')} className="hover:text-primary transition-colors text-left">Kontakt</button></li>
             </ul>
+            
+            {/* Live-Vorschau für Dankeseiten */}
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <h5 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-3">Dankeseiten-Vorschau</h5>
+              <div className="flex flex-col gap-2 text-xs">
+                <button onClick={(e) => handleNav(e, 'thankyou-voice')} className="text-left text-[#13a09e] hover:underline font-medium flex items-center gap-1">
+                  <span>→</span> <span>Danke-Seite (Voice)</span>
+                </button>
+                <button onClick={(e) => handleNav(e, 'thankyou-assist')} className="text-left text-[#13a09e] hover:underline font-medium flex items-center gap-1">
+                  <span>→</span> <span>Danke-Seite (Assist)</span>
+                </button>
+                <button onClick={(e) => handleNav(e, 'thankyou-pulse')} className="text-left text-[#13a09e] hover:underline font-medium flex items-center gap-1">
+                  <span>→</span> <span>Danke-Seite (Pulse)</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Sicherheit Column */}
