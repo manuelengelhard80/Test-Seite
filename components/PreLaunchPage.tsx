@@ -11,6 +11,9 @@ interface PreLaunchPageProps {
 
 export const PreLaunchPage: React.FC<PreLaunchPageProps> = ({ onNavigate }) => {
   useEffect(() => {
+    // Mark user as pre-launch visitor in this session
+    sessionStorage.setItem('is_pre_launch_user', 'true');
+
     // Add meta robots noindex, nofollow to exclude from Google index
     const meta = document.createElement('meta');
     meta.name = 'robots';

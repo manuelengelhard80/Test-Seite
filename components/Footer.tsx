@@ -50,7 +50,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Hauptmenü</h4>
             <ul className="space-y-3 text-sm text-slate-500">
               <li><button onClick={(e) => handleNav(e, 'home')} className="hover:text-primary transition-colors text-left">Start</button></li>
-              <li><button onClick={(e) => handleNav(e, 'pre-launch')} className="hover:text-[#0D9488] transition-colors text-left font-medium text-[#0D9488]/80">Pre-Launch (Temp)</button></li>
               <li><button onClick={(e) => handleNav(e, 'audio')} className="hover:text-primary transition-colors text-left">Hörproben</button></li>
               <li><button onClick={(e) => handleNav(e, 'features')} className="hover:text-primary transition-colors text-left">Funktionen</button></li>
               <li><button onClick={(e) => handleNav(e, 'pricing')} className="hover:text-primary transition-colors text-left">Preise</button></li>

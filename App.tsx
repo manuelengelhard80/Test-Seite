@@ -45,6 +45,12 @@ const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }
 };
 
 const HomePage: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
+  const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+
+  if (isPreLaunchUser) {
+    return <PreLaunchPage onNavigate={onNavigate} />;
+  }
+
   return (
     <>
       <Hero />
