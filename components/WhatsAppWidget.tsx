@@ -78,8 +78,8 @@ export const WhatsAppWidget: React.FC = () => {
               </div>
               <div className="text-left">
                 <h4 className="font-bold text-sm leading-tight">Manuel Engelhard</h4>
-                <p className="text-[10px] text-teal-100/90 flex items-center gap-1">
-                  <span>●</span> <span>Auxilium Beratung online</span>
+                <p className="text-[11px] text-teal-100/90 mt-0.5">
+                  Experte für KI-Implementierungen
                 </p>
               </div>
             </div>

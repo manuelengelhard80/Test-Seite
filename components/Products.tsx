@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { CheckCircle2, PhoneCall, CalendarCheck2, Activity, ChevronLeft, ChevronRight, Mail, Globe, Plus, Info, Minus } from 'lucide-react';
 
 interface ZoomableImageProps {
@@ -120,12 +120,45 @@ const ZoomableImage: React.FC<ZoomableImageProps> = ({
 
 interface ProductsProps {
   onNavigate?: (view: string) => void;
+  preLaunchMode?: boolean;
 }
 
-export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
+export const Products: React.FC<ProductsProps> = ({ onNavigate, preLaunchMode = false }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showNotes, setShowNotes] = useState(false);
+  const [slotsLeft, setSlotsLeft] = useState<number>(11);
+
+  useEffect(() => {
+    if (!preLaunchMode) return;
+
+    // Scarcity counter logic
+    const savedCountStr = localStorage.getItem('prelaunch_slots_count');
+    let currentCount = savedCountStr ? parseInt(savedCountStr, 10) : 11;
+    const sessionVisited = sessionStorage.getItem('prelaunch_session_visited');
+
+    if (!savedCountStr) {
+      // First time visiting
+      localStorage.setItem('prelaunch_slots_count', '11');
+      sessionStorage.setItem('prelaunch_session_visited', 'true');
+      setSlotsLeft(11);
+    } else {
+      if (!sessionVisited) {
+        // Returning visitor in a new session / tab
+        const decrement = Math.floor(Math.random() * 2) + 1; // 1 or 2
+        let newCount = currentCount - decrement;
+        if (newCount < 2) {
+          newCount = 2; // stops at 2
+        }
+        localStorage.setItem('prelaunch_slots_count', newCount.toString());
+        sessionStorage.setItem('prelaunch_session_visited', 'true');
+        setSlotsLeft(newCount);
+      } else {
+        // Simple reload
+        setSlotsLeft(currentCount);
+      }
+    }
+  }, [preLaunchMode]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -332,7 +365,9 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </ul>
 
               <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">
+                  {preLaunchMode ? 'Pre-Launch-Rabatt' : 'Praxis-Start-Vorteil'}
+                </p>
                 <div className="flex flex-col mb-4 w-full">
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
                     <span>Einrichtungspreis</span>
@@ -348,14 +383,23 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </div>
-                <a 
-                  href="https://www.digistore24.com/product/690597"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
-                >
-                  Jetzt bestellen
-                </a>
+                {preLaunchMode ? (
+                  <button 
+                    onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block cursor-pointer"
+                  >
+                    Jetzt sichern
+                  </button>
+                ) : (
+                  <a 
+                    href="https://www.digistore24.com/product/690597"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
+                  >
+                    Jetzt bestellen
+                  </a>
+                )}
               </div>
             </div>
 
@@ -500,7 +544,9 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </span>
                   </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">
+                  {preLaunchMode ? 'Pre-Launch-Rabatt' : 'Praxis-Start-Vorteil'}
+                </p>
                 <div className="flex flex-col mb-4 w-full">
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
                     <span>Einrichtungspreis</span>
@@ -516,14 +562,23 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </div>
-                <a 
-                  href="https://www.digistore24.com/product/707217"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
-                >
-                  Jetzt bestellen
-                </a>
+                {preLaunchMode ? (
+                  <button 
+                    onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block cursor-pointer"
+                  >
+                    Jetzt sichern
+                  </button>
+                ) : (
+                  <a 
+                    href="https://www.digistore24.com/product/707217"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
+                  >
+                    Jetzt bestellen
+                  </a>
+                )}
               </div>
             </div>
 
@@ -648,7 +703,9 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
               </ul>
 
               <div className="mt-auto pt-6 border-t border-slate-100 relative z-10">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">Praxis-Start-Vorteil</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-left">
+                  {preLaunchMode ? 'Pre-Launch-Rabatt' : 'Praxis-Start-Vorteil'}
+                </p>
                 <div className="flex flex-col mb-4 w-full">
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
                     <span>Einrichtungspreis</span>
@@ -664,14 +721,23 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                 </div>
-                <a 
-                  href="https://www.digistore24.com/product/707577"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
-                >
-                  Jetzt bestellen
-                </a>
+                {preLaunchMode ? (
+                  <button 
+                    onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block cursor-pointer"
+                  >
+                    Jetzt sichern
+                  </button>
+                ) : (
+                  <a 
+                    href="https://www.digistore24.com/product/707577"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-medical text-white font-bold py-3 rounded-xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md text-center block"
+                  >
+                    Jetzt bestellen
+                  </a>
+                )}
               </div>
             </div>
 
@@ -745,6 +811,14 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate }) => {
             <ChevronRight size={24} />
           </button>
         </div>
+        
+        {preLaunchMode && (
+          <div className="mt-12 max-w-2xl mx-auto text-center px-6">
+            <p className="text-slate-600 font-medium text-sm sm:text-base leading-relaxed">
+              Da wir jede Praxis persönlich onboarden und die KI-Telefonassistenten für jede Praxis maßgeschneidert einrichten, ist die Pre-Launch-Phase streng limitiert. Aktuell sind nur noch <span onClick={() => document.getElementById('global-whatsapp-trigger')?.click()} className="font-extrabold text-teal-600 underline decoration-2 decoration-teal-300 bg-teal-50 hover:bg-teal-100/80 px-1.5 py-0.5 rounded cursor-pointer transition-colors" title="Chat starten & Slot sichern">{slotsLeft} Slots</span> frei. Sichern Sie sich jetzt Ihren Pre-Launch-Rabatt.
+            </p>
+          </div>
+        )}
 
         {/* Collapsible Panel: Wichtige Hinweise */}
         <div className="mt-16 max-w-4xl mx-auto w-full px-4 md:px-0">

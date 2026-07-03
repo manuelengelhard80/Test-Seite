@@ -28,6 +28,7 @@ import { Paragraph203Page } from './components/Paragraph203Page';
 import { BewertungenPage } from './components/BewertungenPage';
 import { TarifePage } from './components/TarifePage';
 import { WhatsAppWidget } from './components/WhatsAppWidget';
+import { PreLaunchPage } from './components/PreLaunchPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -120,6 +121,8 @@ const AppContent: React.FC = () => {
       'thankyou-voice': '/danke-voice',
       'thankyou-assist': '/danke-assist',
       'thankyou-pulse': '/danke-pulse',
+      'pre-launch': '/pre-launch',
+      'prelaunch': '/pre-launch',
     };
     
     const targetPath = routeMap[view] || (view.startsWith('/') ? view : `/${view}`);
@@ -152,6 +155,8 @@ const AppContent: React.FC = () => {
       {/* Pages with standard Layout (navbar/footer) */}
       <Route element={<Layout onNavigate={handleNavigate} />}>
         <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
+        <Route path="/pre-launch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
+        <Route path="/prelaunch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
         <Route path="/test" element={<PraxisCheckPage />} />
         <Route path="/praxis-check" element={<PraxisCheckPage />} />
         <Route path="/3-minuten-praxis-check" element={<PraxisCheckPage />} />

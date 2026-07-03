@@ -4,7 +4,7 @@ import {
   X, ArrowRight, ArrowLeft, Check, Sparkles, Lock, 
   ShieldCheck, Server, FileText, CheckCircle2, AlertCircle,
   Building, Mail, Phone, User, Star, Flame, Award, Heart, Shield, Landmark,
-  TrendingUp, Clock, Euro, ArrowUpRight, ChevronDown, ChevronUp
+  TrendingUp, Clock, Euro, ArrowUpRight, ChevronDown, ChevronUp, MessageCircle
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -94,7 +94,7 @@ const quizQuestions: Question[] = [
 
 export const PraxisCheckPage: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<number>(1); // 1-7: Questions, 8: Lead Gate, 9: Evaluation Screen
+  const [step, setStep] = useState<number>(1); // 1-7: Questions, 8: Evaluation Screen
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [leadForm, setLeadForm] = useState({
     name: '',
@@ -187,7 +187,7 @@ export const PraxisCheckPage: React.FC = () => {
     setTimeout(() => {
       setStep((curr) => {
         if (curr === 7) {
-          return 9; // Skip step 8 (Lead Gate is deactivated for testing mode)
+          return 8; // Directly to evaluation screen which is step 8
         }
         return curr + 1;
       });
@@ -246,7 +246,7 @@ export const PraxisCheckPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Intro Header (only visible before result page) */}
-        {step < 9 && (
+        {step < 8 && (
           <div className="text-center max-w-3xl mx-auto mb-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100 mb-4 animate-pulse">
               <Sparkles size={12} className="text-emerald-600" />
@@ -264,13 +264,13 @@ export const PraxisCheckPage: React.FC = () => {
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left panel - Main Container (takes full width on step 9) */}
-          <div className={`${step === 9 ? 'lg:col-span-12' : 'lg:col-span-7 xl:col-span-8'} w-full`}>
+          {/* Left panel - Main Container (takes full width on step 8) */}
+          <div className={`${step === 8 ? 'lg:col-span-12' : 'lg:col-span-7 xl:col-span-8'} w-full`}>
             
             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
               
               {/* Card Header Profile Indicator */}
-              {step <= 8 && (
+              {step <= 7 && (
                 <div className="px-6 py-4.5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center text-xs text-slate-500 font-medium">
                   <div className="flex items-center gap-2">
                     <span className="flex h-2.5 w-2.5 relative">
@@ -284,11 +284,11 @@ export const PraxisCheckPage: React.FC = () => {
               )}
 
               {/* Progress bar */}
-              {step <= 8 && (
+              {step <= 7 && (
                 <div className="w-full bg-slate-100 h-1.5 flex transition-all duration-300">
                   <div 
                     className="bg-gradient-medical h-full rounded-r-full transition-all duration-500 ease-out"
-                    style={{ width: `${(Math.min(step, 8) / 8) * 100}%` }}
+                    style={{ width: `${(Math.min(step, 7) / 7) * 100}%` }}
                   />
                 </div>
               )}
@@ -444,121 +444,6 @@ export const PraxisCheckPage: React.FC = () => {
                         <span className="text-xs text-slate-400 font-medium font-sans">
                           Schritt {step} von 7
                         </span>
-                      </div>
-                    </motion.div>
-                  ) : step === 8 ? (
-                    // LEAD GATE STEP (Daten-Sperre)
-                    <motion.div
-                      key="lead-gate"
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      className="space-y-6"
-                    >
-                      <div className="text-center max-w-xl mx-auto mb-6">
-                        <div className="inline-flex items-center justify-center p-3 bg-gradient-medical text-white rounded-2xl shadow-xl mb-4">
-                          <Sparkles size={24} />
-                        </div>
-                        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                          Fast fertig! Ihre Auswertung liegt bereit.
-                        </h2>
-                        <p className="text-slate-500 mt-2 text-sm sm:text-base leading-relaxed">
-                          Wir berechnen nun die betriebswirtschaftlichen Kennzahlen für Ihre Praxis. Bitte tragen Sie Ihre Daten ein, um die Auswertung sofort in Echtzeit zu entsperren.
-                        </p>
-                      </div>
-
-                      <form onSubmit={handleLeadSubmit} className="space-y-4 max-w-xl mx-auto">
-                        
-                        {/* Name des Ansprechpartners */}
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Name des Ansprechpartners (lead_name)</label>
-                          <div className="relative">
-                            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                              type="text"
-                              value={leadForm.name}
-                              onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                              placeholder="z.B. Müller (oder Dr. Müller)"
-                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.name ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                            />
-                          </div>
-                          {formErrors.name && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.name}</span>}
-                        </div>
-
-                        {/* Name der Praxis / Fachrichtung */}
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Name der Praxis / Fachrichtung (praxis_name)</label>
-                          <div className="relative">
-                            <Building size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                              type="text"
-                              value={leadForm.praxis}
-                              onChange={(e) => setLeadForm({ ...leadForm, praxis: e.target.value })}
-                              placeholder="z.B. Gemeinschaftspraxis Westend, Hausarztpraxis"
-                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.praxis ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                            />
-                          </div>
-                          {formErrors.praxis && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.praxis}</span>}
-                        </div>
-
-                        {/* E-Mail-Adresse */}
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">E-Mail-Adresse (lead_email)</label>
-                          <div className="relative">
-                            <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                              type="email"
-                              value={leadForm.email}
-                              onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                              placeholder="dr.mueller@praxis-westend.de"
-                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.email ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                            />
-                          </div>
-                          {formErrors.email && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.email}</span>}
-                        </div>
-
-                        {/* Telefonnummer */}
-                        <div className="space-y-1">
-                          <label className="text-xs font-bold text-slate-600 block pl-1 uppercase tracking-wide">Telefonnummer (lead_phone)</label>
-                          <div className="relative">
-                            <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                            <input
-                              type="text"
-                              value={leadForm.phone}
-                              onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                              placeholder="z.B. +49 89 1234567"
-                              className={`w-full pl-10 pr-4 py-3 bg-slate-50 focus:bg-white rounded-xl border ${formErrors.phone ? 'border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-[#0D9488]'} focus:ring-2 outline-none text-slate-800 transition-all text-sm`}
-                            />
-                          </div>
-                          {formErrors.phone && <span className="text-xs text-red-500 block pl-1 font-medium">{formErrors.phone}</span>}
-                        </div>
-
-                        {/* Submit Button with explicitly requested text */}
-                        <div className="pt-4">
-                          <button
-                            type="submit"
-                            className="w-full bg-gradient-medical text-white font-bold py-4 rounded-2xl hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-lg flex items-center justify-center gap-2 group cursor-pointer text-base"
-                          >
-                            Jetzt Auswertung in Echtzeit anzeigen
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                          </button>
-                        </div>
-
-                        {/* DSGVO Note */}
-                        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-2 border-t border-slate-100 mt-4">
-                          <Lock size={12} />
-                          <span>Ihre Daten sind absolut sicher und werden streng DSGVO-konform geschützt.</span>
-                        </div>
-                      </form>
-
-                      <div className="pt-4 flex justify-between items-center text-xs text-slate-400">
-                        <button
-                          type="button"
-                          onClick={() => setStep(7)}
-                          className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer"
-                        >
-                          <ArrowLeft size={14} /> Zurück zur letzten Frage
-                        </button>
                       </div>
                     </motion.div>
                   ) : (
@@ -733,27 +618,83 @@ export const PraxisCheckPage: React.FC = () => {
                                 </span>
                               </div>
 
-                              {/* Info zum Onboarding - Klares Design */}
-                              <div className="bg-slate-800/40 border border-slate-800/80 p-3 rounded-xl flex items-start gap-2.5 text-[11px] text-slate-450 mt-2">
-                                <span className="text-xs text-[#2DD4BF] shrink-0 mt-0.5">💡</span>
-                                <p className="leading-normal text-left text-slate-300">
-                                  <strong>Wichtiger Buchungshinweis:</strong> Der monatliche Tarif wird erst im Laufe Ihres persönlichen, geführten Onboarding-Prozesses finalisiert und gebucht. Sie gehen jetzt kein Risiko ein.
-                                </p>
+                              {/* WhatsApp Beratung - Kleiner, klickbarer Vermerk mit Profilbild */}
+                              <div 
+                                onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                                className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-900/40 hover:bg-slate-800/50 border border-slate-800/60 rounded-2xl cursor-pointer transition-all hover:scale-[1.01] hover:border-teal-500/30 group text-left"
+                              >
+                                <div className="flex items-start gap-3.5">
+                                  <div className="relative shrink-0 mt-0.5">
+                                    <img 
+                                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1784764800&v=beta&t=DwGFx1quxy-6XfmkHlN_O7-th5TQZbMkOhofWVwD_68" 
+                                      alt="Manuel Engelhard" 
+                                      className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-[#0D9488] rounded-full" />
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
+                                    <div>
+                                      <h4 className="font-bold text-xs sm:text-sm text-white leading-tight">Manuel Engelhard</h4>
+                                      <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Experte für KI-Implementierungen</p>
+                                    </div>
+                                    <p className="text-[11px] text-slate-300 leading-snug">
+                                      Haben Sie Fragen zur Auswertung? Klicken Sie hier, für eine persönliche Beratung!
+                                    </p>
+                                  </div>
+                                </div>
+                                
+                                <div className="shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#0D9488]/15 text-[#2DD4BF] font-bold text-[10px] uppercase tracking-wider rounded-xl border border-[#0D9488]/30 group-hover:bg-[#0D9488]/25 group-hover:text-white transition-all self-start sm:self-center">
+                                  <MessageCircle size={12} className="fill-current" />
+                                  <span>Beratung starten</span>
+                                </div>
                               </div>
+
                             </div>
 
-                            {/* Rechte Seite: Call To Action Button mit modernem, passendem Design */}
-                            <div className="w-full lg:w-auto self-stretch lg:self-center shrink-0 flex items-center justify-center pt-2 lg:pt-0">
-                              <a
-                                href={savings.link}
-                                target="_blank"
-                                referrerPolicy="no-referrer"
-                                className="w-full lg:w-64 text-center bg-gradient-medical hover:shadow-glow text-white font-black px-8 py-5 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 group cursor-pointer"
-                                id="btn-buy-recommendation"
-                              >
-                                JETZT SYSTEM BUCHEN
-                                <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                              </a>
+                            {/* Rechte Seite: Buchungs-CTA */}
+                            <div className="w-full lg:w-80 shrink-0 self-stretch flex flex-col justify-start pt-2 lg:pt-0">
+                              <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 text-center h-full flex flex-col justify-between items-center space-y-4">
+                                <div className="space-y-3 w-full">
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0D9488]/10 text-[#2DD4BF] font-bold text-[10px] uppercase tracking-wider rounded-full border border-[#0D9488]/20">
+                                    <Sparkles size={10} /> Empfehlung sichern
+                                  </span>
+                                  <h3 className="text-xl font-black text-white tracking-tight leading-snug">
+                                    Ihr KI-Assistent ist bereit
+                                  </h3>
+                                  <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
+                                    Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.
+                                  </p>
+                                </div>
+
+                                <div className="w-full space-y-3">
+                                  <a
+                                    href={savings.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    referrerPolicy="no-referrer"
+                                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
+                                    id="btn-buy-recommendation"
+                                  >
+                                    <span>JETZT SYSTEM BUCHEN</span>
+                                    <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                  </a>
+                                  
+                                  <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400 font-medium">
+                                    <Lock size={10} className="text-emerald-400" />
+                                    <span>Risikofrei &amp; DSGVO-konform</span>
+                                  </div>
+                                </div>
+
+                                {/* Info zum Onboarding - Klares Design */}
+                                <div className="bg-slate-800/40 border border-slate-800/80 p-3.5 rounded-2xl flex items-start gap-2.5 text-[11px] text-slate-450 w-full mt-auto">
+                                  <span className="text-xs text-[#2DD4BF] shrink-0 mt-0.5">💡</span>
+                                  <p className="leading-normal text-left text-slate-300">
+                                    <strong>Wichtiger Buchungshinweis:</strong> Der monatliche Tarif wird erst im Laufe Ihres persönlichen, geführten Onboarding-Prozesses finalisiert und gebucht. Sie gehen jetzt kein Risiko ein.
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -864,7 +805,6 @@ export const PraxisCheckPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-
                       {/* 4. DISCLAMER / INFORMATION LABEL */}
                       <div className="flex items-start gap-2.5 bg-slate-50 p-4.5 rounded-2xl border border-slate-200">
                         <span className="text-base text-slate-400 shrink-0 mt-0.5">ℹ️</span>
@@ -1008,7 +948,7 @@ export const PraxisCheckPage: React.FC = () => {
           </div>
 
           {/* Right panel - Live Saving Calculator Sidebar (5 columns) */}
-          {step < 9 && (
+          {step < 8 && (
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
               
               {/* Profile Box */}
@@ -1016,7 +956,7 @@ export const PraxisCheckPage: React.FC = () => {
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                   <Flame size={120} />
                 </div>
-
+ 
                 <div className="flex justify-between items-center border-b border-slate-800 pb-4 mb-5">
                   <div className="flex items-center gap-2">
                     <Award size={18} className="text-emerald-400" />
@@ -1026,7 +966,7 @@ export const PraxisCheckPage: React.FC = () => {
                     Echtzeit-Analyse
                   </span>
                 </div>
-
+ 
                 <div className="space-y-4">
                   {/* Locked Savings Potential Teaser */}
                   <div className="bg-slate-800/40 rounded-2xl p-4.5 border border-slate-800 text-center relative overflow-hidden group">
@@ -1036,7 +976,7 @@ export const PraxisCheckPage: React.FC = () => {
                       </div>
                       <span className="text-[10px] font-bold leading-normal text-emerald-400 uppercase tracking-wider block">Analyse &amp; Berechnung aktiv</span>
                       <p className="text-[10.5px] text-slate-300 max-w-[200px] mt-1 leading-tight text-center font-medium">
-                        {step === 8 ? 'Berechnung abgeschlossen! Geben Sie Ihre Daten ein.' : 'Wird nach Abschluss des Fragebogens live freigeschaltet'}
+                        Wird nach Abschluss des Fragebogens live freigeschaltet
                       </p>
                     </div>
                     
