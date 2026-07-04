@@ -110,12 +110,41 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
 
   const isPreLaunchUser = forcePreLaunchMode || sessionStorage.getItem('is_pre_launch_user') === 'true';
+  const [slotsLeft, setSlotsLeft] = useState<number>(11);
 
   useEffect(() => {
     if (forcePreLaunchMode) {
       sessionStorage.setItem('is_pre_launch_user', 'true');
     }
   }, [forcePreLaunchMode]);
+
+  useEffect(() => {
+    if (!isPreLaunchUser) return;
+
+    // Scarcity counter logic
+    const savedCountStr = localStorage.getItem('prelaunch_slots_count');
+    let currentCount = savedCountStr ? parseInt(savedCountStr, 10) : 11;
+    const sessionVisited = sessionStorage.getItem('prelaunch_session_visited');
+
+    if (!savedCountStr) {
+      localStorage.setItem('prelaunch_slots_count', '11');
+      sessionStorage.setItem('prelaunch_session_visited', 'true');
+      setSlotsLeft(11);
+    } else {
+      if (!sessionVisited) {
+        const decrement = Math.floor(Math.random() * 2) + 1; // 1 or 2
+        let newCount = currentCount - decrement;
+        if (newCount < 2) {
+          newCount = 2; // stops at 2
+        }
+        localStorage.setItem('prelaunch_slots_count', newCount.toString());
+        sessionStorage.setItem('prelaunch_session_visited', 'true');
+        setSlotsLeft(newCount);
+      } else {
+        setSlotsLeft(currentCount);
+      }
+    }
+  }, [isPreLaunchUser]);
 
   useEffect(() => {
     if (isPreLaunchUser) {
@@ -695,6 +724,11 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                       ? 'Sichern Sie sich jetzt Ihren exklusiven Pre-Launch-Sonderrabatt und reservieren Sie einen der limitierten Installations-Slots bequem per Chat.' 
                                       : 'Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.'}
                                   </p>
+                                  {isPreLaunchUser && (
+                                    <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs py-2 px-3 rounded-2xl font-bold flex items-center justify-center gap-2">
+                                      <span>⚠️ Nur noch {slotsLeft} freie Pre-Launch Slots!</span>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <div className="w-full space-y-3">
@@ -831,7 +865,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                             </h3>
                             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-2 font-medium">
                               {isPreLaunchUser 
-                                ? 'Sichern Sie sich Ihren exklusiven Sonderrabatt und reservieren Sie Ihren Slot per Chat:' 
+                                ? `Sichern Sie sich Ihren exklusiven Sonderrabatt und reservieren Sie Ihren Slot per Chat (Nur noch ${slotsLeft} Plätze frei):` 
                                 : 'Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:'}
                             </p>
                           </div>
