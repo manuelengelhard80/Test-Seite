@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, ArrowRight, ArrowLeft, Check, Sparkles, Lock, 
@@ -104,6 +104,23 @@ export const PraxisCheckPage: React.FC = () => {
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
+
+  const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+
+  useEffect(() => {
+    if (isPreLaunchUser) {
+      // Add meta robots noindex, nofollow to exclude from Google index
+      const meta = document.createElement('meta');
+      meta.name = 'robots';
+      meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+
+      return () => {
+        // Cleanup on unmount
+        document.head.removeChild(meta);
+      };
+    }
+  }, [isPreLaunchUser]);
 
   // Calculations based on Question 1 answers
   const calculatePotentialSavings = () => {
@@ -658,28 +675,41 @@ export const PraxisCheckPage: React.FC = () => {
                               <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 text-center h-full flex flex-col justify-between items-center space-y-4">
                                 <div className="space-y-3 w-full">
                                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0D9488]/10 text-[#2DD4BF] font-bold text-[10px] uppercase tracking-wider rounded-full border border-[#0D9488]/20">
-                                    <Sparkles size={10} /> Empfehlung sichern
+                                    <Sparkles size={10} /> {isPreLaunchUser ? 'Pre-Launch Vorteil' : 'Empfehlung sichern'}
                                   </span>
                                   <h3 className="text-xl font-black text-white tracking-tight leading-snug">
-                                    Ihr KI-Assistent ist bereit
+                                    {isPreLaunchUser ? 'Sonderkondition sichern' : 'Ihr KI-Assistent ist bereit'}
                                   </h3>
                                   <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
-                                    Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.
+                                    {isPreLaunchUser 
+                                      ? 'Sichern Sie sich jetzt Ihren exklusiven Pre-Launch-Sonderrabatt und reservieren Sie einen der limitierten Installations-Slots bequem per Chat.' 
+                                      : 'Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.'}
                                   </p>
                                 </div>
 
                                 <div className="w-full space-y-3">
-                                  <a
-                                    href={savings.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    referrerPolicy="no-referrer"
-                                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
-                                    id="btn-buy-recommendation"
-                                  >
-                                    <span>JETZT SYSTEM BUCHEN</span>
-                                    <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                  </a>
+                                  {isPreLaunchUser ? (
+                                    <button
+                                      onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                                      className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
+                                      id="btn-prelaunch-whatsapp-recommendation"
+                                    >
+                                      <span>RABATT & SLOT SICHERN</span>
+                                      <MessageCircle size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                                    </button>
+                                  ) : (
+                                    <a
+                                      href={savings.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      referrerPolicy="no-referrer"
+                                      className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
+                                      id="btn-buy-recommendation"
+                                    >
+                                      <span>JETZT SYSTEM BUCHEN</span>
+                                      <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                    </a>
+                                  )}
                                   
                                   <div className="flex items-center justify-center gap-1 text-[10px] text-slate-400 font-medium">
                                     <Lock size={10} className="text-emerald-400" />
@@ -691,7 +721,9 @@ export const PraxisCheckPage: React.FC = () => {
                                 <div className="bg-slate-800/40 border border-slate-800/80 p-3.5 rounded-2xl flex items-start gap-2.5 text-[11px] text-slate-450 w-full mt-auto">
                                   <span className="text-xs text-[#2DD4BF] shrink-0 mt-0.5">💡</span>
                                   <p className="leading-normal text-left text-slate-300">
-                                    <strong>Wichtiger Buchungshinweis:</strong> Der monatliche Tarif wird erst im Laufe Ihres persönlichen, geführten Onboarding-Prozesses finalisiert und gebucht. Sie gehen jetzt kein Risiko ein.
+                                    <strong>Wichtiger Buchungshinweis:</strong> {isPreLaunchUser 
+                                      ? 'Ihre Reservierung über WhatsApp ist absolut unverbindlich. Die finalen Details und Konditionen besprechen wir ganz entspannt im Gespräch.' 
+                                      : 'Der monatliche Tarif wird erst im Laufe Ihres persönlichen, geführten Onboarding-Prozesses finalisiert und gebucht. Sie gehen jetzt kein Risiko ein.'}
                                   </p>
                                 </div>
                               </div>
@@ -785,23 +817,36 @@ export const PraxisCheckPage: React.FC = () => {
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                           <div className="text-left">
                             <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-wider uppercase flex items-center gap-2">
-                              <Lock size={15} className="text-[#0D9488]" /> IHR DIREKTZUGANG
+                              <Lock size={15} className="text-[#0D9488]" /> {isPreLaunchUser ? 'PRE-LAUNCH VORTEILE' : 'IHR DIREKTZUGANG'}
                             </h3>
                             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-2 font-medium">
-                              Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:
+                              {isPreLaunchUser 
+                                ? 'Sichern Sie sich Ihren exklusiven Sonderrabatt und reservieren Sie Ihren Slot per Chat:' 
+                                : 'Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:'}
                             </p>
                           </div>
                           <div className="w-full md:w-auto shrink-0 flex items-center justify-center">
-                            <a
-                              href={savings.link}
-                              target="_blank"
-                              referrerPolicy="no-referrer"
-                              className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
-                              id="btn-direct-access-link"
-                            >
-                              Jetzt für die Praxis buchen
-                              <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                            </a>
+                            {isPreLaunchUser ? (
+                              <button
+                                onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                                className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
+                                id="btn-prelaunch-whatsapp-direct-link"
+                              >
+                                Rabatt sichern (via WhatsApp)
+                                <MessageCircle size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                              </button>
+                            ) : (
+                              <a
+                                href={savings.link}
+                                target="_blank"
+                                referrerPolicy="no-referrer"
+                                className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
+                                id="btn-direct-access-link"
+                              >
+                                Jetzt für die Praxis buchen
+                                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                              </a>
+                            )}
                           </div>
                         </div>
                       </div>
