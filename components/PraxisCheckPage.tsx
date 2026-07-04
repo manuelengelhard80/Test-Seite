@@ -716,7 +716,15 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0D9488]/10 text-[#2DD4BF] font-bold text-[10px] uppercase tracking-wider rounded-full border border-[#0D9488]/20">
                                     <Sparkles size={10} /> {isPreLaunchUser ? 'Pre-Launch Vorteil' : 'Empfehlung sichern'}
                                   </span>
-                                  <h3 className="text-xl font-black text-white tracking-tight leading-snug">
+
+                                  {/* Paket-Preis-Anzeige */}
+                                  <div className="py-2.5 px-4 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-center">
+                                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block mb-0.5">Ihr empfohlener Tarif</span>
+                                    <span className="text-2xl font-black text-[#2DD4BF] tracking-tight block">{savings.tarif}</span>
+                                    <span className="text-xs text-slate-300 font-medium block mt-1">{savings.inklusivminuten}</span>
+                                  </div>
+
+                                  <h3 className="text-xl font-black text-white tracking-tight leading-snug pt-1">
                                     {isPreLaunchUser ? 'Sonderkondition sichern' : 'Ihr KI-Assistent ist bereit'}
                                   </h3>
                                   <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
@@ -725,8 +733,8 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                       : 'Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.'}
                                   </p>
                                   {isPreLaunchUser && (
-                                    <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs py-2 px-3 rounded-2xl font-bold flex items-center justify-center gap-2">
-                                      <span>⚠️ Nur noch {slotsLeft} freie Pre-Launch Slots!</span>
+                                    <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs py-3 px-4 rounded-2xl font-medium text-left leading-relaxed">
+                                      Da wir jede Praxis persönlich onboarden und die KI-Telefonassistenten für jede Praxis maßgeschneidert einrichten, ist die Pre-Launch-Phase streng limitiert. Aktuell sind nur noch <span className="font-extrabold text-[#2DD4BF] underline decoration-2 decoration-teal-400">{slotsLeft} Slots</span> frei.
                                     </div>
                                   )}
                                 </div>
