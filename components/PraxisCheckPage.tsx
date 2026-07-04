@@ -109,7 +109,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
 
-  const isPreLaunchUser = true; // Always show pre-launch texts and slot reservation logic
+  const isPreLaunchUser = forcePreLaunchMode || sessionStorage.getItem('is_pre_launch_user') === 'true';
   const [slotsLeft, setSlotsLeft] = useState<number>(11);
 
   useEffect(() => {
@@ -748,24 +748,32 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                   </span>
 
                                   {/* Paket-Preis-Anzeige */}
-                                  <div className="py-3.5 px-4 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-center space-y-2 w-full">
-                                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block">Ihr empfohlenes System</span>
-                                    <span className="text-2xl font-black text-white tracking-tight block">{productDetails.name}</span>
-                                    
-                                    <div className="flex items-center justify-between text-xs text-slate-450 pt-1 border-t border-slate-800/80">
-                                      <span>Einrichtungspreis:</span>
-                                      <span className="line-through text-slate-500">{productDetails.originalPrice}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
-                                        {productDetails.savingsPercent} • {productDetails.savedAmount}
-                                      </span>
-                                      <div className="text-right">
-                                        <span className="text-2xl font-black text-[#2DD4BF] block leading-none">{productDetails.discountedPrice}</span>
-                                        <span className="text-[9px] text-slate-500 font-medium block mt-0.5">zzgl. MwSt.</span>
+                                  {isPreLaunchUser ? (
+                                    <div className="py-3.5 px-4 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-center space-y-2 w-full">
+                                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block">Ihr empfohlenes System</span>
+                                      <span className="text-2xl font-black text-white tracking-tight block">{productDetails.name}</span>
+                                      
+                                      <div className="flex items-center justify-between text-xs text-slate-450 pt-1 border-t border-slate-800/80">
+                                        <span>Einrichtungspreis:</span>
+                                        <span className="line-through text-slate-500">{productDetails.originalPrice}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between gap-2">
+                                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                                          {productDetails.savingsPercent} • {productDetails.savedAmount}
+                                        </span>
+                                        <div className="text-right">
+                                          <span className="text-2xl font-black text-[#2DD4BF] block leading-none">{productDetails.discountedPrice}</span>
+                                          <span className="text-[9px] text-slate-500 font-medium block mt-0.5">zzgl. MwSt.</span>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  ) : (
+                                    <div className="py-2.5 px-4 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-center w-full">
+                                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block mb-0.5">Ihr empfohlener Tarif</span>
+                                      <span className="text-2xl font-black text-[#2DD4BF] tracking-tight block">{savings.tarif}</span>
+                                      <span className="text-xs text-slate-300 font-medium block mt-1">{savings.inklusivminuten}</span>
+                                    </div>
+                                  )}
 
                                   <h3 className="text-xl font-black text-white tracking-tight leading-snug pt-1">
                                     {isPreLaunchUser ? 'Sonderkondition sichern' : 'Ihr KI-Assistent ist bereit'}
