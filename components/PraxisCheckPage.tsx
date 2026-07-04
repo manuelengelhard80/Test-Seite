@@ -109,7 +109,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
 
-  const isPreLaunchUser = forcePreLaunchMode || sessionStorage.getItem('is_pre_launch_user') === 'true';
+  const isPreLaunchUser = true; // Always show pre-launch texts and slot reservation logic
   const [slotsLeft, setSlotsLeft] = useState<number>(11);
 
   useEffect(() => {
