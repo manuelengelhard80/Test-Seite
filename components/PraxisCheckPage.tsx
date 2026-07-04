@@ -92,7 +92,11 @@ const quizQuestions: Question[] = [
   },
 ];
 
-export const PraxisCheckPage: React.FC = () => {
+interface PraxisCheckPageProps {
+  forcePreLaunchMode?: boolean;
+}
+
+export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunchMode = false }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState<number>(1); // 1-7: Questions, 8: Evaluation Screen
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -105,7 +109,13 @@ export const PraxisCheckPage: React.FC = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
 
-  const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+  const isPreLaunchUser = forcePreLaunchMode || sessionStorage.getItem('is_pre_launch_user') === 'true';
+
+  useEffect(() => {
+    if (forcePreLaunchMode) {
+      sessionStorage.setItem('is_pre_launch_user', 'true');
+    }
+  }, [forcePreLaunchMode]);
 
   useEffect(() => {
     if (isPreLaunchUser) {

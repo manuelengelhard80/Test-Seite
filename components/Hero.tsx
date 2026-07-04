@@ -125,7 +125,11 @@ export const Hero: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => { navigate('/praxis-check'); window.scrollTo(0, 0); }}
+            onClick={() => { 
+              const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+              navigate(isPreLaunchUser ? '/pre-launch-check' : '/praxis-check'); 
+              window.scrollTo(0, 0); 
+            }}
             className="w-full sm:w-auto bg-gradient-medical text-white px-8 py-4 rounded-full font-bold hover:shadow-glow transition-all hover:-translate-y-0.5 shadow-lg flex items-center justify-center gap-2 h-[64px]"
           >
             Jetzt zum 3-Minuten-Praxis-Check!

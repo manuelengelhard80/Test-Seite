@@ -111,8 +111,8 @@ const AppContent: React.FC = () => {
 
     const routeMap: Record<string, string> = {
       'home': '/',
-      'test': '/praxis-check',
-      'praxis-check': '/praxis-check',
+      'test': isPreLaunchUser ? '/pre-launch-check' : '/praxis-check',
+      'praxis-check': isPreLaunchUser ? '/pre-launch-check' : '/praxis-check',
       'features': '/funktionen',
       'audio': '/hörproben',
       'security': '/dsgvo',
@@ -133,6 +133,7 @@ const AppContent: React.FC = () => {
       'pre-launch': '/pre-launch',
       'prelaunch': '/pre-launch',
       'pre-launch-rabatt': '/pre-launch-rabatt',
+      'pre-launch-check': '/pre-launch-check',
     };
     
     const targetPath = routeMap[view] || (view.startsWith('/') ? view : `/${view}`);
@@ -167,9 +168,38 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
         <Route path="/pre-launch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
         <Route path="/prelaunch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
-        <Route path="/test" element={<PraxisCheckPage />} />
-        <Route path="/praxis-check" element={<PraxisCheckPage />} />
-        <Route path="/3-minuten-praxis-check" element={<PraxisCheckPage />} />
+        <Route 
+          path="/test" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route 
+          path="/praxis-check" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route 
+          path="/3-minuten-praxis-check" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route path="/pre-launch-check" element={<PraxisCheckPage forcePreLaunchMode={true} />} />
+        <Route path="/prelaunch-check" element={<PraxisCheckPage forcePreLaunchMode={true} />} />
         
         {/* German and English routes aliases */}
         <Route path="/funktionen" element={<FeaturesPage onBack={() => handleNavigate('home')} />} />
