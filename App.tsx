@@ -29,6 +29,7 @@ import { BewertungenPage } from './components/BewertungenPage';
 import { TarifePage } from './components/TarifePage';
 import { WhatsAppWidget } from './components/WhatsAppWidget';
 import { PreLaunchPage } from './components/PreLaunchPage';
+import { PreLaunchPricingPage } from './components/PreLaunchPricingPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -106,6 +107,8 @@ const AppContent: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleNavigate = (view: string) => {
+    const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+
     const routeMap: Record<string, string> = {
       'home': '/',
       'test': '/praxis-check',
@@ -114,7 +117,7 @@ const AppContent: React.FC = () => {
       'audio': '/hörproben',
       'security': '/dsgvo',
       'paragraph-203': '/paragraph-203',
-      'pricing': '/preise',
+      'pricing': isPreLaunchUser ? '/pre-launch-rabatt' : '/preise',
       'tarife': '/tarife',
       'bewertungen': '/bewertungen',
       'bewertung': '/bewertungen',
@@ -129,6 +132,7 @@ const AppContent: React.FC = () => {
       'thankyou-pulse': '/danke-pulse',
       'pre-launch': '/pre-launch',
       'prelaunch': '/pre-launch',
+      'pre-launch-rabatt': '/pre-launch-rabatt',
     };
     
     const targetPath = routeMap[view] || (view.startsWith('/') ? view : `/${view}`);
@@ -180,8 +184,27 @@ const AppContent: React.FC = () => {
         
         <Route path="/paragraph-203" element={<Paragraph203Page onBack={() => handleNavigate('home')} />} />
         
-        <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
-        <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        <Route 
+          path="/preise" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            ) : (
+              <PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            )
+          } 
+        />
+        <Route 
+          path="/pricing" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            ) : (
+              <PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            )
+          } 
+        />
+        <Route path="/pre-launch-rabatt" element={<PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
         
         <Route path="/tarife" element={<TarifePage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
         
