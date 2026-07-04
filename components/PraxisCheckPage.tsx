@@ -237,6 +237,36 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
 
   const savings = calculatePotentialSavings();
 
+  const getProductDetails = () => {
+    if (savings.hauptprodukt === 'Voice') {
+      return {
+        name: 'Auxilium Voice',
+        originalPrice: '999 €',
+        discountedPrice: '797 €',
+        savingsPercent: '-20%',
+        savedAmount: '202 € gespart'
+      };
+    } else if (savings.hauptprodukt === 'Assist') {
+      return {
+        name: 'Auxilium Assist',
+        originalPrice: '1.999 €',
+        discountedPrice: '1.497 €',
+        savingsPercent: '-25%',
+        savedAmount: '502 € gespart'
+      };
+    } else {
+      return {
+        name: 'Auxilium Pulse',
+        originalPrice: '2.999 €',
+        discountedPrice: '1.997 €',
+        savingsPercent: '-33%',
+        savedAmount: '1.002 € gespart'
+      };
+    }
+  };
+
+  const productDetails = getProductDetails();
+
   const handleSelectOption = (questionId: number, option: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
     // Single choice: advances automatically and without delay
@@ -718,24 +748,37 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                   </span>
 
                                   {/* Paket-Preis-Anzeige */}
-                                  <div className="py-2.5 px-4 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-center">
-                                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block mb-0.5">Ihr empfohlener Tarif</span>
-                                    <span className="text-2xl font-black text-[#2DD4BF] tracking-tight block">{savings.tarif}</span>
-                                    <span className="text-xs text-slate-300 font-medium block mt-1">{savings.inklusivminuten}</span>
+                                  <div className="py-3.5 px-4 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-center space-y-2 w-full">
+                                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block">Ihr empfohlenes System</span>
+                                    <span className="text-2xl font-black text-white tracking-tight block">{productDetails.name}</span>
+                                    
+                                    <div className="flex items-center justify-between text-xs text-slate-450 pt-1 border-t border-slate-800/80">
+                                      <span>Einrichtungspreis:</span>
+                                      <span className="line-through text-slate-500">{productDetails.originalPrice}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                                        {productDetails.savingsPercent} • {productDetails.savedAmount}
+                                      </span>
+                                      <div className="text-right">
+                                        <span className="text-2xl font-black text-[#2DD4BF] block leading-none">{productDetails.discountedPrice}</span>
+                                        <span className="text-[9px] text-slate-500 font-medium block mt-0.5">zzgl. MwSt.</span>
+                                      </div>
+                                    </div>
                                   </div>
 
                                   <h3 className="text-xl font-black text-white tracking-tight leading-snug pt-1">
                                     {isPreLaunchUser ? 'Sonderkondition sichern' : 'Ihr KI-Assistent ist bereit'}
                                   </h3>
-                                  <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed">
+                                  <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed text-left">
                                     {isPreLaunchUser 
                                       ? 'Sichern Sie sich jetzt Ihren exklusiven Pre-Launch-Sonderrabatt und reservieren Sie einen der limitierten Installations-Slots bequem per Chat.' 
                                       : 'Sichern Sie sich jetzt Ihr maßgeschneidertes KI-System zum Sonderpreis. Die Einrichtung erfolgt unkompliziert und remote.'}
                                   </p>
                                   {isPreLaunchUser && (
-                                    <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs py-3 px-4 rounded-2xl font-medium text-left leading-relaxed">
+                                    <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed text-left pt-1">
                                       Da wir jede Praxis persönlich onboarden und die KI-Telefonassistenten für jede Praxis maßgeschneidert einrichten, ist die Pre-Launch-Phase streng limitiert. Aktuell sind nur noch <span className="font-extrabold text-[#2DD4BF] underline decoration-2 decoration-teal-400">{slotsLeft} Slots</span> frei.
-                                    </div>
+                                    </p>
                                   )}
                                 </div>
 
