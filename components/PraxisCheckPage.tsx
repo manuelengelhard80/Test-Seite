@@ -204,17 +204,17 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     // LOGIK 2: ERMITTLUNG DES INSTALLATIONS-PRODUKTS (Basis: Frage 7)
     const q7 = answers[7] || '';
     let hauptprodukt = 'Voice';
-    let link = 'https://auxilium-assist.de/voice-kaufen';
+    let link = 'https://www.digistore24.com/product/690597';
     
     if (q7.includes('Praxissoftware') || q7.includes('API-Schnittstelle')) {
       hauptprodukt = 'Puls';
-      link = 'https://auxilium-assist.de/puls-kaufen';
+      link = 'https://www.digistore24.com/product/707577';
     } else if (q7.includes('externen') || q7.includes('Cloud-Kalender') || q7.includes('Google') || q7.includes('Microsoft')) {
       hauptprodukt = 'Assist';
-      link = 'https://auxilium-assist.de/assist-kaufen';
+      link = 'https://www.digistore24.com/product/707217';
     } else {
       hauptprodukt = 'Voice';
-      link = 'https://auxilium-assist.de/voice-kaufen';
+      link = 'https://www.digistore24.com/product/690597';
     }
 
     return {
@@ -748,34 +748,31 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                   </span>
 
                                   {/* Paket-Preis-Anzeige */}
-                                  {isPreLaunchUser ? (
-                                    <div className="py-3.5 px-4 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-center space-y-2 w-full">
-                                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block">Ihr empfohlenes System</span>
-                                      <span className="text-2xl font-black text-white tracking-tight block">{productDetails.name}</span>
-                                      
-                                      <div className="flex items-center justify-between text-xs text-slate-450 pt-1 border-t border-slate-800/80">
-                                        <span>Einrichtungspreis:</span>
-                                        <span className="line-through text-slate-500">{productDetails.originalPrice}</span>
-                                      </div>
-                                      <div className="flex items-center justify-between gap-2">
-                                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                                  <div className="py-3.5 px-4 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-center space-y-2 w-full">
+                                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block">Ihr empfohlenes System</span>
+                                    <span className="text-2xl font-black text-white tracking-tight block">{productDetails.name}</span>
+                                    
+                                    <div className="flex items-center justify-between text-xs text-slate-450 pt-1 border-t border-slate-800/80">
+                                      <span>Einrichtungspreis:</span>
+                                      <span className="line-through text-slate-500">{productDetails.originalPrice}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <div className="text-left space-y-1">
+                                        <span className="text-[10px] text-slate-400 block text-left">
+                                          {isPreLaunchUser ? 'Pre-Launch-Rabatt:' : 'Praxis-Start-Vorteil:'}
+                                        </span>
+                                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded block w-fit">
                                           {productDetails.savingsPercent} • {productDetails.savedAmount}
                                         </span>
-                                        <div className="text-right">
-                                          <span className="text-2xl font-black text-[#2DD4BF] block leading-none">{productDetails.discountedPrice}</span>
-                                          <span className="text-[9px] text-slate-500 font-medium block mt-0.5">zzgl. MwSt.</span>
-                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <span className="text-2xl font-black text-[#2DD4BF] block leading-none">{productDetails.discountedPrice}</span>
+                                        <span className="text-[9px] text-slate-500 font-medium block mt-0.5">zzgl. MwSt.</span>
                                       </div>
                                     </div>
-                                  ) : (
-                                    <div className="py-2.5 px-4 bg-slate-800/50 border border-slate-700/50 rounded-2xl text-center w-full">
-                                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block mb-0.5">Ihr empfohlener Tarif</span>
-                                      <span className="text-2xl font-black text-[#2DD4BF] tracking-tight block">{savings.tarif}</span>
-                                      <span className="text-xs text-slate-300 font-medium block mt-1">{savings.inklusivminuten}</span>
-                                    </div>
-                                  )}
+                                  </div>
 
-                                  <h3 className="text-xl font-black text-white tracking-tight leading-snug pt-1">
+                                  <h3 className="text-xl font-black text-white tracking-tight leading-snug pt-1 text-left w-full">
                                     {isPreLaunchUser ? 'Sonderkondition sichern' : 'Ihr KI-Assistent ist bereit'}
                                   </h3>
                                   <p className="text-slate-300 text-xs sm:text-[13px] leading-relaxed text-left">
@@ -792,14 +789,17 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
 
                                 <div className="w-full space-y-3">
                                   {isPreLaunchUser ? (
-                                    <button
-                                      onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
+                                    <a
+                                      href={savings.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      referrerPolicy="no-referrer"
                                       className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
-                                      id="btn-prelaunch-whatsapp-recommendation"
+                                      id="btn-prelaunch-buy-recommendation"
                                     >
                                       <span>RABATT & SLOT SICHERN</span>
-                                      <MessageCircle size={16} className="group-hover:translate-x-0.5 transition-transform" />
-                                    </button>
+                                      <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                    </a>
                                   ) : (
                                     <a
                                       href={savings.link}
