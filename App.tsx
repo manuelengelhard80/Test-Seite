@@ -10,6 +10,7 @@ import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
 import { SpecialtyPage } from './components/SpecialtyPage';
 import { AudioSamplesPage } from './components/AudioSamplesPage';
+import { AudioSamplesPreLaunchPage } from './components/AudioSamplesPreLaunchPage';
 import { SecurityPage } from './components/SecurityPage';
 import { PricingPage } from './components/PricingPage';
 import { CTASection } from './components/CTASection';
@@ -115,6 +116,8 @@ const AppContent: React.FC = () => {
       'praxis-check': isPreLaunchUser ? '/pre-launch-check' : '/praxis-check',
       'features': '/funktionen',
       'audio': '/hörproben',
+      'audio-hörproben': '/audio-hörproben',
+      'audio-hoerproben': '/audio-hörproben',
       'security': '/dsgvo',
       'paragraph-203': '/paragraph-203',
       'pricing': isPreLaunchUser ? '/pre-launch-rabatt' : '/preise',
@@ -208,6 +211,8 @@ const AppContent: React.FC = () => {
         <Route path="/hörproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/hoerproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/audio" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/audio-hörproben" element={<AudioSamplesPreLaunchPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/audio-hoerproben" element={<AudioSamplesPreLaunchPage onBack={() => handleNavigate('home')} />} />
         
         <Route path="/dsgvo" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
         <Route path="/security" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
