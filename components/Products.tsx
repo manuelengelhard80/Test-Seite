@@ -262,7 +262,7 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate, preLaunchMode = 
               
 
               <div className="text-slate-500 mb-6 text-sm leading-relaxed relative z-10 text-center w-full mx-auto">
-                <p className="text-center max-w-md mx-auto">Ihr KI-Telefonassistent beantwortet Patientenfragen rund um die Uhr und nimmt Rezeptwünsche strukturiert auf – ohne Besetztzeichen, auch am Wochenende.</p>
+                <p className="text-center max-w-md mx-auto">Ihr KI-Telefonassistent beantwortet Patientenfragen rund um die Uhr und nimmt Rezeptwünsche strukturiert auf.</p>
               </div>
 
               <h4 className="text-sm font-semibold text-slate-500 mb-4 relative z-10 text-left">
@@ -822,85 +822,85 @@ export const Products: React.FC<ProductsProps> = ({ onNavigate, preLaunchMode = 
 
         {/* Collapsible Panel: Wichtige Hinweise */}
         {!preLaunchMode && (
-          <div className="mt-16 max-w-4xl mx-auto w-full px-4 md:px-0">
-            <div className="border border-slate-200/80 rounded-2xl bg-white overflow-hidden shadow-sm transition-all duration-300">
+          <div className="mt-12 max-w-3xl mx-auto w-full px-4 sm:px-6">
+            <div className="border border-slate-200/60 rounded-xl bg-slate-50/20 overflow-hidden transition-all duration-300">
               <button
                 onClick={() => setShowNotes(!showNotes)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50/50 transition-colors focus:outline-none"
+                className="w-full flex items-center justify-between py-4 px-5 text-left hover:bg-slate-50/50 transition-colors focus:outline-none"
                 aria-expanded={showNotes}
               >
-                <span className="font-bold text-slate-800 text-base md:text-lg">
+                <span className="font-semibold text-slate-500 hover:text-slate-700 text-[13px] sm:text-sm">
                   Wichtige Hinweise zu Leistungsumfang & Bereitstellung
                 </span>
-                <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 border border-slate-100 transition-colors shrink-0">
-                  {showNotes ? <Minus size={18} /> : <Plus size={18} />}
+                <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-400 border border-slate-100 transition-colors shrink-0">
+                  {showNotes ? <Minus size={14} /> : <Plus size={14} />}
                 </div>
               </button>
 
               {showNotes && (
-                <div className="border-t border-slate-100 bg-slate-50/20 p-6 md:p-8 space-y-8 text-slate-600 text-sm leading-relaxed text-left">
+                <div className="border-t border-slate-100 bg-white/40 p-5 sm:p-6 space-y-6 text-slate-500 text-xs sm:text-[13px] leading-relaxed text-left">
                   {/* Lieferart */}
                   <div>
-                    <h4 className="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
+                    <h4 className="font-bold text-slate-700 text-[13px] sm:text-sm mb-2 flex items-center gap-1.5">
                       Informationen zur Bereitstellung (Lieferart)
                     </h4>
-                    <p className="text-slate-600 pl-1">
+                    <p className="text-slate-500 pl-0.5">
                       Bei unseren Angeboten handelt es sich um reine Dienstleistungen, die remote erbracht werden. Es erfolgt kein physischer Versand und keine Einrichtung vor Ort. Direkt nach erfolgreicher Buchung erhalten Sie eine Bestätigungs-E-Mail mit dem Zugang zu unserem Online-Kalender, um das Onboarding-Gespräch zu terminieren. Die gesamte Kommunikation, Konfiguration und Bereitstellung des KI-Telefonassistenten erfolgt per Telefon, E-Mail und Web-Tools.
                     </p>
                   </div>
 
                   {/* Leistungsumfang */}
                   <div>
-                    <h4 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                    <h4 className="font-bold text-slate-700 text-[13px] sm:text-sm mb-3 flex items-center gap-1.5">
                       Details zum Leistungsumfang
                     </h4>
-                    <ul className="space-y-4 pl-1">
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                    <ul className="space-y-3 pl-0.5">
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Strategisches Onboarding-Gespräch:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Strategisches Onboarding-Gespräch:</strong>
                           <span>Gemeinsame telefonische Erstanalyse Ihres Praxisbedarfs zur Erfassung aller Anforderungen sowie der nahtlosen Vorbereitung Ihres Onboardings.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Konzeption der Praxis-Kommunikation:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Konzeption der Praxis-Kommunikation:</strong>
                           <span>Individuelles Prompt-Engineering sowie präzise Programmierung der Gesprächsstruktur, der passenden Antworten (z. B. für Terminvergaben, Rezeptwünsche oder FAQs) und der gewünschten Tonalität für Ihre Patienten. Hierbei werden auch Ihre individuellen Praxisregeln (z. B. Verhalten bei medizinischen Notfällen) direkt im System hinterlegt.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Bereitstellung der Ziel-Rufnummer:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Bereitstellung der Ziel-Rufnummer:</strong>
                           <span>Konfiguration des Assistenten inklusive Stimmenauswahl. Sie erhalten von uns eine dedizierte Telefonnummer für Ihre Praxis, an die Sie Ihren bestehenden Telefonanschluss ganz einfach per Rufumleitung anbinden können.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Testphase & Qualitätssicherung:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Testphase & Qualitätssicherung:</strong>
                           <span>Ausführliche Funktionsprüfung und Optimierung des Assistenten vor der finalen Bereitstellung.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Übergabe & Sofort-Einsatz:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Übergabe & Sofort-Einsatz:</strong>
                           <span>Bereitstellung und Übergabe des fertigen Systems. Ihr KI-Telefonassistent ist ab diesem Zeitpunkt sofort vollständig für Ihre Praxis einsatzbereit.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Optionale Anpassungen auf Kundenwunsch:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Optionale Anpassungen auf Kundenwunsch:</strong>
                           <span>Falls im Nachgang noch Änderungen am System benötigt werden, reicht eine kurze Mitteilung (z. B. per E-Mail) aus. Wir setzen Ihre Änderungswünsche unkompliziert um.</span>
                         </div>
                       </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-[#13a09e] shrink-0 mt-1" />
+                      <li className="flex items-start gap-2.5">
+                        <CheckCircle2 size={14} className="text-[#13a09e]/80 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-slate-800 font-semibold block mb-0.5">Abschluss-Briefing:</strong>
+                          <strong className="text-slate-700 font-semibold block mb-0.5">Abschluss-Briefing:</strong>
                           <span>Bereitstellung aller relevanten Informationen und Anleitungen zur optimalen Nutzung des Systems für Ihr Praxisteam.</span>
                         </div>
                       </li>
