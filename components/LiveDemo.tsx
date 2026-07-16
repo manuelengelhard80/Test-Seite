@@ -52,16 +52,13 @@ export const LiveDemo: React.FC = () => {
       setPlayingIndex(index);
       
       if (index === 0) {
-        if (!audioRef.current) {
-          audioRef.current = new Audio("/termin.mp3");
-          audioRef.current.addEventListener('ended', () => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => {
+            console.warn("LiveDemo audio play failed:", err);
             setPlayingIndex(null);
           });
         }
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => {
-          console.warn("LiveDemo audio play failed, maybe not uploaded yet:", err);
-        });
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
@@ -71,13 +68,18 @@ export const LiveDemo: React.FC = () => {
   };
 
   useEffect(() => {
+    const audio = new Audio("/termin.mp3");
+    audio.preload = "auto";
+    audio.addEventListener('ended', () => {
+      setPlayingIndex(null);
+    });
+    audioRef.current = audio;
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      audio.pause();
     };
   }, []);
 

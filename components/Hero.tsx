@@ -10,31 +10,31 @@ export const Hero: React.FC = () => {
   const navigate = useNavigate();
 
   const toggleAudio = () => {
+    if (!audioRef.current) return;
+
     if (isPlaying) {
       setIsPlaying(false);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      audioRef.current.pause();
     } else {
       setIsPlaying(true);
-      if (!audioRef.current) {
-        audioRef.current = new Audio("/termin.mp3");
-        audioRef.current.addEventListener('ended', () => {
-          setIsPlaying(false);
-        });
-      }
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(err => {
-        console.warn("Hero audio play failed, maybe not uploaded yet:", err);
+        console.warn("Hero audio play failed:", err);
+        setIsPlaying(false);
       });
     }
   };
 
   useEffect(() => {
+    const audio = new Audio("/termin.mp3");
+    audio.preload = "auto";
+    audio.addEventListener('ended', () => {
+      setIsPlaying(false);
+    });
+    audioRef.current = audio;
+
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      audio.pause();
     };
   }, []);
 
