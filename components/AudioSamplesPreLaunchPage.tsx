@@ -72,7 +72,7 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio("http://2bmedia-marketing.de/audio/termin.wav");
+          const audio = new Audio("/termin.wav");
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
@@ -80,17 +80,8 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
         }
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(err => {
-          console.warn("Primary audio URL failed to play, trying local fallback:", err);
-          if (audioRef.current && audioRef.current.src !== window.location.origin + "/termin.wav") {
-            audioRef.current.src = "/termin.wav";
-            audioRef.current.load();
-            audioRef.current.play().catch(fallbackErr => {
-              console.error("Local audio fallback failed:", fallbackErr);
-              setPlayingIndex(null);
-            });
-          } else {
-            setPlayingIndex(null);
-          }
+          console.error("Audio play failed:", err);
+          setPlayingIndex(null);
         });
       } else {
         timeoutRef.current = setTimeout(() => {

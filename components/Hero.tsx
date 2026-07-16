@@ -18,7 +18,7 @@ export const Hero: React.FC = () => {
     } else {
       setIsPlaying(true);
       if (!audioRef.current) {
-        const audio = new Audio("http://2bmedia-marketing.de/audio/termin.wav");
+        const audio = new Audio("/termin.wav");
         audio.addEventListener('ended', () => {
           setIsPlaying(false);
         });
@@ -26,17 +26,8 @@ export const Hero: React.FC = () => {
       }
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(err => {
-        console.warn("Primary audio URL failed to play, trying local fallback:", err);
-        if (audioRef.current && audioRef.current.src !== window.location.origin + "/termin.wav") {
-          audioRef.current.src = "/termin.wav";
-          audioRef.current.load();
-          audioRef.current.play().catch(fallbackErr => {
-            console.error("Local audio fallback failed:", fallbackErr);
-            setIsPlaying(false);
-          });
-        } else {
-          setIsPlaying(false);
-        }
+        console.error("Audio play failed:", err);
+        setIsPlaying(false);
       });
     }
   };
