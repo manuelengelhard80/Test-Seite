@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Play, Pause, ShieldCheck, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
 // @ts-ignore
 import terminWav from '../assets/termin.wav';
 

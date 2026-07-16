@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Play, Pause, Volume2, Calendar, Pill, AlertCircle } from 'lucide-react';
-
 // @ts-ignore
 import terminWav from '../assets/termin.wav';
 

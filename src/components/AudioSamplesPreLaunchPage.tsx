@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Volume2, Play, Pause, Calendar, Pill, AlertCircle } from 'lucide-react';
 import { CTASection } from './CTASection';
-
 // @ts-ignore
 import terminWav from '../assets/termin.wav';
 
