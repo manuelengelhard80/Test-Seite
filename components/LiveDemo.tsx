@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Play, Pause, Volume2, Calendar, Pill, AlertCircle } from 'lucide-react';
 
+// @ts-ignore
+import terminWav from '../assets/termin.wav';
+
 export const LiveDemo: React.FC = () => {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const timeoutRef = useRef<any>(null);
@@ -53,7 +56,7 @@ export const LiveDemo: React.FC = () => {
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio("/termin.wav");
+          const audio = new Audio(terminWav);
           audio.preload = "auto";
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
