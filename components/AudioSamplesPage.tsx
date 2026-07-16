@@ -58,7 +58,8 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio("/termin.wav");
+          const audio = new Audio("/termin.mp3");
+          audio.preload = "auto";
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
