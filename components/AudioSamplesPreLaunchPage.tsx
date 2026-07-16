@@ -9,10 +9,20 @@ interface AudioSamplesPreLaunchPageProps {
 export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps> = ({ onBack }) => {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const timeoutRef = useRef<any>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Mark user as pre-launch visitor in this session
     sessionStorage.setItem('is_pre_launch_user', 'true');
+    
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
   }, []);
   
   const samples = [
@@ -48,15 +58,34 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
   const togglePlay = (index: number) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (audioRef.current) {
+      audioRef.current.pause();
     }
 
     if (playingIndex === index) {
       setPlayingIndex(null);
     } else {
       setPlayingIndex(index);
-      timeoutRef.current = setTimeout(() => {
-        setPlayingIndex(null);
-      }, 4000);
+      
+      if (index === 0) {
+        if (!audioRef.current) {
+          audioRef.current = new Audio("/termin.wav");
+          audioRef.current.addEventListener('ended', () => {
+            setPlayingIndex(null);
+          });
+        }
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(err => {
+          console.warn("AudioSamplesPreLaunchPage audio play failed, maybe not uploaded yet:", err);
+        });
+      } else {
+        timeoutRef.current = setTimeout(() => {
+          setPlayingIndex(null);
+        }, 4000);
+      }
     }
   };
 
@@ -115,7 +144,7 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
                     {playingIndex === idx ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-1" />}
                   </button>
                   
-                  {playingIndex === idx ? (
+                  {(playingIndex === idx && idx !== 0) ? (
                     <div className="flex-1 text-xs font-semibold text-[#0D9488] animate-pulse text-left leading-relaxed">
                       Die Hörbeispiele folgen in Kürze...
                     </div>
@@ -139,6 +168,7 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
                           [10, 32, 50, 68, 45, 78, 95, 82, 52, 60, 40, 52, 70, 48, 35, 58, 42, 22]  // Notfall-Triage
                         ];
                         const heights = presets[idx % presets.length];
+                        const isCurrentlyPlaying = playingIndex === idx;
                         return heights.map((height, i) => {
                           const ratio = i / (heights.length - 1 || 1);
                           const r = Math.round(59 - 40 * ratio);
@@ -147,10 +177,11 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
                           return (
                             <div 
                               key={i} 
-                              className="flex-1 rounded-full transition-all duration-300"
+                              className={`flex-1 rounded-full transition-all duration-300 ${isCurrentlyPlaying ? 'animate-wave-bar' : ''}`}
                               style={{ 
                                 height: `${height}%`,
-                                backgroundColor: `rgb(${r}, ${g}, ${b})`
+                                backgroundColor: `rgb(${r}, ${g}, ${b})`,
+                                animationDelay: isCurrentlyPlaying ? `${i * 0.05}s` : undefined
                               }} 
                             ></div>
                           );

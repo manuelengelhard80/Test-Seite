@@ -6,27 +6,34 @@ import { useNavigate } from 'react-router-dom';
 export const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const timeoutRef = useRef<any>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
 
   const toggleAudio = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
     if (isPlaying) {
       setIsPlaying(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     } else {
       setIsPlaying(true);
-      timeoutRef.current = setTimeout(() => {
-        setIsPlaying(false);
-      }, 4000);
+      if (!audioRef.current) {
+        audioRef.current = new Audio("/termin.wav");
+        audioRef.current.addEventListener('ended', () => {
+          setIsPlaying(false);
+        });
+      }
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(err => {
+        console.warn("Hero audio play failed, maybe not uploaded yet:", err);
+      });
     }
   };
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     };
   }, []);
@@ -86,41 +93,36 @@ export const Hero: React.FC = () => {
             
             <div className="flex flex-col items-start text-left min-w-[140px]">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1 group-hover:text-[#3ba2d8] transition-colors">Beispiel-Anruf hören</span>
-              {isPlaying ? (
-                <span className="text-[11px] font-semibold text-[#0D9488] animate-pulse block leading-normal">
-                  Die Hörbeispiele folgen in Kürze...
-                </span>
-              ) : (
-                /* Waveform Visualization styled like the user's uploaded image with precise colors and heights */
-                <div className="flex items-center gap-[3px] h-7 w-full">
-                  <style dangerouslySetInnerHTML={{__html: `
-                    @keyframes hoverWave {
-                      0%, 100% { transform: scaleY(1); }
-                      50% { transform: scaleY(0.35); }
-                    }
-                    .animate-wave-bar {
-                      animation: hoverWave 1.2s ease-in-out infinite;
-                      transform-origin: center;
-                    }
-                  `}} />
-                  {[15, 38, 58, 82, 54, 42, 90, 100, 75, 48, 60, 40, 72, 58, 45, 42, 80, 38, 28, 15].map((height, i, arr) => {
-                    const ratio = i / (arr.length - 1 || 1);
-                    const r = Math.round(59 - 40 * ratio);
-                    const g = Math.round(162 - 2 * ratio);
-                    const b = Math.round(216 - 58 * ratio);
-                    return (
-                      <div 
-                        key={i} 
-                        className="w-[4px] rounded-full transition-all duration-300"
-                        style={{ 
-                          height: `${height}%`,
-                          backgroundColor: `rgb(${r}, ${g}, ${b})`
-                        }} 
-                      ></div>
-                    );
-                  })}
-                </div>
-              )}
+              {/* Waveform Visualization styled like the user's uploaded image with precise colors and heights */}
+              <div className="flex items-center gap-[3px] h-7 w-full">
+                <style dangerouslySetInnerHTML={{__html: `
+                  @keyframes hoverWave {
+                    0%, 100% { transform: scaleY(1); }
+                    50% { transform: scaleY(0.35); }
+                  }
+                  .animate-wave-bar {
+                    animation: hoverWave 1.2s ease-in-out infinite;
+                    transform-origin: center;
+                  }
+                `}} />
+                {[15, 38, 58, 82, 54, 42, 90, 100, 75, 48, 60, 40, 72, 58, 45, 42, 80, 38, 28, 15].map((height, i, arr) => {
+                  const ratio = i / (arr.length - 1 || 1);
+                  const r = Math.round(59 - 40 * ratio);
+                  const g = Math.round(162 - 2 * ratio);
+                  const b = Math.round(216 - 58 * ratio);
+                  return (
+                    <div 
+                      key={i} 
+                      className={`w-[4px] rounded-full transition-all duration-300 ${isPlaying ? 'animate-wave-bar' : ''}`}
+                      style={{ 
+                        height: `${height}%`,
+                        backgroundColor: `rgb(${r}, ${g}, ${b})`,
+                        animationDelay: isPlaying ? `${i * 0.05}s` : undefined
+                      }} 
+                    ></div>
+                  );
+                })}
+              </div>
             </div>
           </button>
 
