@@ -53,7 +53,7 @@ export const LiveDemo: React.FC = () => {
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio("/termin.wav");
+          const audio = new Audio("http://2bmedia-marketing.de/audio/termin.wav");
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
@@ -61,8 +61,17 @@ export const LiveDemo: React.FC = () => {
         }
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(err => {
-          console.warn("LiveDemo audio play failed:", err);
-          setPlayingIndex(null);
+          console.warn("Primary audio URL failed to play, trying local fallback:", err);
+          if (audioRef.current && audioRef.current.src !== window.location.origin + "/termin.wav") {
+            audioRef.current.src = "/termin.wav";
+            audioRef.current.load();
+            audioRef.current.play().catch(fallbackErr => {
+              console.error("Local audio fallback failed:", fallbackErr);
+              setPlayingIndex(null);
+            });
+          } else {
+            setPlayingIndex(null);
+          }
         });
       } else {
         timeoutRef.current = setTimeout(() => {
