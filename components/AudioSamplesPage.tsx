@@ -57,13 +57,18 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
       setPlayingIndex(index);
       
       if (index === 0) {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => {
-            console.warn("AudioSamplesPage audio play failed:", err);
+        if (!audioRef.current) {
+          const audio = new Audio("/termin.wav");
+          audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
+          audioRef.current = audio;
         }
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(err => {
+          console.warn("AudioSamplesPage audio play failed:", err);
+          setPlayingIndex(null);
+        });
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
@@ -73,18 +78,13 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
   };
 
   useEffect(() => {
-    const audio = new Audio("/termin.mp3");
-    audio.preload = "auto";
-    audio.addEventListener('ended', () => {
-      setPlayingIndex(null);
-    });
-    audioRef.current = audio;
-
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     };
   }, []);
 

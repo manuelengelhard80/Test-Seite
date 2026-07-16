@@ -14,19 +14,14 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
   useEffect(() => {
     // Mark user as pre-launch visitor in this session
     sessionStorage.setItem('is_pre_launch_user', 'true');
-
-    const audio = new Audio("/termin.mp3");
-    audio.preload = "auto";
-    audio.addEventListener('ended', () => {
-      setPlayingIndex(null);
-    });
-    audioRef.current = audio;
     
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     };
   }, []);
   
@@ -76,13 +71,18 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
       setPlayingIndex(index);
       
       if (index === 0) {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => {
-            console.warn("AudioSamplesPreLaunchPage audio play failed:", err);
+        if (!audioRef.current) {
+          const audio = new Audio("/termin.wav");
+          audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
+          audioRef.current = audio;
         }
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(err => {
+          console.warn("AudioSamplesPreLaunchPage audio play failed:", err);
+          setPlayingIndex(null);
+        });
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
