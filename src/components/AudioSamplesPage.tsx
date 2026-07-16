@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Volume2, Play, Pause, Calendar, Pill, AlertCircle } from 'lucide-react';
 import { CTASection } from './CTASection';
-import { terminAudio } from '../assets/audioData';
+// @ts-ignore
+import terminWav from '../assets/termin.wav';
 
 interface AudioSamplesPageProps {
   onBack: () => void;
@@ -59,7 +60,7 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio(terminAudio);
+          const audio = new Audio(terminWav);
           audio.preload = "auto";
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);

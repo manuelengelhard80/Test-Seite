@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Play, Pause, ShieldCheck, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { terminAudio } from '../assets/audioData';
+// @ts-ignore
+import terminWav from '../assets/termin.wav';
 
 export const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,7 +20,7 @@ export const Hero: React.FC = () => {
     } else {
       setIsPlaying(true);
       if (!audioRef.current) {
-        const audio = new Audio(terminAudio);
+        const audio = new Audio(terminWav);
         audio.preload = "auto";
         audio.addEventListener('ended', () => {
           setIsPlaying(false);
