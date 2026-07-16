@@ -18,7 +18,7 @@ export const Hero: React.FC = () => {
     } else {
       setIsPlaying(true);
       if (!audioRef.current) {
-        audioRef.current = new Audio("/termin.wav");
+        audioRef.current = new Audio("/termin.mp3");
         audioRef.current.addEventListener('ended', () => {
           setIsPlaying(false);
         });
