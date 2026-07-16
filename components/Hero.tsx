@@ -17,13 +17,19 @@ export const Hero: React.FC = () => {
       }
     } else {
       setIsPlaying(true);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => {
-          console.error("Audio play failed:", err);
+      if (!audioRef.current) {
+        const audio = new Audio("/termin.wav");
+        audio.preload = "auto";
+        audio.addEventListener('ended', () => {
           setIsPlaying(false);
         });
+        audioRef.current = audio;
       }
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(err => {
+        console.error("Audio play failed:", err);
+        setIsPlaying(false);
+      });
     }
   };
 
@@ -37,12 +43,6 @@ export const Hero: React.FC = () => {
 
   return (
     <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-16 overflow-hidden bg-white border-b border-slate-100">
-      <audio 
-        ref={audioRef} 
-        src="/termin.mp3" 
-        preload="auto" 
-        onEnded={() => setIsPlaying(false)} 
-      />
       
       {/* Background Gradient */}
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-subtle -z-10"></div>

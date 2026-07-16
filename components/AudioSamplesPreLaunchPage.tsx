@@ -71,13 +71,19 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
       setPlayingIndex(index);
       
       if (index === 0) {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => {
-            console.error("Audio play failed:", err);
+        if (!audioRef.current) {
+          const audio = new Audio("/termin.wav");
+          audio.preload = "auto";
+          audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
+          audioRef.current = audio;
         }
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(err => {
+          console.error("Audio play failed:", err);
+          setPlayingIndex(null);
+        });
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
@@ -88,12 +94,6 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
 
   return (
     <div className="bg-slate-50 min-h-screen pt-20">
-      <audio 
-        ref={audioRef} 
-        src="/termin.mp3" 
-        preload="auto" 
-        onEnded={() => setPlayingIndex(null)} 
-      />
       
       {/* Header Section */}
       <section className="bg-white pb-16 pt-10 border-b border-slate-100">
