@@ -52,19 +52,13 @@ export const LiveDemo: React.FC = () => {
       setPlayingIndex(index);
       
       if (index === 0) {
-        if (!audioRef.current) {
-          const audio = new Audio("/termin.mp3");
-          audio.preload = "auto";
-          audio.addEventListener('ended', () => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => {
+            console.error("Audio play failed:", err);
             setPlayingIndex(null);
           });
-          audioRef.current = audio;
         }
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => {
-          console.error("Audio play failed:", err);
-          setPlayingIndex(null);
-        });
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
@@ -86,6 +80,12 @@ export const LiveDemo: React.FC = () => {
 
   return (
     <section id="demo" className="py-16 bg-white border-t border-slate-100">
+      <audio 
+        ref={audioRef} 
+        src="/termin.mp3" 
+        preload="auto" 
+        onEnded={() => setPlayingIndex(null)} 
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="max-w-3xl mx-auto text-center mb-16">
