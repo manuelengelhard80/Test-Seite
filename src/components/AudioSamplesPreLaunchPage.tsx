@@ -55,22 +55,6 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
     }
   ];
 
-  const playFallbackSpeech = (onEnd: () => void) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(
-        "Guten Tag! Praxis Dr. med. Schneider. Alle unsere Mitarbeiter sind gerade im Gespräch. Wenn Sie einen Termin vereinbaren möchten, sagen Sie bitte einfach Termin."
-      );
-      utterance.lang = 'de-DE';
-      utterance.rate = 1.05;
-      utterance.onend = onEnd;
-      utterance.onerror = onEnd;
-      window.speechSynthesis.speak(utterance);
-    } else {
-      onEnd();
-    }
-  };
-
   const togglePlay = (index: number) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -80,9 +64,6 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
     if (audioRef.current) {
       audioRef.current.pause();
     }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
 
     if (playingIndex === index) {
       setPlayingIndex(null);
@@ -91,19 +72,16 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio('https://www.auxilium-assist.de/termin.mp3');
+          const audio = new Audio('/termin.mp3');
           audio.preload = "auto";
           
-          const handleEnded = () => {
+          audio.addEventListener('ended', () => {
             setPlayingIndex(null);
-          };
-
-          audio.addEventListener('ended', handleEnded);
+          });
           
           audio.addEventListener('error', (e) => {
-            console.warn("Audio loading failed or corrupted, falling back to Speech Synthesis:", e);
-            audioRef.current = null;
-            playFallbackSpeech(handleEnded);
+            console.error("Audio loading failed or file is corrupted:", e);
+            setPlayingIndex(null);
           });
 
           audioRef.current = audio;
@@ -111,9 +89,8 @@ export const AudioSamplesPreLaunchPage: React.FC<AudioSamplesPreLaunchPageProps>
         
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(err => {
-          console.warn("Audio play failed, falling back to Speech Synthesis:", err);
-          audioRef.current = null;
-          playFallbackSpeech(() => setPlayingIndex(null));
+          console.error("Audio play failed:", err);
+          setPlayingIndex(null);
         });
       } else {
         timeoutRef.current = setTimeout(() => {
