@@ -30,8 +30,8 @@ export const AllFeatures: React.FC<AllFeaturesProps> = ({ preview = false, onNav
     },
     {
       icon: Mail,
-      title: "E-Mail-Benachrichtigung",
-      benefit: "Benachrichtigt sofort über neue Termine, Rückrufe & Rezepte – medizinische Details bleiben geschützt im Dashboard."
+      title: "E-Mail-Weiterleitung",
+      benefit: "Leitet Anliegen inklusive Transkript direkt an den richtigen Ansprechpartner."
     },
     {
       icon: HelpCircle,
@@ -78,10 +78,10 @@ export const AllFeatures: React.FC<AllFeaturesProps> = ({ preview = false, onNav
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-            Ein Assistent – <span className="text-gradient">Alle Funktionen.</span>
+            Ein Assistent. <span className="text-gradient">Alle Funktionen.</span>
           </h2>
           <p className="text-lg text-slate-500">
-            Auxilium Assist deckt den kompletten telefonischen Workflow Ihrer Praxis ab – passend zu Ihrem gewählten Paket.
+            Auxilium AI deckt den kompletten telefonischen Workflow Ihrer Praxis ab – passend zu Ihrem gewählten Paket.
           </p>
         </div>
 
@@ -105,10 +105,9 @@ export const AllFeatures: React.FC<AllFeaturesProps> = ({ preview = false, onNav
           <div className="mt-12 text-center">
             <button 
               onClick={() => onNavigate('features')}
-              className="inline-flex items-center gap-2 font-bold hover:opacity-80 transition-opacity text-lg group"
+              className="inline-flex items-center gap-2 text-primary-dark font-bold hover:text-primary transition-colors text-lg group"
             >
-              <span className="text-gradient py-1">Alle Funktionen ansehen</span>
-              <ArrowRight size={20} className="text-[#0D9488] group-hover:translate-x-1 transition-transform shrink-0" />
+              Alle Funktionen ansehen <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         )}

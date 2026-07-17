@@ -30,7 +30,7 @@ export const AGBPage: React.FC<AGBPageProps> = ({ onBack }) => {
               Allgemeine <span className="text-gradient">Geschäftsbedingungen</span>
             </h1>
             <p className="text-lg text-slate-600 mb-0">
-               Auxilium-Assist
+               Auxilium – ein Angebot der 2Bmedia & Marketing GbR
             </p>
           </div>
         </div>
@@ -50,7 +50,7 @@ export const AGBPage: React.FC<AGBPageProps> = ({ onBack }) => {
                    Zusammenfassung
                  </h2>
                  <p className="text-slate-600 text-sm">
-                   Diese AGB regeln die Zusammenarbeit zwischen Auxilium-Assist und seinen gewerblichen Kunden. 
+                   Diese AGB regeln die Zusammenarbeit zwischen der 2Bmedia & Marketing GbR und ihren gewerblichen Kunden. 
                    Bitte beachten Sie, dass sich unser Angebot ausschließlich an Unternehmer richtet. 
                    Gegenstand ist die Einrichtung von KI-Kommunikationslösungen.
                  </p>
@@ -64,7 +64,8 @@ export const AGBPage: React.FC<AGBPageProps> = ({ onBack }) => {
                     Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge zwischen
                   </p>
                   <p className="text-slate-700 font-medium bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
-                    Auxilium-Assist<br />
+                    Auxilium – ein Angebot der 2Bmedia & Marketing GbR<br />
+                    2Bmedia & Marketing GbR<br />
                     Beeker Ring 7<br />
                     89423 Gundelfingen an der Donau<br />
                     Deutschland

@@ -92,7 +92,7 @@ export const CookieConsent: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Diese Cookies und technische Funktionen sind zwingend für den sicheren Betrieb der Website, die Speicherung Ihrer Privatsphäre-Einstellungen sowie die reibungslose Bereitstellung von Basisfunktionen wie der Seitennavigation und des Praxis-Checks erforderlich.
+                          Erforderlich für Kernfunktionen wie den Praxis-Check und Ihre Produktempfehlungen.
                         </p>
                       </div>
                       <div className="relative inline-flex items-center shrink-0">
@@ -110,7 +110,7 @@ export const CookieConsent: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Ermöglicht uns die vollkommen anonymisierte Auswertung von Website-Aufrufen, Klickpfaden und Nutzungsinteraktionen. Hierdurch können wir Fehler beheben, die Benutzerfreundlichkeit verbessern und unser Informationsangebot kontinuierlich für Sie optimieren.
+                          Ermöglicht uns, die Nutzung anonymisiert zu messen (z.B. Abbruchquoten des Tests) zwecks Optimierung.
                         </p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer shrink-0 select-none">
@@ -124,16 +124,16 @@ export const CookieConsent: React.FC = () => {
                       </label>
                     </div>
 
-                    {/* Category 3: Marketing Retargeting */}
+                    {/* Category 3: Personalisation */}
                     <div className="bg-slate-50 dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/80 flex items-start justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-1.5 select-none cursor-pointer" onClick={() => toggleSetting('marketing')}>
                           <span className="text-xs font-bold text-slate-950 dark:text-white">
-                            Marketing &amp; Retargeting
+                            Personalisierung &amp; Produkte
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                          Ermöglicht die Anzeige personalisierter Werbemittel und maßgeschneiderter Angebote auf Plattformen von Drittanbietern sowie die genaue Ermittlung der Effektivität unserer Werbemaßnahmen.
+                          Aktiviert Audio-Hörproben der Fachrichtungen und personalisierte Voice Assist &amp; Pulse Angebote.
                         </p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer shrink-0 select-none">
@@ -186,7 +186,7 @@ export const CookieConsent: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-[12px] text-slate-600 dark:text-slate-300 mt-1 leading-snug">
-                    Wir nutzen Cookies, um Kernfunktionen optimal anzubieten. In unseren{' '}
+                    Wir nutzen Cookies, um Kernfunktionen wie den Praxis-Check und Audio-Anrufbeispiele optimal anzubieten. In unseren{' '}
                     <Link to="/datenschutz" className="underline hover:text-[#0D9488] font-medium">Datenschutzrichtlinien</Link>{' '}
                     erfahren Sie mehr.
                   </p>

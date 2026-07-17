@@ -32,15 +32,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         <div className="p-8 text-center border-b border-slate-100 bg-slate-50/50">
           <div className="flex justify-center mb-4">
-            <div className="flex flex-col items-start pl-6">
-              <div className="flex items-center gap-[6px]">
-                <span className="relative flex h-2.5 w-2.5 mt-0.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
-                </span>
-                <span className="font-extrabold text-gradient text-2xl leading-none ml-1">Auxilium Assist</span>
-              </div>
-              <span className="text-[11px] sm:text-xs text-slate-500 mt-1.5 leading-none tracking-tight font-semibold pl-[22px] text-left">Der KI-Telefonassistent für die Arztpraxis</span>
+            <div className="flex items-center gap-[3px]">
+              <span className="relative flex h-2 w-2 mt-[3px]">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488] shadow-sm"></span>
+              </span>
+              <span className="font-bold text-gradient text-2xl leading-none ml-1">Auxilium Assist</span>
             </div>
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Praxis-Login</h2>

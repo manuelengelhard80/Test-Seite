@@ -34,9 +34,9 @@ export const FeaturesPage: React.FC<FeaturesPageProps> = ({ onBack }) => {
     },
     {
       icon: Mail,
-      title: "E-Mail-Benachrichtigung",
-      benefit: "Benachrichtigt Sie umgehend über neue Termine, Rückrufe & Rezepte.",
-      detail: "Sie erhalten per E-Mail eine reine Benachrichtigung über das Ereignis. Transkripte und sensible medizinische Patientendaten verbleiben zu jeder Zeit absolut sicher im geschützten Dashboard (Auxilium Voice)."
+      title: "E-Mail-Weiterleitung",
+      benefit: "Leitet Anliegen inklusive Transkript direkt an den richtigen Ansprechpartner.",
+      detail: "Jedes Gespräch wird transkribiert und zusammen mit der Audio-Datei kategorisiert per E-Mail an das Praxispostfach oder den zuständigen Arzt gesendet (Auxilium Voice)."
     },
     {
       icon: HelpCircle,
@@ -106,7 +106,7 @@ export const FeaturesPage: React.FC<FeaturesPageProps> = ({ onBack }) => {
               <span className="text-gradient">Intelligent.</span>
             </h1>
             <p className="text-xl text-slate-500 leading-relaxed max-w-3xl">
-              Entdecken Sie alle Möglichkeiten, wie Auxilium Assist Ihre Praxis entlastet – detailliert aufgeschlüsselt nach unseren Paketen.
+              Entdecken Sie alle Möglichkeiten, wie Auxilium AI Ihre Praxis entlastet – detailliert aufgeschlüsselt nach unseren Paketen.
             </p>
           </div>
         </div>

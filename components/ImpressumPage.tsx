@@ -43,7 +43,7 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-2">Angaben gemäß § 5 TMG</h2>
               <p className="text-slate-600 leading-relaxed">
-                <strong>Auxilium-Assist ist ein Angebot der 2Bmedia & Marketing GbR</strong><br />
+                <strong>2Bmedia & Marketing GbR</strong><br />
                 Beeker Ring 7<br />
                 89423 Gundelfingen an der Donau<br />
                 Deutschland
@@ -64,11 +64,11 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-slate-600">
                   <Mail size={18} className="text-slate-400" />
-                  <span>E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline">info@auxilium-assist.de</a></span>
+                  <span>E-Mail: <a href="mailto:info@auxiliumassist.ai" className="text-primary hover:underline">info@auxiliumassist.ai</a></span>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600">
                   <FileText size={18} className="text-slate-400" />
-                  <span>Web: www.auxilium-assist.de</span>
+                  <span>Web: www.auxiliumassist.ai</span>
                 </div>
               </div>
             </div>

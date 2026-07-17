@@ -13,12 +13,12 @@ export const FeatureFocus: React.FC = () => {
         <div className="max-w-3xl mx-auto text-center mb-16">
            <div className="inline-flex items-center gap-2 text-primary-dark font-semibold bg-primary-light px-3 py-1 rounded-full text-sm mb-6">
               <Sparkles size={14} className="text-primary-dark" strokeWidth={2.5} />
-              <span>Praxis-Transformation mit Auxilium Assist</span>
+              <span>Praxis-Transformation mit Auxilium AI</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight">
               Verwandeln Sie Ihr Telefon vom <br/>
-              <span className="text-gradient">Stressfaktor zum Erfolgstreiber.</span>
+              <span className="text-gradient">Störfaktor zum Erfolgstreiber.</span>
             </h2>
             
             <div className="text-lg text-slate-500 leading-relaxed space-y-4">
@@ -70,7 +70,7 @@ export const FeatureFocus: React.FC = () => {
                   <CheckCircle2 size={20} className="text-primary-dark" />
                 </div>
                 <div className="w-full">
-                  <h4 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-primary transition-colors">Kein unnötiges Telefonklingeln am Empfang</h4>
+                  <h4 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-primary transition-colors">Kein Telefonklingeln am Empfang</h4>
                   <p className="text-slate-500 leading-relaxed">Eine ruhige Atmosphäre im Wartebereich ohne ständige Unterbrechungen schafft Vertrauen und Professionalität.</p>
                 </div>
               </li>
@@ -110,10 +110,9 @@ export const FeatureFocus: React.FC = () => {
               </p>
               <button 
                 onClick={() => { navigate('/praxis-check'); window.scrollTo(0, 0); }}
-                className="font-bold text-lg hover:opacity-80 transition-opacity inline-flex items-center gap-2 group cursor-pointer"
+                className="text-primary-dark font-bold text-lg hover:text-primary transition-colors inline-flex items-center gap-2 group cursor-pointer"
               >
-                <span className="text-gradient py-1">Jetzt zum 3-Minuten-Praxis-Check!</span>
-                <ArrowRight className="text-[#0D9488] group-hover:translate-x-1 transition-transform shrink-0" size={20} />
+                Jetzt zum 3-Minuten-Praxis-Check! <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </button>
             </div>
           </div>

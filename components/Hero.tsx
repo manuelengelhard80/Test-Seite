@@ -6,97 +6,35 @@ import { useNavigate } from 'react-router-dom';
 export const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const objectUrlRef = useRef<string | null>(null);
   const navigate = useNavigate();
 
-  const loadAudioBlob = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('text/html')) {
-        throw new Error("Received HTML instead of audio. Probably redirected by cookie check.");
-      }
-      const blob = await response.blob();
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-      }
-      const objUrl = URL.createObjectURL(blob);
-      objectUrlRef.current = objUrl;
-      return objUrl;
-    } catch (e) {
-      console.error("Error loading audio blob:", e);
-      return null;
-    }
-  };
-
-  const toggleAudio = async () => {
-    if (isPlaying) {
-      setIsPlaying(false);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    } else {
-      setIsPlaying(true);
-      if (!audioRef.current) {
-        let url = await loadAudioBlob('/termin.mp3?v=3');
-        if (!url) {
-          console.warn("MP3 load failed, trying WAV...");
-          url = await loadAudioBlob('/termin.wav?v=3');
-        }
-        
-        if (!url) {
-          console.error("Failed to fetch audio in both formats.");
-          setIsPlaying(false);
-          return;
-        }
-
-        const audio = new Audio(url);
-        audio.preload = "auto";
-        audio.addEventListener('ended', () => {
-          setIsPlaying(false);
-        });
-        audio.addEventListener('error', async (e) => {
-          console.error("Audio error event fired:", e);
-          if (audioRef.current && !audioRef.current.src.includes('wav')) {
-            const wavUrl = await loadAudioBlob('/termin.wav?v=3');
-            if (wavUrl && audioRef.current) {
-              audioRef.current.src = wavUrl;
-              audioRef.current.load();
-              audioRef.current.play().catch(err => {
-                console.error("WAV play failed:", err);
-                setIsPlaying(false);
-              });
-              return;
-            }
-          }
-          setIsPlaying(false);
-        });
-        audioRef.current = audio;
-      }
-      
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => {
-          console.error("Audio play failed:", err);
-          setIsPlaying(false);
-        });
-      }
-    }
-  };
-
   useEffect(() => {
+    // Initialize Audio Object
+    const audioUrl = "https://cdn.shopify.com/s/files/1/0915/3334/5117/files/Voicetest.mp3?v=1763726844";
+    audioRef.current = new Audio(audioUrl);
+    
+    // Reset state when audio finishes
+    audioRef.current.onended = () => setIsPlaying(false);
+
     return () => {
+      // Cleanup on unmount
       if (audioRef.current) {
         audioRef.current.pause();
-      }
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
+        audioRef.current = null;
       }
     };
   }, []);
+
+  const toggleAudio = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-16 overflow-hidden bg-white border-b border-slate-100">
@@ -117,20 +55,20 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Headline */}
-        <h1 className="font-extrabold tracking-tight text-slate-900 mb-6 max-w-6xl mx-auto leading-[1.25]">
-          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-extrabold">Endlich Ruhe am Telefon...</span>
-          <span className="text-gradient text-3xl md:text-4xl font-extrabold">und mehr Zeit für Ihre Patienten.</span>
+        <h1 className="font-bold tracking-tight text-slate-900 mb-6 max-w-6xl mx-auto leading-[1.1]">
+          <span className="block text-3xl md:text-4xl mb-2 text-slate-900 font-bold">Endlich Ruhe am Telefon...</span>
+          <span className="text-gradient text-3xl md:text-5xl font-bold">und mehr Zeit für Ihre Patienten.</span>
         </h1>
 
         {/* Subheadline/Body Copy */}
-        <div className="text-base sm:text-lg text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed">
+        <div className="text-lg text-slate-500 mb-10 max-w-4xl mx-auto leading-relaxed">
           <p className="mb-4 font-medium text-slate-700">
             Das Telefon klingelt ununterbrochen, das Wartezimmer platzt aus allen Nähten<br />
             und Ihr Team arbeitet längst am Limit?
           </p>
           <p className="mb-4">
             Stoppen Sie die ständigen Unterbrechungen und entlasten Sie jetzt Ihr Praxispersonal.<br />
-            Mit Ihrem smarten KI-Telefonassistenten, speziell entwickelt für die moderne Arztpraxis, verpassen Sie kein Anliegen Ihrer Patienten mehr – und Ihr Team bleibt dabei gelassen und entspannt.
+            Mit unserem smarten KI-Telefonassistenten, speziell entwickelt für die moderne Arztpraxis, verpassen Sie kein Anliegen Ihrer Patienten mehr – und Ihr Team bleibt dabei gelassen und entspannt.
           </p>
           <p>
             Ihr neuer KI-Telefonassistent ist 24/7 erreichbar, nimmt alle Anrufe entgegen, vereinbart automatisch Termine, kümmert sich um Rezept- und Überweisungsanfragen – damit Ihr Team endlich wieder durchatmen kann.
@@ -141,9 +79,9 @@ export const Hero: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <button 
             onClick={toggleAudio}
-            className="w-full sm:w-auto bg-white border border-slate-200 pr-6 pl-2 py-2 rounded-full hover:shadow-md hover:border-slate-300 transition-all flex items-center gap-3 group h-[64px] justify-center min-w-[260px]"
+            className="w-full sm:w-auto bg-white border border-slate-200 pr-6 pl-2 py-2 rounded-full hover:shadow-md hover:border-slate-300 transition-all flex items-center gap-3 group h-[64px] justify-center"
           >
-            <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md ${isPlaying ? 'bg-[#298cc4] scale-105' : 'bg-[#13a09e] group-hover:bg-[#0f8280]'}`}>
+            <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md ${isPlaying ? 'bg-[#298cc4] scale-105' : 'bg-[#3ba2d8] group-hover:bg-[#2c8fc7]'}`}>
               {isPlaying ? (
                 <Pause size={20} fill="currentColor" />
               ) : (
@@ -177,7 +115,7 @@ export const Hero: React.FC = () => {
                       style={{ 
                         height: `${height}%`,
                         backgroundColor: `rgb(${r}, ${g}, ${b})`,
-                        animationDelay: isPlaying ? `${i * 0.05}s` : undefined
+                        animationDelay: `${i * 0.06}s` 
                       }} 
                     ></div>
                   );
@@ -187,11 +125,7 @@ export const Hero: React.FC = () => {
           </button>
 
           <button 
-            onClick={() => { 
-              const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
-              navigate(isPreLaunchUser ? '/pre-launch-check' : '/praxis-check'); 
-              window.scrollTo(0, 0); 
-            }}
+            onClick={() => { navigate('/praxis-check'); window.scrollTo(0, 0); }}
             className="w-full sm:w-auto bg-gradient-medical text-white px-8 py-4 rounded-full font-bold hover:shadow-glow transition-all hover:-translate-y-0.5 shadow-lg flex items-center justify-center gap-2 h-[64px]"
           >
             Jetzt zum 3-Minuten-Praxis-Check!
@@ -200,18 +134,15 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* DSGVO / Trust Banner */}
-        <div className="flex flex-col items-center gap-3 mt-4 text-center max-w-xl mx-auto">
+        <div className="flex justify-center mb-0">
           <div className="inline-flex items-center gap-5 bg-white px-8 py-3 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
             <ShieldCheck size={32} className="text-[#0D9488]" />
-            <div className="flex flex-col items-start justify-center text-left">
-              <span className="text-sm font-bold text-slate-900 leading-none mb-1.5">100% DSGVO-konform</span>
+            <div className="flex flex-col items-start justify-center">
+              <span className="text-sm font-bold text-slate-900 leading-none mb-1.5">100% DSGVO konform</span>
               <div className="w-full h-[4px] bg-[linear-gradient(90deg,black_33%,#DD0000_33%,#DD0000_66%,#FFCE00_66%)] rounded-full"></div>
               <span className="text-sm font-bold text-slate-900 leading-none mt-1.5">Serverstandort Deutschland</span>
             </div>
           </div>
-          <p className="text-[11px] sm:text-xs text-slate-500 font-medium leading-relaxed max-w-lg">
-            <span className="text-[#0D9488] font-bold">Ärztliche Schweigepflicht (§ 203 StGB):</span> Das System erfüllt lückenlos alle rechtlichen Vorgaben des Patientengeheimnisses. Patientendaten sind zu jedem Zeitpunkt absolut sicher und verschlüsselt.
-          </p>
         </div>
 
       </div>

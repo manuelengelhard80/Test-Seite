@@ -140,7 +140,7 @@ export const Testimonials: React.FC = () => {
             Von Ärzten <span className="text-gradient">empfohlen.</span>
           </h2>
           <p className="text-lg text-slate-500">
-            Vertrauen ist gut, Erfahrung ist besser. Sehen Sie, wie Kollegen ihre Praxis mit Auxilium Assist transformiert haben.
+            Vertrauen ist gut, Erfahrung ist besser. Sehen Sie, wie Kollegen ihre Praxis mit Auxilium AI transformiert haben.
           </p>
         </div>
 
