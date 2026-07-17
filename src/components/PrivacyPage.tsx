@@ -30,7 +30,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
               Datenschutz<span className="text-gradient">erklärung</span>
             </h1>
             <p className="text-lg text-slate-600 mb-0">
-               Auxilium – ein Angebot der 2Bmedia & Marketing GbR
+               Auxilium-Assist
             </p>
           </div>
         </div>
@@ -62,13 +62,13 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                     Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
                   </p>
                   <p className="text-slate-700 font-medium bg-slate-50 p-4 rounded-xl border border-slate-100 mb-4">
-                    Auxilium ist ein Angebot der 2Bmedia & Marketing GbR<br />
+                    Auxilium-Assist<br />
                     Beeker Ring 7<br />
                     89423 Gundelfingen an der Donau<br />
                     Deutschland<br /><br />
                     Vertreten durch den geschäftsführenden Gesellschafter<br />
                     Manuel Engelhard<br /><br />
-                    E-Mail: <a href="mailto:info@auxiliumassist.ai" className="text-primary hover:underline font-semibold">info@auxiliumassist.ai</a>
+                    E-Mail: <a href="mailto:info@auxilium-assist.de" className="text-primary hover:underline font-semibold">info@auxilium-assist.de</a>
                   </p>
                 </section>
 
@@ -197,6 +197,74 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
                   <h2 className="text-2xl font-bold text-slate-900 mb-4">12. Änderungen dieser Datenschutzerklärung</h2>
                   <p className="text-slate-600 leading-relaxed">
                     Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, um sie an geänderte rechtliche oder technische Anforderungen anzupassen.
+                  </p>
+                </section>
+
+                {/* 13. Cookies, Affiliate-Links und Retargeting-Technologien */}
+                <section>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-4">13. Cookies, Affiliate-Links und Retargeting-Technologien</h2>
+                  <p className="text-slate-600 leading-relaxed mb-4">
+                    Unsere Website nutzt verschiedene Arten von Cookies und ähnlichen Tracking-Technologien, um Kernfunktionen bereitzustellen, die Nutzung statistisch auszuwerten, Affiliate-Partnerzuordnungen vorzunehmen und gezieltes Marketing zu ermöglichen.
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">a) Notwendige &amp; Essenzielle Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Diese Cookies sind für den Betrieb der Website zwingend erforderlich (z. B. Speicherung der Cookie-Präferenzen, Funktion des Praxis-Checks, temporäre Sitzungsspeicherungen). Sie können nicht deaktiviert werden. Die Rechtsgrundlage hierfür ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am reibungslosen Betrieb der Website).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">b) Analyse- und Statistik-Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wir nutzen anonymisierte Messverfahren, um das Verhalten der Nutzer auf unserer Website besser zu verstehen (z. B. welche Abschnitte des Praxis-Checks am häufigsten genutzt werden). Dies hilft uns, die Struktur und Inhalte kontinuierlich zu optimieren. Die Speicherung erfolgt nur nach Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">c) Affiliate-Cookies (Partner-Tracking)</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Auf unserer Website befinden sich Links zu unserem Partner <strong className="text-slate-800">fonio.ai</strong> (z. B. der Link mit dem Tracking-Parameter <code className="bg-slate-100 px-1 py-0.5 rounded text-xs text-primary font-mono">ac=ICTDD9L82N</code>). Wenn Sie diesen Links folgen und dort eine Bestellung oder ein Onboarding starten, wird ein sogenanntes <strong>Affiliate-Cookie</strong> gesetzt. 
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Dieses Cookie dient ausschließlich dazu, festzustellen, dass Sie über unsere Empfehlung zu fonio.ai gelangt sind, um eine etwaige Vermittlungsprovision (Affiliate-Zuordnung) korrekt abrechnen zu können. Es werden keine sensiblen persönlichen Daten verarbeitet oder Profile über Ihr Surfverhalten erstellt. Die Rechtsgrundlage für den Einsatz dieses Cookies ist Ihre Einwilligung bzw. unser berechtigtes Interesse an der kommerziellen Abwicklung von Affiliate-Partnerschaften (Art. 6 Abs. 1 lit. f bzw. lit. a DSGVO).
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">d) Retargeting- und Marketing-Cookies</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wir setzen Retargeting-Technologien (wie Werbepixel oder Remarketing-Dienste) ein. Diese ermöglichen es, Besucher unserer Website auf Plattformen von Drittanbietern (z. B. Google, Meta) mit personalisierten Werbeanzeigen anzusprechen. 
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Dadurch wird sichergestellt, dass Ihnen Angebote angezeigt werden, die Ihren tatsächlichen Interessen entsprechen (z. B. spezifische Telefonassistenz-Tarife, die Sie sich zuvor angesehen haben). Die Datenverarbeitung erfolgt ausschließlich auf Grundlage Ihrer freiwilligen Einwilligung über das Cookie-Consent-Banner (Art. 6 Abs. 1 lit. a DSGVO). Sie können diese Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">e) Widerruf und Cookie-Einstellungen</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm">
+                    Sie können Ihre Cookie-Einstellungen jederzeit über das Cookie-Consent-Banner am unteren Bildschirmrand anpassen oder verändern sowie die gesetzten Cookies in den Systemeinstellungen Ihres Browsers löschen.
+                  </p>
+                </section>
+
+                {/* 14. WhatsApp Kommunikation */}
+                <section>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-4">14. Kommunikation via WhatsApp (WhatsApp Business)</h2>
+                  <p className="text-slate-600 leading-relaxed mb-4">
+                    Wir bieten Ihnen die Möglichkeit, schnell und unkompliziert per WhatsApp mit uns in Kontakt zu treten. Hierfür nutzen wir die Business-Version von WhatsApp. Anbieter des Dienstes ist die WhatsApp Ireland Limited, 4 Grand Canal Square, Grand Canal Harbour, Dublin 2, Irland (Muttergesellschaft: Meta Platforms Inc., USA).
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">a) Zweck und Rechtsgrundlage der Datenverarbeitung</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Wenn Sie uns eine Anfrage per WhatsApp senden, verarbeiten wir Ihre Mobilfunknummer, Ihren WhatsApp-Benutzernamen (sofern angegeben) sowie den Inhalt Ihrer Nachricht und etwaige übermittelte Medien ausschließlich zur Beantwortung Ihrer Anfrage bzw. zur persönlichen Beratung.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Die Rechtsgrundlage für diese Datenverarbeitung ist Ihre ausdrückliche Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO, die Sie uns durch die aktive Kontaktaufnahme übermitteln, sowie Art. 6 Abs. 1 lit. b DSGVO zur Durchführung vorvertraglicher Maßnahmen oder zur Beantwortung vertraglicher Anfragen.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">b) Ende-zu-Ende-Verschlüsselung und Drittlandstransfer</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    WhatsApp verwendet eine Ende-zu-Ende-Verschlüsselung. Das bedeutet, dass die Inhalte der Nachrichten für WhatsApp selbst oder sonstige Dritte nicht einsehbar sind. Allerdings erfasst WhatsApp sogenannte Metadaten (z. B. IP-Adresse, Informationen über das verwendete Gerät, Absender- und Empfängernummer, Uhrzeit des Versands), die an Server von Meta Platforms Inc. in den USA übertragen werden können.
+                  </p>
+                  <p className="text-slate-600 leading-relaxed mb-4 text-sm">
+                    Die Datenübertragung in die USA wird durch Standardvertragsklauseln der EU-Kommission sowie das EU-US Data Privacy Framework abgesichert, für das Meta zertifiziert ist, um ein angemessenes Datenschutzniveau zu garantieren.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-2">c) Speicherdauer und Widerruf</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm">
+                    Wir löschen Ihre WhatsApp-Nachrichten und die damit verbundenen Daten, sobald Ihre Anfrage abschließend geklärt ist und keine gesetzlichen Aufbewahrungspflichten (z. B. aus dem Handels- oder Steuerrecht) einer Löschung entgegenstehen. Sie können Ihre erteilte Einwilligung zur Datenverarbeitung jederzeit mit Wirkung für die Zukunft per formloser Nachricht (z. B. via E-Mail an info@auxilium-assist.de oder direkt im Chat) widerrufen.
                   </p>
                 </section>
 

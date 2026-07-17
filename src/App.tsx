@@ -10,6 +10,7 @@ import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
 import { SpecialtyPage } from './components/SpecialtyPage';
 import { AudioSamplesPage } from './components/AudioSamplesPage';
+import { AudioSamplesPreLaunchPage } from './components/AudioSamplesPreLaunchPage';
 import { SecurityPage } from './components/SecurityPage';
 import { PricingPage } from './components/PricingPage';
 import { CTASection } from './components/CTASection';
@@ -22,28 +23,42 @@ import { AGBPage } from './components/AGBPage';
 import { PrivacyPage } from './components/PrivacyPage';
 import { ThankYouPage } from './components/ThankYouPage';
 import { CookieConsent } from './components/CookieConsent';
+import { RechnerPage } from './components/RechnerPage';
+import { ContactPage } from './components/ContactPage';
+import { Paragraph203Page } from './components/Paragraph203Page';
+import { BewertungenPage } from './components/BewertungenPage';
+import { TarifePage } from './components/TarifePage';
+import { WhatsAppWidget } from './components/WhatsAppWidget';
+import { PreLaunchPage } from './components/PreLaunchPage';
+import { PreLaunchPricingPage } from './components/PreLaunchPricingPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary-light selection:text-primary-dark">
+    <div className="min-h-screen bg-slate-50 font-sans selection:bg-primary-light selection:text-primary-dark overflow-x-hidden w-full relative">
       <Navbar onNavigate={onNavigate} />
-      <main>
+      <main className="w-full overflow-x-hidden">
         <Outlet />
       </main>
       <Footer onNavigate={onNavigate} />
+      <WhatsAppWidget />
     </div>
   );
 };
 
 const HomePage: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
+  const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+
+  if (isPreLaunchUser) {
+    return <PreLaunchPage onNavigate={onNavigate} />;
+  }
+
   return (
     <>
       <Hero />
       <FeatureFocus />
       {/* "Drei starke Module" bleiben auf der Startseite als Produktvorstellung */}
       <Products onNavigate={onNavigate} />
-      <Testimonials />
       
       {/* Trust Section / Stats */}
       <section className="py-16 bg-white border-y border-slate-100">
@@ -93,20 +108,35 @@ const AppContent: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleNavigate = (view: string) => {
+    const isPreLaunchUser = sessionStorage.getItem('is_pre_launch_user') === 'true';
+
     const routeMap: Record<string, string> = {
       'home': '/',
-      'test': '/praxis-check',
-      'praxis-check': '/praxis-check',
+      'test': isPreLaunchUser ? '/pre-launch-check' : '/praxis-check',
+      'praxis-check': isPreLaunchUser ? '/pre-launch-check' : '/praxis-check',
       'features': '/funktionen',
       'audio': '/hörproben',
+      'audio-hörproben': '/audio-hörproben',
+      'audio-hoerproben': '/audio-hörproben',
       'security': '/dsgvo',
-      'pricing': '/preise',
+      'paragraph-203': '/paragraph-203',
+      'pricing': isPreLaunchUser ? '/pre-launch-rabatt' : '/preise',
+      'tarife': '/tarife',
+      'bewertungen': '/bewertungen',
+      'bewertung': '/bewertungen',
+      'rechner': '/rechner',
       'impressum': '/impressum',
       'agb': '/agb',
       'privacy': '/datenschutz',
+      'kontakt': '/kontakt',
+      'contact': '/kontakt',
       'thankyou-voice': '/danke-voice',
       'thankyou-assist': '/danke-assist',
       'thankyou-pulse': '/danke-pulse',
+      'pre-launch': '/pre-launch',
+      'prelaunch': '/pre-launch',
+      'pre-launch-rabatt': '/pre-launch-rabatt',
+      'pre-launch-check': '/pre-launch-check',
     };
     
     const targetPath = routeMap[view] || (view.startsWith('/') ? view : `/${view}`);
@@ -139,9 +169,40 @@ const AppContent: React.FC = () => {
       {/* Pages with standard Layout (navbar/footer) */}
       <Route element={<Layout onNavigate={handleNavigate} />}>
         <Route path="/" element={<HomePage onNavigate={handleNavigate} />} />
-        <Route path="/test" element={<PraxisCheckPage />} />
-        <Route path="/praxis-check" element={<PraxisCheckPage />} />
-        <Route path="/3-minuten-praxis-check" element={<PraxisCheckPage />} />
+        <Route path="/pre-launch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
+        <Route path="/prelaunch" element={<PreLaunchPage onNavigate={handleNavigate} />} />
+        <Route 
+          path="/test" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route 
+          path="/praxis-check" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route 
+          path="/3-minuten-praxis-check" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PraxisCheckPage forcePreLaunchMode={true} />
+            ) : (
+              <PraxisCheckPage />
+            )
+          } 
+        />
+        <Route path="/pre-launch-check" element={<PraxisCheckPage forcePreLaunchMode={true} />} />
+        <Route path="/prelaunch-check" element={<PraxisCheckPage forcePreLaunchMode={true} />} />
         
         {/* German and English routes aliases */}
         <Route path="/funktionen" element={<FeaturesPage onBack={() => handleNavigate('home')} />} />
@@ -150,12 +211,42 @@ const AppContent: React.FC = () => {
         <Route path="/hörproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/hoerproben" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
         <Route path="/audio" element={<AudioSamplesPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/audio-hörproben" element={<AudioSamplesPreLaunchPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/audio-hoerproben" element={<AudioSamplesPreLaunchPage onBack={() => handleNavigate('home')} />} />
         
         <Route path="/dsgvo" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
         <Route path="/security" element={<SecurityPage onBack={() => handleNavigate('home')} />} />
         
-        <Route path="/preise" element={<PricingPage onBack={() => handleNavigate('home')} />} />
-        <Route path="/pricing" element={<PricingPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/paragraph-203" element={<Paragraph203Page onBack={() => handleNavigate('home')} />} />
+        
+        <Route 
+          path="/preise" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            ) : (
+              <PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            )
+          } 
+        />
+        <Route 
+          path="/pricing" 
+          element={
+            sessionStorage.getItem('is_pre_launch_user') === 'true' ? (
+              <PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            ) : (
+              <PricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />
+            )
+          } 
+        />
+        <Route path="/pre-launch-rabatt" element={<PreLaunchPricingPage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        
+        <Route path="/tarife" element={<TarifePage onBack={() => handleNavigate('home')} onNavigate={handleNavigate} />} />
+        
+        <Route path="/bewertungen" element={<BewertungenPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/bewertung" element={<BewertungenPage onBack={() => handleNavigate('home')} />} />
+        
+        <Route path="/rechner" element={<RechnerPage onBack={() => handleNavigate('home')} />} />
         
         <Route path="/impressum" element={<ImpressumPage onBack={() => handleNavigate('home')} />} />
         
@@ -163,6 +254,9 @@ const AppContent: React.FC = () => {
         
         <Route path="/datenschutz" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
         <Route path="/privacy" element={<PrivacyPage onBack={() => handleNavigate('home')} />} />
+
+        <Route path="/kontakt" element={<ContactPage onBack={() => handleNavigate('home')} />} />
+        <Route path="/contact" element={<ContactPage onBack={() => handleNavigate('home')} />} />
         
         {/* Dankeseiten with German and Legacy routes */}
         <Route 

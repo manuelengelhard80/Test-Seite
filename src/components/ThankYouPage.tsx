@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   CheckCircle2, 
@@ -14,7 +14,7 @@ import {
   ChevronDown, 
   ChevronUp, 
   User, 
-  Phone,
+  MessageCircle,
   ArrowRight
 } from 'lucide-react';
 
@@ -29,6 +29,19 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [showPhoneNum, setShowPhoneNum] = useState(false);
+
+  useEffect(() => {
+    // Exclude thank-you pages from Google / Search Engine Indexing
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
 
   const productDetails = {
     voice: {
@@ -152,6 +165,28 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
 
   const currentDetails = productDetails[productType];
 
+  const prices = {
+    voice: {
+      original: '999,00 €',
+      discounted: '797,00 €',
+      vat: '151,43 €',
+      total: '948,43 €'
+    },
+    assist: {
+      original: '1.999,00 €',
+      discounted: '1.497,00 €',
+      vat: '284,43 €',
+      total: '1.781,43 €'
+    },
+    pulse: {
+      original: '2.999,00 €',
+      discounted: '1.997,00 €',
+      vat: '379,43 €',
+      total: '2.376,43 €'
+    }
+  };
+  const currentPrice = prices[productType];
+
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
@@ -173,7 +208,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pt-24 pb-20">
+    <div className="bg-slate-50 min-h-screen pt-36 lg:pt-44 pb-20">
       
       {/* Visual background decorations */}
       <div className="absolute top-0 left-0 right-0 h-[350px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none z-0" />
@@ -222,22 +257,59 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
               </p>
 
               <div className="relative border-l-2 border-slate-100 pl-6 ml-4 space-y-8">
-                {currentDetails.steps.map((step, idx) => (
-                  <div key={idx} className="relative group">
-                    {/* Circle Dot with number */}
-                    <div className="absolute -left-[35px] top-0.5 w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shadow-sm">
-                      {idx + 1}
-                    </div>
-                    <div className="pl-2">
-                      <h3 className="font-bold text-slate-900 block text-base group-hover:text-primary transition-colors">
-                        {step.title}
-                      </h3>
-                      <p className="text-slate-600 text-sm mt-1.5 leading-relaxed">
-                        {step.desc}
-                      </p>
+                {/* Step 1 */}
+                <div className="relative group">
+                  <div className="absolute -left-[35px] top-0.5 w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shadow-sm">
+                    1
+                  </div>
+                  <div className="pl-2">
+                    <h3 className="font-bold text-slate-900 block text-base group-hover:text-primary transition-colors">
+                      Seite als Lesezeichen speichern
+                    </h3>
+                    <p className="text-slate-600 text-sm mt-1.5 leading-relaxed">
+                      Sichern Sie sich diese Bestätigungsseite in Ihrem Browser (z. B. mit <kbd className="bg-slate-100 px-1.5 py-0.5 rounded text-[11px] font-mono font-bold text-slate-700">Strg + D</kbd> oder dem Stern-Symbol oben rechts), um Ihre Bestelldaten und den direkten Support-Zugang jederzeit schnell griffbereit zu haben.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="relative group">
+                  <div className="absolute -left-[35px] top-0.5 w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shadow-sm">
+                    2
+                  </div>
+                  <div className="pl-2">
+                    <h3 className="font-bold text-slate-900 block text-base group-hover:text-primary transition-colors">
+                      Onboarding-Guide (PDF) laden &amp; befolgen
+                    </h3>
+                    <p className="text-slate-600 text-sm mt-1.5 leading-relaxed">
+                      Laden Sie sich den bebilderten Onboarding-Guide herunter und gehen Sie die einfachen Schritte zur optimalen Vorbereitung Ihrer Telefonassistenz durch.
+                    </p>
+                    <div className="mt-3">
+                      <button 
+                        onClick={(e) => { e.preventDefault(); alert('Ihr Onboarding PDF-Dokument wird in Kürze generiert und an Sie versendet.'); }}
+                        className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-200 shadow-sm"
+                      >
+                        <Download size={14} className="text-slate-500" />
+                        <span>Onboarding-Guide (PDF) jetzt laden</span>
+                      </button>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Step 3 */}
+                <div className="relative group">
+                  <div className="absolute -left-[35px] top-0.5 w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shadow-sm">
+                    3
+                  </div>
+                  <div className="pl-2">
+                    <h3 className="font-bold text-slate-900 block text-base group-hover:text-primary transition-colors">
+                      Onboarding-Call vereinbaren
+                    </h3>
+                    <p className="text-slate-600 text-sm mt-1.5 leading-relaxed">
+                      Buchen Sie gleich im Anschluss unten Ihren persönlichen Onboarding-Termin, damit wir Ihre Telefonassistenz in nur 15 Minuten gemeinsam mit unserem Praxistechniker freischalten können.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -245,7 +317,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
             <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8" id="appointment-booking-card">
               <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                 <Calendar className="text-primary" size={22} />
-                <span>Onboarding-Call sofort vereinbaren</span>
+                <span>Onboarding-Call vereinbaren</span>
               </h2>
               <p className="text-sm text-slate-500 mb-6 font-normal">
                 Wählen Sie direkt Ihren Wunschtermin, um die Einrichtung gemeinsam mit unserem Praxistechniker in maximal 15 Minuten durchzuführen.
@@ -337,37 +409,6 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
               )}
             </div>
 
-            {/* FAQ Section */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8" id="thankyou-faq-card">
-              <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2.5">
-                <HelpCircle className="text-primary" size={22} />
-                <span>Häufige Fragen nach dem Kauf</span>
-              </h2>
-
-              <div className="divide-y divide-slate-100">
-                {currentDetails.faqs.map((faq, idx) => (
-                  <div key={idx} className="py-4 first:pt-0 last:pb-0">
-                    <button
-                      onClick={() => toggleFaq(idx)}
-                      className="w-full flex items-center justify-between text-left gap-4 font-bold text-slate-900 hover:text-primary transition-colors py-1"
-                    >
-                      <span className="text-sm md:text-base">{faq.q}</span>
-                      {activeFaq === idx ? (
-                        <ChevronUp size={18} className="text-slate-400 shrink-0" />
-                      ) : (
-                        <ChevronDown size={18} className="text-slate-400 shrink-0" />
-                      )}
-                    </button>
-                    {activeFaq === idx && (
-                      <p className="mt-3 text-slate-600 text-sm leading-relaxed pl-1 animate-fade-in">
-                        {faq.a}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
           </div>
 
           {/* RIGHT: Bill Overview & Quick Links - Span 1 */}
@@ -378,43 +419,43 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
               {/* Colored Badge strip */}
               <div className={`absolute top-0 left-0 right-0 h-1.5 bg-[#0D9488]`} />
               
-              <div className="flex items-center gap-3.5 mb-6 pt-2">
+              <div className="flex items-center gap-3.5 mb-5 pt-2">
                 <div className="p-3 bg-primary-light rounded-xl">
                   {currentDetails.icon}
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 text-lg leading-tight">{currentDetails.name}</h3>
-                  <p className="text-slate-400 text-xs mt-0.5">Lizenz: Aktiv (Lebenslang-Abo)</p>
+                  <p className="text-slate-400 text-xs mt-0.5">Lizenz: Aktiv</p>
                 </div>
               </div>
 
-              <div className="space-y-4 text-xs md:text-sm border-t border-slate-100 pt-5">
+              {/* Price Table Breakdown */}
+              <div className="border-t border-slate-100 pt-5 pb-4 space-y-2.5 text-xs md:text-sm">
                 <div className="flex justify-between items-center text-slate-500">
-                  <span>Bestellnummer:</span>
-                  <span className="font-mono text-slate-800 font-semibold">AX-2026-89423</span>
+                  <span>Einrichtungspreis (regulär)</span>
+                  <span className="line-through text-slate-400">{currentPrice.original}</span>
+                </div>
+                <div className="flex justify-between items-center text-slate-500 font-medium">
+                  <span>Einrichtungspreis (Aktion)</span>
+                  <span className="text-slate-800 font-bold">{currentPrice.discounted}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-500">
-                  <span>Datum / Uhrzeit:</span>
-                  <span className="text-slate-800 font-medium">{new Date().toLocaleDateString('de-DE')} - live</span>
+                  <span>MwSt. (19%)</span>
+                  <span className="text-slate-700">{currentPrice.vat}</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-500">
-                  <span>Zahlungsmethode:</span>
-                  <span className="text-slate-800 font-medium">Rechnung (30 Tage Ziel)</span>
+                <div className="flex justify-between items-center text-slate-900 font-bold border-t border-slate-100 pt-2.5 text-base">
+                  <span>Gesamtbetrag</span>
+                  <span className="text-[#0D9488]">{currentPrice.total}</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-500">
-                  <span>Preismodell:</span>
-                  <span className="text-slate-800 font-semibold text-primary">{currentDetails.price}</span>
-                </div>
-                <div className="flex justify-between items-center text-slate-500">
-                  <span>Status der Freischaltung:</span>
-                  <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full border border-emerald-200">
-                    Bereit
-                  </span>
-                </div>
+              </div>
+
+              {/* Digistore24 order billing notice (gelber container) */}
+              <div className="mt-2 p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-center text-xs text-amber-900 font-semibold leading-relaxed">
+                Kostenpflichtiges Produkt: „Die Abbuchung erfolgt durch <a href="https://www.digistore24.com/" target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-700">Digistore24 GmbH</a> (Deutschland)“
               </div>
 
               {/* Resource Download Block */}
-              <div className="mt-6 pt-5 border-t border-slate-100 space-y-3">
+              <div className="mt-4 pt-4 border-t border-slate-100 space-y-2.5">
                 <a 
                   href="#"
                   onClick={(e) => { e.preventDefault(); alert('Ihr Onboarding PDF-Dokument wird in Kürze generiert und an Sie versendet.'); }}
@@ -435,50 +476,89 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
             </div>
 
             {/* Direct Instant Service Live Support Widget */}
-            <div className="bg-gradient-to-br from-[#0c5c54] to-[#044c45] text-white rounded-3xl p-6 shadow-md" id="thankyou-support-widget">
-              <h3 className="font-bold text-lg mb-2">Technischer Express-Support</h3>
-              <p className="text-xs text-emerald-100 leading-relaxed mb-6">
-                Rufen Sie uns direkt an oder schreiben Sie eine Nachricht, falls Sie Fragen zur Verknüpfung Ihrer Telefonanlage haben.
+            <div className="bg-gradient-to-br from-[#0D9488] to-[#0284C7] text-white rounded-3xl p-6 shadow-md" id="thankyou-support-widget">
+              <h3 className="font-bold text-lg mb-2">Technischer Support</h3>
+              <p className="text-xs text-teal-50 leading-relaxed mb-6">
+                Schreiben Sie uns direkt per WhatsApp oder E-Mail, falls Sie Fragen zur Verknüpfung Ihrer Telefonanlage haben.
               </p>
 
               <div className="space-y-4">
-                <a 
-                  href="tel:+4989423000" 
-                  onClick={(e) => e.preventDefault()} 
-                  className="flex items-center gap-3 bg-white/10 hover:bg-white/15 p-3 rounded-2xl transition-all"
-                >
-                  <Phone size={18} className="text-emerald-300 shrink-0" />
-                  <div className="text-left">
-                    <div className="text-[10px] text-emerald-200 uppercase font-semibold">Hotline für Ärzte</div>
-                    <div className="text-sm font-bold">+49 89 4230 - Support</div>
+                {/* WhatsApp Support with Profile Pic, Contact Save, and Hidden Number */}
+                <div className="flex items-start gap-3.5 bg-white p-4 rounded-2xl transition-all border border-slate-100 text-slate-800 shadow-sm">
+                  <div className="relative shrink-0">
+                    <img 
+                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1784764800&v=beta&t=DwGFx1quxy-6XfmkHlN_O7-th5TQZbMkOhofWVwD_68" 
+                      alt="Manuel Engelhard - Auxilium Support" 
+                      className="w-12 h-12 rounded-full object-cover shrink-0 shadow-sm"
+                      referrerPolicy="no-referrer"
+                    />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-white rounded-full" />
                   </div>
-                </a>
+                  <div className="flex-1 text-left space-y-2">
+                    <div>
+                      <div className="text-[10px] text-[#0D9488] uppercase font-bold tracking-wider">Auxilium Support</div>
+                      <div className="text-sm font-bold text-slate-900">Manuel Engelhard</div>
+                    </div>
+                    
+                    <div className="flex flex-col gap-1.5 pt-1">
+                      <a 
+                        href="https://wa.me/4915257344044" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-2.5 px-3 rounded-xl text-xs transition-colors shadow-md w-full"
+                      >
+                        <MessageCircle size={15} />
+                        <span>WhatsApp Chat</span>
+                      </a>
+                      
+                      <a 
+                        href={`data:text/vcard;charset=utf-8,${encodeURIComponent(`BEGIN:VCARD
+VERSION:3.0
+FN:Manuel Engelhard (Auxilium Support)
+ORG:Auxilium Assist
+TEL;TYPE=CELL,VOICE:+4915257344044
+EMAIL;TYPE=PREF,INTERNET:onboarding@auxilium-assist.de
+URL:https://www.auxilium-assist.de
+END:VCARD`)}`}
+                        download="Manuel-Engelhard-Auxilium.vcf"
+                        className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold py-2 px-3 rounded-xl text-xs transition-colors shadow-sm w-full border border-slate-200"
+                      >
+                        <span>Kontakt speichern</span>
+                      </a>
+                    </div>
+                    
+                    <div className="pt-1.5 border-t border-slate-150">
+                      {showPhoneNum ? (
+                        <span className="text-xs font-mono text-slate-700 font-bold block pt-0.5">
+                          +49 1525 7344044
+                        </span>
+                      ) : (
+                        <button 
+                          onClick={() => setShowPhoneNum(true)}
+                          className="text-[10px] text-slate-500 hover:text-[#0D9488] hover:underline font-bold text-left block"
+                        >
+                          Rufnummer für Desktop anzeigen
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
 
                 <a 
-                  href="mailto:support@auxiliumassist.ai" 
-                  className="flex items-center gap-3 bg-white/10 hover:bg-white/15 p-3 rounded-2xl transition-all"
+                  href="mailto:onboarding@auxilium-assist.de" 
+                  className="flex items-center gap-3 bg-white hover:bg-slate-50 border border-slate-150 p-3.5 rounded-2xl transition-all text-slate-800 shadow-sm"
                 >
-                  <Mail size={18} className="text-emerald-300 shrink-0" />
+                  <Mail size={18} className="text-[#0D9488] shrink-0" />
                   <div className="text-left">
-                    <div className="text-[10px] text-emerald-200 uppercase font-semibold">Support per E-Mail</div>
-                    <div className="text-sm font-bold">support@auxiliumassist.ai</div>
+                    <div className="text-[10px] text-slate-400 uppercase font-bold">Support per E-Mail</div>
+                    <div className="text-sm font-bold text-slate-900 break-all">onboarding@auxilium-assist.de</div>
                   </div>
                 </a>
               </div>
 
-              <div className="mt-6 text-center text-[10px] text-emerald-200">
+              <div className="mt-6 text-center text-[10px] text-teal-100 font-medium">
                 Mo. - Fr. von 08:00 bis 18:00 Uhr besetzt
               </div>
-            </div>
-
-            {/* Nav controls */}
-            <div className="space-y-3">
-              <button
-                onClick={onNavigateHome}
-                className="w-full py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm tracking-wide rounded-xl border border-slate-200 shadow-sm transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Zurück zur Startseite</span>
-              </button>
             </div>
 
           </div>

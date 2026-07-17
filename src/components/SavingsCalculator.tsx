@@ -207,7 +207,7 @@ export const SavingsCalculator: React.FC = () => {
                 </div>
                 <div className="flex flex-col gap-1 px-4 py-3 bg-primary-light/30 rounded-xl border border-primary/10">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-primary-dark">Investition Auxilium AI</span>
+                    <span className="text-sm font-bold text-primary-dark">Investition Auxilium Assist</span>
                     <span className="text-lg font-black text-primary-dark">-{results.totalAiCost.toLocaleString('de-DE')} €</span>
                   </div>
                   <p className="text-[10px] font-bold text-primary-dark/60 italic uppercase tracking-wider">
