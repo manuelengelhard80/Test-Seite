@@ -10,6 +10,30 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const timeoutRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
+
+  const loadAudioBlob = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error("Received HTML instead of audio. Probably redirected by cookie check.");
+      }
+      const blob = await response.blob();
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+      const objUrl = URL.createObjectURL(blob);
+      objectUrlRef.current = objUrl;
+      return objUrl;
+    } catch (e) {
+      console.error("Error loading audio blob:", e);
+      return null;
+    }
+  };
   
   const samples = [
     {
@@ -41,7 +65,7 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
     }
   ];
 
-  const togglePlay = (index: number) => {
+  const togglePlay = async (index: number) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -58,35 +82,52 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio('/termin.mp3?v=3');
+          let url = await loadAudioBlob('/termin.mp3?v=3');
+          if (!url) {
+            console.warn("MP3 load failed, trying WAV...");
+            url = await loadAudioBlob('/termin.wav?v=3');
+          }
+
+          if (!url) {
+            console.error("Failed to fetch audio in both formats.");
+            setPlayingIndex(null);
+            return;
+          }
+
+          const audio = new Audio(url);
           audio.preload = "auto";
           
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
           });
           
-          audio.addEventListener('error', (e) => {
-            console.error("Audio loading failed for MP3, trying WAV fallback:", e);
-            if (audio.src.includes('.mp3')) {
-              audio.src = '/termin.wav?v=3';
-              audio.load();
-              audio.play().catch(err => {
-                console.error("WAV fallback play failed:", err);
-                setPlayingIndex(null);
-              });
-            } else {
-              setPlayingIndex(null);
+          audio.addEventListener('error', async (e) => {
+            console.error("Audio error event fired:", e);
+            if (audioRef.current && !audioRef.current.src.includes('wav')) {
+              const wavUrl = await loadAudioBlob('/termin.wav?v=3');
+              if (wavUrl && audioRef.current) {
+                audioRef.current.src = wavUrl;
+                audioRef.current.load();
+                audioRef.current.play().catch(err => {
+                  console.error("WAV play failed:", err);
+                  setPlayingIndex(null);
+                });
+                return;
+              }
             }
+            setPlayingIndex(null);
           });
 
           audioRef.current = audio;
         }
         
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => {
-          console.error("Audio play failed:", err);
-          setPlayingIndex(null);
-        });
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => {
+            console.error("Audio play failed:", err);
+            setPlayingIndex(null);
+          });
+        }
       } else {
         timeoutRef.current = setTimeout(() => {
           setPlayingIndex(null);
@@ -102,6 +143,9 @@ export const AudioSamplesPage: React.FC<AudioSamplesPageProps> = ({ onBack }) =>
       }
       if (audioRef.current) {
         audioRef.current.pause();
+      }
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
       }
     };
   }, []);
