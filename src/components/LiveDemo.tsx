@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Play, Pause, Volume2, Calendar, Pill, AlertCircle } from 'lucide-react';
-import { terminAudio } from '../assets/audioData';
 
 export const LiveDemo: React.FC = () => {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -54,7 +53,7 @@ export const LiveDemo: React.FC = () => {
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio(terminAudio);
+          const audio = new Audio('/termin.mp3');
           audio.preload = "auto";
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
