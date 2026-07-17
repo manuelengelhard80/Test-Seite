@@ -18,14 +18,23 @@ export const Hero: React.FC = () => {
     } else {
       setIsPlaying(true);
       if (!audioRef.current) {
-        const audio = new Audio('/termin.mp3');
+        const audio = new Audio('/termin.mp3?v=3');
         audio.preload = "auto";
         audio.addEventListener('ended', () => {
           setIsPlaying(false);
         });
         audio.addEventListener('error', (e) => {
-          console.error("Audio loading failed or file is corrupted:", e);
-          setIsPlaying(false);
+          console.error("Audio loading failed for MP3, trying WAV fallback:", e);
+          if (audio.src.includes('.mp3')) {
+            audio.src = '/termin.wav?v=3';
+            audio.load();
+            audio.play().catch(err => {
+              console.error("WAV fallback play failed:", err);
+              setIsPlaying(false);
+            });
+          } else {
+            setIsPlaying(false);
+          }
         });
         audioRef.current = audio;
       }

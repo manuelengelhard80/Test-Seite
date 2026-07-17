@@ -53,7 +53,7 @@ export const LiveDemo: React.FC = () => {
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio('/termin.mp3');
+          const audio = new Audio('/termin.mp3?v=3');
           audio.preload = "auto";
           
           audio.addEventListener('ended', () => {
@@ -61,8 +61,17 @@ export const LiveDemo: React.FC = () => {
           });
           
           audio.addEventListener('error', (e) => {
-            console.error("Audio loading failed or file is corrupted:", e);
-            setPlayingIndex(null);
+            console.error("Audio loading failed for MP3, trying WAV fallback:", e);
+            if (audio.src.includes('.mp3')) {
+              audio.src = '/termin.wav?v=3';
+              audio.load();
+              audio.play().catch(err => {
+                console.error("WAV fallback play failed:", err);
+                setPlayingIndex(null);
+              });
+            } else {
+              setPlayingIndex(null);
+            }
           });
 
           audioRef.current = audio;
