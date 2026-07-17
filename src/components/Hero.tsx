@@ -9,26 +9,57 @@ export const Hero: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
 
+  const playFallbackSpeech = (onEnd: () => void) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(
+        "Guten Tag! Willkommen bei Auxilium Assist. Ihr intelligenter Telefonassistent für die Arztpraxis entlastet Ihr Team und nimmt Termine rund um die Uhr entgegen. Gerne vereinbaren wir einen Termin für Sie."
+      );
+      utterance.lang = 'de-DE';
+      utterance.rate = 1.05;
+      utterance.onend = onEnd;
+      utterance.onerror = onEnd;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      onEnd();
+    }
+  };
+
   const toggleAudio = () => {
     if (isPlaying) {
       setIsPlaying(false);
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
     } else {
       setIsPlaying(true);
       if (!audioRef.current) {
         const audio = new Audio('https://www.auxilium-assist.de/termin.mp3');
         audio.preload = "auto";
-        audio.addEventListener('ended', () => {
+        
+        const handleEnded = () => {
           setIsPlaying(false);
+        };
+
+        audio.addEventListener('ended', handleEnded);
+        
+        audio.addEventListener('error', (e) => {
+          console.warn("Audio loading failed or corrupted, falling back to Speech Synthesis:", e);
+          audioRef.current = null;
+          playFallbackSpeech(handleEnded);
         });
+
         audioRef.current = audio;
       }
+      
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(err => {
-        console.error("Audio play failed:", err);
-        setIsPlaying(false);
+        console.warn("Audio play failed, falling back to Speech Synthesis:", err);
+        audioRef.current = null;
+        playFallbackSpeech(() => setIsPlaying(false));
       });
     }
   };
