@@ -53,7 +53,7 @@ export const LiveDemo: React.FC = () => {
       
       if (index === 0) {
         if (!audioRef.current) {
-          const audio = new Audio('/termin.mp3');
+          const audio = new Audio('https://www.auxilium-assist.de/termin.mp3');
           audio.preload = "auto";
           audio.addEventListener('ended', () => {
             setPlayingIndex(null);
