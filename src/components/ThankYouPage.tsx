@@ -487,10 +487,13 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
                 <div className="flex items-start gap-3.5 bg-white p-4 rounded-2xl transition-all border border-slate-100 text-slate-800 shadow-sm">
                   <div className="relative shrink-0">
                     <img 
-                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1784764800&v=beta&t=DwGFx1quxy-6XfmkHlN_O7-th5TQZbMkOhofWVwD_68" 
+                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1786579200&v=beta&t=1DxxHh5mOnlye6Nvc7zf739XHv4SZsY_pzAsY2ZaMag" 
                       alt="Manuel Engelhard - Auxilium Support" 
                       className="w-12 h-12 rounded-full object-cover shrink-0 shadow-sm"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80";
+                      }}
                     />
                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-white rounded-full" />
                   </div>

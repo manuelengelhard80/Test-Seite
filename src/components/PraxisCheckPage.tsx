@@ -197,8 +197,9 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     const workingDays = 22;
     const ki_minuten = Math.round(anrufe_tag * 0.80 * 4 * workingDays);
     const zeitgewinn_stunden = Math.round(ki_minuten / 33);
-    const brutto_ersparnis = Math.round(zeitgewinn_stunden * 25.0);
-    const netto_ersparnis = Math.round(brutto_ersparnis - systemkosten);
+    const hourlyMfaRate = 24.85; // Realistischer, ungerader Arbeitgeber-MFA-Kostensatz inkl. Nebenkosten Stand 2026
+    const brutto_ersparnis = Math.round(zeitgewinn_stunden * hourlyMfaRate * 100) / 100;
+    const netto_ersparnis = Math.round((brutto_ersparnis - systemkosten) * 100) / 100;
     const roi = Math.round((netto_ersparnis / systemkosten) * 100);
 
     // LOGIK 2: ERMITTLUNG DES INSTALLATIONS-PRODUKTS (Basis: Frage 7)
@@ -221,8 +222,8 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
       tarif,
       inklusivminuten,
       zeitgewinn_stunden,
-      brutto_ersparnis: `${brutto_ersparnis.toLocaleString('de-DE')} €`,
-      netto_ersparnis: `${netto_ersparnis.toLocaleString('de-DE')} €`,
+      brutto_ersparnis: `${brutto_ersparnis.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`,
+      netto_ersparnis: `${netto_ersparnis.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`,
       roi,
       hauptprodukt,
       link,
@@ -712,10 +713,13 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 <div className="flex items-start gap-3.5">
                                   <div className="relative shrink-0 mt-0.5">
                                     <img 
-                                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1784764800&v=beta&t=DwGFx1quxy-6XfmkHlN_O7-th5TQZbMkOhofWVwD_68" 
+                                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1786579200&v=beta&t=1DxxHh5mOnlye6Nvc7zf739XHv4SZsY_pzAsY2ZaMag" 
                                       alt="Manuel Engelhard" 
                                       className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
                                       referrerPolicy="no-referrer"
+                                      onError={(e) => {
+                                        e.currentTarget.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80";
+                                      }}
                                     />
                                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-[#0D9488] rounded-full" />
                                   </div>
@@ -789,17 +793,14 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
 
                                 <div className="w-full space-y-3">
                                   {isPreLaunchUser ? (
-                                    <a
-                                      href={savings.link}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      referrerPolicy="no-referrer"
+                                    <button
+                                      onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
                                       className="w-full inline-flex items-center justify-center gap-2 bg-gradient-medical hover:shadow-glow text-white font-black py-4 px-6 rounded-2xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs uppercase tracking-wider cursor-pointer group"
                                       id="btn-prelaunch-buy-recommendation"
                                     >
                                       <span>RABATT & SLOT SICHERN</span>
-                                      <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                    </a>
+                                      <MessageCircle size={16} className="group-hover:scale-110 transition-transform" />
+                                    </button>
                                   ) : (
                                     <a
                                       href={savings.link}
@@ -866,14 +867,14 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                           <div className="bg-white border border-slate-200/80 rounded-2.5xl p-6 shadow-sm flex flex-col justify-between hover:border-slate-300 transition-colors">
                             <div className="flex justify-between items-start">
                               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">💶 BUDGET-ENTLASTUNG</span>
-                              <span className="p-1 px-2.5 bg-emerald-50 text-[#0D9488] font-bold text-[10px] rounded-full">Monatlich</span>
+                              <span className="p-1 px-2.5 bg-emerald-50 text-[#0D9488] font-bold text-[10px] rounded-full">Ø Durchschnittswert</span>
                             </div>
                             <div className="mt-4">
-                              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-none text-[#0D9488]">
+                              <h2 className="text-3xl sm:text-4xl font-black text-[#0D9488] leading-none">
                                 {savings.brutto_ersparnis}
                               </h2>
                               <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-medium">
-                                freigeschaufelte Personalkosten
+                                freigeschaufelte Personalkosten (Ø Wert)
                               </p>
                             </div>
                           </div>
@@ -883,14 +884,14 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                             <div className="absolute top-0 right-0 w-20 h-20 bg-[#0D9488] opacity-5 rounded-full blur-xl"></div>
                             <div className="flex justify-between items-start relative z-10">
                               <span className="text-xs font-bold text-[#0D9488] uppercase tracking-widest flex items-center gap-1">📉 REALE NETTO-ERSPARNIS</span>
-                              <span className="p-1 px-2.5 bg-emerald-500 text-white font-extrabold text-[10px] rounded-full uppercase tracking-wider">Effektiv</span>
+                              <span className="p-1 px-2.5 bg-emerald-500 text-white font-extrabold text-[10px] rounded-full uppercase tracking-wider">Ø Durchschnitt</span>
                             </div>
                             <div className="mt-4 relative z-10">
                               <h2 className="text-3.5xl sm:text-4.5xl font-black text-slate-950 leading-none">
                                 {savings.netto_ersparnis}
                               </h2>
                               <p className="text-slate-600 text-xs sm:text-sm mt-2 font-bold block">
-                                echte Netto-Ersparnis pro Monat
+                                durchschnittliche Netto-Ersparnis pro Monat
                               </p>
                             </div>
                           </div>
@@ -957,7 +958,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                       <div className="flex items-start gap-2.5 bg-slate-50 p-4.5 rounded-2xl border border-slate-200">
                         <span className="text-base text-slate-400 shrink-0 mt-0.5">ℹ️</span>
                         <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                          <em>Berechnungsgrundlage 2026:</em> Basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 25,00 €/Std. inkl. Nebenkosten. Sonstige Anrufanliegen (wie Rezepte) erhalten eine sichere E-Mail-Benachrichtigung und werden datenschutzkonform direkt im Dashboard dokumentiert.
+                          <em>Berechnungsgrundlage 2026:</em> Alle finanziellen Berechnungen sind unverbindliche Durchschnittswerte (Ø-Werte) basierend auf {savings.zeitgewinn_stunden} Std. befreiter Arbeitszeit und einem durchschnittlichen Arbeitgeber-MFA-Kostensatz von 24,85 €/Std. inkl. gesetzlicher Lohnnebenkosten. Sonstige Anrufanliegen (wie Rezepte) erhalten eine sichere E-Mail-Benachrichtigung und werden datenschutzkonform direkt im Dashboard dokumentiert.
                         </p>
                       </div>
 
@@ -1006,12 +1007,12 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                       <li>• Arbeitstage: <strong>{savings.workingDays} Tage / Monat</strong></li>
                                       <li>• KI-Abfangrate: <strong>80 %</strong> (pauschale Abfangrate)</li>
                                       <li>• Zeitaufwand pro Anruf: <strong>4 Minuten</strong> (inkl. Nachbearbeitungszeit)</li>
-                                      <li>• Arbeitgeber-Stundensatz MFA (inkl. Lohnnebenkosten Stand 2026): <strong>25,00 € / Stunde</strong></li>
+                                      <li>• Arbeitgeber-Stundensatz MFA (inkl. Lohnnebenkosten Stand 2026): <strong>24,85 € / Stunde</strong> (Ø-Kostensatz)</li>
                                     </ul>
                                   </div>
 
                                   <div className="border-t border-slate-100 pt-3">
-                                    <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 font-sans">Mathematischer Rechenweg</p>
+                                    <p className="text-slate-400 font-bold uppercase tracking-wider text-[10px] mb-3 font-sans">Mathematischer Rechenweg (Durchschnittswerte)</p>
                                     <ul className="space-y-3 text-slate-700">
                                       <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
                                         <span className="font-semibold text-slate-900 shrink-0">1. KI-Minuten:</span>
@@ -1028,7 +1029,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                       <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
                                         <span className="font-semibold text-slate-900 shrink-0">3. Budget-Entlastung:</span>
                                         <span className="font-mono text-slate-650 bg-slate-50 px-1.5 py-0.5 rounded text-xs select-all">
-                                          {savings.zeitgewinn_stunden} Std. * 25,00 € = {savings.brutto_ersparnis}
+                                          {savings.zeitgewinn_stunden} Std. * 24,85 € = {savings.brutto_ersparnis}
                                         </span>
                                       </li>
                                       <li className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
@@ -1042,7 +1043,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 </div>
 
                                 <div className="bg-emerald-50/60 p-4.5 rounded-xl border border-[#0D9488]/15 text-xs sm:text-sm text-slate-705">
-                                  <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von 25,- € pro Stunde. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> zurück. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
+                                  <strong>Betriebswirtschaftlicher Nachweis:</strong> Die entlastete Arbeitszeit entspricht realen <strong>Arbeitgeber-Vollkosten (Tarif 2026)</strong> von durchschnittlich <strong>24,85 € pro Stunde</strong>. Abzüglich der Tarif-Gebühr von <strong>{savings.systemkosten} €</strong> spart Ihre Praxis somit jeden Monat durchschnittlich effektiv <strong>{savings.netto_ersparnis} an Netto-Kosten</strong> ein. Bei Systemkosten von {savings.systemkosten} € entspricht dies einem <strong>ROI von {savings.roi}%</strong> ab dem ersten Tag.
                                 </div>
                               </div>
                             </motion.div>
