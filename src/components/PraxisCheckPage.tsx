@@ -85,8 +85,8 @@ const quizQuestions: Question[] = [
     title: 'Wie sollen Termine über den KI-Telefonassistenten gebucht bzw. synchronisiert werden?',
     type: 'select',
     options: [
-      'Über unsere Praxissoftware (z.B. Doctolib, tomedo etc. via API-Schnittstelle)',
-      'Über einen externen Cloud-Kalender (z.B. Google/Microsoft)',
+      'Über unsere Praxissoftware (via API-Schnittstelle)',
+      'Über Ihren bestehenden, datenschutzkonformen Kalenderdienst (z. B. Microsoft 365 oder Google Workspace)',
       'Keine automatische Terminbuchung benötigt',
     ],
   },
@@ -210,7 +210,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     if (q7.includes('Praxissoftware') || q7.includes('API-Schnittstelle')) {
       hauptprodukt = 'Puls';
       link = 'https://www.digistore24.com/product/707577';
-    } else if (q7.includes('externen') || q7.includes('Cloud-Kalender') || q7.includes('Google') || q7.includes('Microsoft')) {
+    } else if (q7.includes('Kalenderdienst') || q7.includes('externen') || q7.includes('Cloud-Kalender') || q7.includes('Google') || q7.includes('Microsoft')) {
       hauptprodukt = 'Assist';
       link = 'https://www.digistore24.com/product/707217';
     } else {
