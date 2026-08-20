@@ -109,6 +109,8 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [showTransparency, setShowTransparency] = useState<boolean>(false);
+  const [includeCheckResults, setIncludeCheckResults] = useState<boolean>(true);
+  const [consultationMessage, setConsultationMessage] = useState<string>('');
 
   const isPreLaunchUser = forcePreLaunchMode || sessionStorage.getItem('is_pre_launch_user') === 'true';
   const [slotsLeft, setSlotsLeft] = useState<number>(11);
@@ -282,23 +284,34 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     const nameInfo = leadForm.name ? `\n• Ansprechpartner: ${leadForm.name}` : '';
     const emailInfo = leadForm.email ? `\n• E-Mail: ${leadForm.email}` : '';
     const phoneInfo = leadForm.phone ? `\n• Telefon: ${leadForm.phone}` : '';
+    const customNote = consultationMessage.trim() ? `\n\n💬 *Hinweis / Frage:* ${consultationMessage.trim()}` : '';
 
-    const text = `Hallo Manuel! 👋\n` +
-      `Ich habe den Praxis-Check auf Auxilium durchgeführt und möchte meine Ergebnisse mit dir besprechen, um die Beratung zu starten:\n` +
-      (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}\n` : '') +
-      `\n📊 *Ergebnisse des Praxis-Checks:*` +
-      `\n1. Anrufaufkommen: ${q1}` +
-      `\n2. Hauptanliegen: ${q2}` +
-      `\n3. Bei Besetzt/Nichtannahme: ${q3}` +
-      `\n4. Belastung des Teams: ${q4}` +
-      `\n5. Einsatzzeitraum: ${q5}` +
-      `\n6. Praxissoftware (PVS): ${q6}` +
-      `\n7. Terminsynchronisation: ${q7}` +
-      `\n\n💡 *Errechnetes Ergebnis & Empfehlung:*` +
-      `\n• Empfohlenes System: Auxilium ${savings.hauptprodukt} (${savings.tarif})` +
-      `\n• Erwartete Zeitersparnis: ~${savings.zeitgewinn_stunden} Std./Monat` +
-      `\n• Erwartete Netto-Ersparnis: ${savings.netto_ersparnis} / Monat` +
-      `\n\nIch bitte um Rückmeldung für die persönliche Beratung und die nächsten Schritte!`;
+    let text = '';
+    if (includeCheckResults) {
+      text = `Hallo Manuel! 👋\n` +
+        `Ich habe den Praxis-Check auf Auxilium durchgeführt und möchte meine Ergebnisse mit dir besprechen, um die Beratung zu starten:\n` +
+        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}\n` : '') +
+        `\n📊 *Ergebnisse des Praxis-Checks:*` +
+        `\n1. Anrufaufkommen: ${q1}` +
+        `\n2. Hauptanliegen: ${q2}` +
+        `\n3. Bei Besetzt/Nichtannahme: ${q3}` +
+        `\n4. Belastung des Teams: ${q4}` +
+        `\n5. Einsatzzeitraum: ${q5}` +
+        `\n6. Praxissoftware (PVS): ${q6}` +
+        `\n7. Terminsynchronisation: ${q7}` +
+        `\n\n💡 *Errechnetes Ergebnis & Empfehlung:*` +
+        `\n• Empfohlenes System: Auxilium ${savings.hauptprodukt} (${savings.tarif})` +
+        `\n• Erwartete Zeitersparnis: ~${savings.zeitgewinn_stunden} Std./Monat` +
+        `\n• Erwartete Netto-Ersparnis: ${savings.netto_ersparnis} / Monat` +
+        customNote +
+        `\n\nIch bitte um Rückmeldung für die persönliche Beratung und die nächsten Schritte!`;
+    } else {
+      text = `Hallo Manuel! 👋\n` +
+        `Ich interessiere mich für eine persönliche Beratung zu den KI-Lösungen von Auxilium für meine Praxis.` +
+        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}` : '') +
+        customNote +
+        `\n\nIch freue mich auf den Austausch!`;
+    }
 
     return `https://wa.me/4915257344044?text=${encodeURIComponent(text)}`;
   };
@@ -740,39 +753,69 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 </span>
                               </div>
 
-                              {/* WhatsApp Beratung - Kleiner, klickbarer Vermerk mit Profilbild */}
-                              <a 
-                                href={getWhatsAppShareUrl()}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-900/40 hover:bg-slate-800/50 border border-slate-800/60 rounded-2xl cursor-pointer transition-all hover:scale-[1.01] hover:border-teal-500/30 group text-left block"
-                              >
-                                <div className="flex items-start gap-3.5">
-                                  <div className="relative shrink-0 mt-0.5">
-                                    <img 
-                                      src={manuelPhoto} 
-                                      alt="Manuel Engelhard" 
-                                      className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
-                                    />
-                                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
-                                    <div>
-                                      <h4 className="font-bold text-xs sm:text-sm text-white leading-tight">Manuel Engelhard</h4>
-                                      <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Experte für KI-Implementierungen</p>
+                              {/* WhatsApp Beratung - Box mit Profilbild, Checkbox & Notizfeld */}
+                              <div className="mt-5 p-4 bg-slate-900/60 border border-slate-800/80 rounded-2xl space-y-3.5 text-left">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                  <div className="flex items-start gap-3">
+                                    <div className="relative shrink-0 mt-0.5">
+                                      <img 
+                                        src={manuelPhoto} 
+                                        alt="Manuel Engelhard" 
+                                        className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
+                                      />
+                                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
                                     </div>
-                                    <p className="text-[11px] text-slate-300 leading-snug">
-                                      Haben Sie Fragen zur Auswertung? Klicken Sie hier, für eine persönliche Beratung!
-                                    </p>
+                                    <div className="space-y-1">
+                                      <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
+                                      <div>
+                                        <h4 className="font-bold text-xs sm:text-sm text-white leading-tight">Manuel Engelhard</h4>
+                                        <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Experte für KI-Implementierungen</p>
+                                      </div>
+                                      <p className="text-[11px] text-slate-300 leading-snug">
+                                        Haben Sie Fragen zur Auswertung? Klicken Sie hier für eine persönliche Beratung!
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  <a 
+                                    href={getWhatsAppShareUrl()}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#0D9488] hover:bg-[#0b7f74] text-white font-bold text-[11px] uppercase tracking-wider rounded-xl shadow-md transition-all hover:scale-[1.02] active:scale-95 self-start sm:self-center cursor-pointer"
+                                    id="btn-start-consultation-whatsapp"
+                                  >
+                                    <MessageCircle size={13} className="fill-current" />
+                                    <span>Beratung starten</span>
+                                  </a>
+                                </div>
+
+                                {/* Checkbox & Textfeld unter dem WhatsApp-Button */}
+                                <div className="pt-3 border-t border-slate-800/80 space-y-2">
+                                  <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-200 hover:text-white transition-colors group">
+                                    <input 
+                                      type="checkbox"
+                                      checked={includeCheckResults}
+                                      onChange={(e) => setIncludeCheckResults(e.target.checked)}
+                                      className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-[#0D9488] focus:ring-[#0D9488]/30 focus:ring-offset-0 cursor-pointer accent-[#0D9488]"
+                                      id="cb-include-check-results"
+                                    />
+                                    <span className="font-medium text-slate-200 group-hover:text-white">
+                                      Ergebnisse zur Beratung übermitteln
+                                    </span>
+                                  </label>
+
+                                  <div className="relative">
+                                    <input
+                                      type="text"
+                                      value={consultationMessage}
+                                      onChange={(e) => setConsultationMessage(e.target.value)}
+                                      placeholder="Optionale Nachricht oder konkrete Frage eingeben..."
+                                      className="w-full px-3.5 py-2 bg-slate-950/60 border border-slate-700/60 focus:border-[#2DD4BF] focus:ring-1 focus:ring-[#2DD4BF]/20 rounded-xl text-xs text-slate-100 placeholder-slate-400 outline-none transition-all"
+                                      id="input-consultation-custom-note"
+                                    />
                                   </div>
                                 </div>
-                                
-                                <div className="shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#0D9488]/15 text-[#2DD4BF] font-bold text-[10px] uppercase tracking-wider rounded-xl border border-[#0D9488]/30 group-hover:bg-[#0D9488]/25 group-hover:text-white transition-all self-start sm:self-center">
-                                  <MessageCircle size={12} className="fill-current" />
-                                  <span>Beratung starten</span>
-                                </div>
-                              </a>
+                              </div>
 
                             </div>
 
@@ -984,16 +1027,6 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                               </a>
                             )}
-                            <a
-                              href={getWhatsAppShareUrl()}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-6 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase border border-slate-800"
-                              id="btn-whatsapp-share-check-result"
-                            >
-                              <MessageCircle size={16} className="text-[#25D366] fill-[#25D366]/20" />
-                              Ergebnis per WhatsApp teilen
-                            </a>
                           </div>
                         </div>
                       </div>
