@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
-import manuelPhoto from '../assets/manuel-engelhard.png';
+import { manuelPhoto } from '../assets/manuelPhoto';
 
 export const WhatsAppWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -7,7 +7,7 @@ import {
   TrendingUp, Clock, Euro, ArrowUpRight, ChevronDown, ChevronUp, MessageCircle
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import manuelPhoto from '../assets/manuel-engelhard.png';
+import { manuelPhoto } from '../assets/manuelPhoto';
 
 interface Question {
   id: number;

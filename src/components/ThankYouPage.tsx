@@ -17,7 +17,7 @@ import {
   MessageCircle,
   ArrowRight
 } from 'lucide-react';
-import manuelPhoto from '../assets/manuel-engelhard.png';
+import { manuelPhoto } from '../assets/manuelPhoto';
 
 interface ThankYouPageProps {
   productType: 'voice' | 'assist' | 'pulse';
