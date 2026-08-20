@@ -268,6 +268,40 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
 
   const productDetails = getProductDetails();
 
+  const getWhatsAppShareUrl = () => {
+    const q1 = answers[1] || 'Nicht angegeben';
+    const q2 = answers[2] || 'Nicht angegeben';
+    const q3 = answers[3] || 'Nicht angegeben';
+    const q4 = answers[4] || 'Nicht angegeben';
+    const q5 = answers[5] || 'Nicht angegeben';
+    const q6 = answers[6] || 'Keine Angabe / Nicht angegeben';
+    const q7 = answers[7] || 'Nicht angegeben';
+
+    const praxisInfo = leadForm.praxis ? `\n• Praxis: ${leadForm.praxis}` : '';
+    const nameInfo = leadForm.name ? `\n• Ansprechpartner: ${leadForm.name}` : '';
+    const emailInfo = leadForm.email ? `\n• E-Mail: ${leadForm.email}` : '';
+    const phoneInfo = leadForm.phone ? `\n• Telefon: ${leadForm.phone}` : '';
+
+    const text = `Hallo Manuel! 👋\n` +
+      `Ich habe den Praxis-Check auf Auxilium durchgeführt und möchte meine Ergebnisse mit dir besprechen, um die Beratung zu starten:\n` +
+      (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}\n` : '') +
+      `\n📊 *Ergebnisse des Praxis-Checks:*` +
+      `\n1. Anrufaufkommen: ${q1}` +
+      `\n2. Hauptanliegen: ${q2}` +
+      `\n3. Bei Besetzt/Nichtannahme: ${q3}` +
+      `\n4. Belastung des Teams: ${q4}` +
+      `\n5. Einsatzzeitraum: ${q5}` +
+      `\n6. Praxissoftware (PVS): ${q6}` +
+      `\n7. Terminsynchronisation: ${q7}` +
+      `\n\n💡 *Errechnetes Ergebnis & Empfehlung:*` +
+      `\n• Empfohlenes System: Auxilium ${savings.hauptprodukt} (${savings.tarif})` +
+      `\n• Erwartete Zeitersparnis: ~${savings.zeitgewinn_stunden} Std./Monat` +
+      `\n• Erwartete Netto-Ersparnis: ${savings.netto_ersparnis} / Monat` +
+      `\n\nIch bitte um Rückmeldung für die persönliche Beratung und die nächsten Schritte!`;
+
+    return `https://wa.me/4915257344044?text=${encodeURIComponent(text)}`;
+  };
+
   const handleSelectOption = (questionId: number, option: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
     // Single choice: advances automatically and without delay
@@ -706,22 +740,21 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                               </div>
 
                               {/* WhatsApp Beratung - Kleiner, klickbarer Vermerk mit Profilbild */}
-                              <div 
-                                onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
-                                className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-900/40 hover:bg-slate-800/50 border border-slate-800/60 rounded-2xl cursor-pointer transition-all hover:scale-[1.01] hover:border-teal-500/30 group text-left"
+                              <a 
+                                href={getWhatsAppShareUrl()}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-900/40 hover:bg-slate-800/50 border border-slate-800/60 rounded-2xl cursor-pointer transition-all hover:scale-[1.01] hover:border-teal-500/30 group text-left block"
                               >
                                 <div className="flex items-start gap-3.5">
                                   <div className="relative shrink-0 mt-0.5">
                                     <img 
-                                      src="https://media.licdn.com/dms/image/v2/D4D03AQEjvaMA0a3xfQ/profile-displayphoto-crop_800_800/B4DZvWglWxJMAI-/0/1768830432171?e=1786579200&v=beta&t=1DxxHh5mOnlye6Nvc7zf739XHv4SZsY_pzAsY2ZaMag" 
+                                      src="/manuel-engelhard.jpg" 
                                       alt="Manuel Engelhard" 
                                       className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
                                       referrerPolicy="no-referrer"
-                                      onError={(e) => {
-                                        e.currentTarget.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80";
-                                      }}
                                     />
-                                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-[#0D9488] rounded-full" />
+                                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
                                   </div>
                                   <div className="space-y-1.5">
                                     <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
@@ -739,7 +772,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                   <MessageCircle size={12} className="fill-current" />
                                   <span>Beratung starten</span>
                                 </div>
-                              </div>
+                              </a>
 
                             </div>
 
@@ -918,7 +951,7 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                       {/* 3. DIREKTZUGANG BANNER */}
                       <div className="bg-gradient-to-br from-slate-50 via-white to-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4 shadow-sm relative overflow-hidden">
                         <div className="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#0D9488] to-[#0284C7]"></div>
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                           <div className="text-left">
                             <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-wider uppercase flex items-center gap-2">
                               <Lock size={15} className="text-[#0D9488]" /> {isPreLaunchUser ? 'PRE-LAUNCH VORTEILE' : 'IHR DIREKTZUGANG'}
@@ -929,11 +962,11 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 : 'Sichern Sie sich die KI-Infrastruktur jetzt direkt für Ihr Team:'}
                             </p>
                           </div>
-                          <div className="w-full md:w-auto shrink-0 flex items-center justify-center">
+                          <div className="w-full lg:w-auto shrink-0 flex flex-col sm:flex-row items-center justify-center gap-3">
                             {isPreLaunchUser ? (
                               <button
                                 onClick={() => document.getElementById('global-whatsapp-trigger')?.click()}
-                                className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
+                                className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
                                 id="btn-prelaunch-whatsapp-direct-link"
                               >
                                 Rabatt sichern (via WhatsApp)
@@ -944,13 +977,23 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 href={savings.link}
                                 target="_blank"
                                 referrerPolicy="no-referrer"
-                                className="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
+                                className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-8 bg-gradient-medical hover:shadow-glow text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase"
                                 id="btn-direct-access-link"
                               >
                                 Jetzt für die Praxis buchen
                                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                               </a>
                             )}
+                            <a
+                              href={getWhatsAppShareUrl()}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 py-4 px-6 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-2xl text-xs sm:text-sm tracking-wide shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 group cursor-pointer uppercase border border-slate-800"
+                              id="btn-whatsapp-share-check-result"
+                            >
+                              <MessageCircle size={16} className="text-[#25D366] fill-[#25D366]/20" />
+                              Ergebnis per WhatsApp teilen
+                            </a>
                           </div>
                         </div>
                       </div>
