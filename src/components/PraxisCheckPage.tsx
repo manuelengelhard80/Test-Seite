@@ -172,29 +172,29 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     let anrufe_tag = 15;
     let tarif = 'Doc-Tarif (99 € / Mon.)';
     let systemkosten = 99;
-    let inklusivminuten = '1.000 Inklusivminuten (jede weitere 0,15 €)';
+    let inklusivminuten = '1.000 Minuten (jede weitere 0,15 €)';
     
     if (q1 === 'Unter 20 Anrufe') {
       anrufe_tag = 15;
       tarif = 'Doc-Tarif (99 € / Mon.)';
       systemkosten = 99;
-      inklusivminuten = '1.000 Inklusivminuten (jede weitere 0,15 €)';
+      inklusivminuten = '1.000 Minuten (jede weitere 0,15 €)';
     } else if (q1 === '20 bis 50 Anrufe') {
       anrufe_tag = 35;
       tarif = 'Praxis-Tarif (299 € / Mon.)';
       systemkosten = 299;
-      inklusivminuten = '3.000 Inklusivminuten (jede weitere 0,12 €)';
+      inklusivminuten = '3.000 Minuten (jede weitere 0,12 €)';
     } else if (q1 === '51 bis 100 Anrufe') {
       anrufe_tag = 75;
-      tarif = 'Praxis-Tarif (414 € / Mon.)';
-      systemkosten = 414;
-      inklusivminuten = '3.000 Inklusivminuten (jede weitere 0,12 €)';
+      tarif = 'Klinik-Tarif (499 € / Mon.)';
+      systemkosten = 499;
+      inklusivminuten = '5.000 Minuten (ab 0,08 € die Minute)';
     } else {
       // Über 100 Anrufe
       anrufe_tag = 130;
-      tarif = 'Klinik-Tarif (ab 499 € / Mon.)';
-      systemkosten = 723;
-      inklusivminuten = 'ab 5.000 Inklusivminuten (individuell anpassbar)';
+      tarif = 'Klinik-Tarif (499 € / Mon.)';
+      systemkosten = 499;
+      inklusivminuten = '5.000 Minuten (ab 0,08 € die Minute)';
     }
 
     const workingDays = 22;
@@ -280,18 +280,28 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
     const q6 = answers[6] || 'Keine Angabe / Nicht angegeben';
     const q7 = answers[7] || 'Nicht angegeben';
 
-    const praxisInfo = leadForm.praxis ? `\n• Praxis: ${leadForm.praxis}` : '';
-    const nameInfo = leadForm.name ? `\n• Ansprechpartner: ${leadForm.name}` : '';
-    const emailInfo = leadForm.email ? `\n• E-Mail: ${leadForm.email}` : '';
-    const phoneInfo = leadForm.phone ? `\n• Telefon: ${leadForm.phone}` : '';
-    const customNote = consultationMessage.trim() ? `\n\n💬 *Hinweis / Frage:* ${consultationMessage.trim()}` : '';
+    const hour = new Date().getHours();
+    let greeting = 'Guten Tag';
+    if (hour < 11) {
+      greeting = 'Guten Morgen';
+    } else if (hour >= 18) {
+      greeting = 'Guten Abend';
+    }
+
+    const praxisInfo = leadForm.praxis ? `\nPraxis: ${leadForm.praxis}` : '';
+    const nameInfo = leadForm.name ? `\nAnsprechpartner: ${leadForm.name}` : '';
+    const emailInfo = leadForm.email ? `\nE-Mail: ${leadForm.email}` : '';
+    const phoneInfo = leadForm.phone ? `\nTelefon: ${leadForm.phone}` : '';
+    const customNote = consultationMessage.trim() ? `\n\nHinweis / Frage: ${consultationMessage.trim()}` : '';
+
+    const tarifReinerName = savings.tarif.split(' (')[0];
 
     let text = '';
     if (includeCheckResults) {
-      text = `Hallo Manuel! 👋\n` +
-        `Ich habe den Praxis-Check auf Auxilium durchgeführt und möchte meine Ergebnisse mit dir besprechen, um die Beratung zu starten:\n` +
-        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}\n` : '') +
-        `\n📊 *Ergebnisse des Praxis-Checks:*` +
+      text = `${greeting}!\n\n` +
+        `Ich habe den Praxis-Check auf Auxilium Assist durchgeführt und möchte meine Ergebnisse gerne mit dir besprechen:\n` +
+        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\nKontaktdaten:${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}\n` : '') +
+        `\nErgebnisse des Praxis-Checks:` +
         `\n1. Anrufaufkommen: ${q1}` +
         `\n2. Hauptanliegen: ${q2}` +
         `\n3. Bei Besetzt/Nichtannahme: ${q3}` +
@@ -299,18 +309,17 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
         `\n5. Einsatzzeitraum: ${q5}` +
         `\n6. Praxissoftware (PVS): ${q6}` +
         `\n7. Terminsynchronisation: ${q7}` +
-        `\n\n💡 *Errechnetes Ergebnis & Empfehlung:*` +
-        `\n• Empfohlenes System: Auxilium ${savings.hauptprodukt} (${savings.tarif})` +
-        `\n• Erwartete Zeitersparnis: ~${savings.zeitgewinn_stunden} Std./Monat` +
-        `\n• Erwartete Netto-Ersparnis: ${savings.netto_ersparnis} / Monat` +
+        `\n\nErrechnetes Ergebnis und Empfehlung:` +
+        `\n- Empfohlenes System: Auxilium ${savings.hauptprodukt}` +
+        `\n- Tarif: ${tarifReinerName}` +
         customNote +
-        `\n\nIch bitte um Rückmeldung für die persönliche Beratung und die nächsten Schritte!`;
+        `\n\nIch bitte um Rückmeldung für die persönliche Beratung`;
     } else {
-      text = `Hallo Manuel! 👋\n` +
-        `Ich interessiere mich für eine persönliche Beratung zu den KI-Lösungen von Auxilium für meine Praxis.` +
-        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n\n📋 *Kontaktdaten:*${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}` : '') +
+      text = `${greeting}!\n\n` +
+        `Ich interessiere mich für eine persönliche Beratung zu den KI-Lösungen von Auxilium Assist für meine Praxis.` +
+        (praxisInfo || nameInfo || emailInfo || phoneInfo ? `\n\nKontaktdaten:${praxisInfo}${nameInfo}${emailInfo}${phoneInfo}` : '') +
         customNote +
-        `\n\nIch freue mich auf den Austausch!`;
+        `\n\nIch bitte um Rückmeldung für die persönliche Beratung`;
     }
 
     return `https://wa.me/4915257344044?text=${encodeURIComponent(text)}`;
@@ -753,44 +762,31 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 </span>
                               </div>
 
-                              {/* WhatsApp Beratung - Box mit Profilbild, Checkbox & Notizfeld */}
+                              {/* WhatsApp Beratung - Box mit Profilbild, Checkbox, Notizfeld & Button */}
                               <div className="mt-5 p-4 bg-slate-900/60 border border-slate-800/80 rounded-2xl space-y-3.5 text-left">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                  <div className="flex items-start gap-3">
-                                    <div className="relative shrink-0 mt-0.5">
-                                      <img 
-                                        src={manuelPhoto} 
-                                        alt="Manuel Engelhard" 
-                                        className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
-                                      />
-                                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
-                                    </div>
-                                    <div className="space-y-1">
-                                      <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
-                                      <div>
-                                        <h4 className="font-bold text-xs sm:text-sm text-white leading-tight">Manuel Engelhard</h4>
-                                        <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Experte für KI-Implementierungen</p>
-                                      </div>
-                                      <p className="text-[11px] text-slate-300 leading-snug">
-                                        Haben Sie Fragen zur Auswertung? Klicken Sie hier für eine persönliche Beratung!
-                                      </p>
-                                    </div>
+                                <div className="flex items-start gap-3">
+                                  <div className="relative shrink-0 mt-0.5">
+                                    <img 
+                                      src={manuelPhoto} 
+                                      alt="Manuel Engelhard" 
+                                      className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
+                                    />
+                                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
                                   </div>
-                                  
-                                  <a 
-                                    href={getWhatsAppShareUrl()}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#0D9488] hover:bg-[#0b7f74] text-white font-bold text-[11px] uppercase tracking-wider rounded-xl shadow-md transition-all hover:scale-[1.02] active:scale-95 self-start sm:self-center cursor-pointer"
-                                    id="btn-start-consultation-whatsapp"
-                                  >
-                                    <MessageCircle size={13} className="fill-current" />
-                                    <span>Beratung starten</span>
-                                  </a>
+                                  <div className="space-y-1">
+                                    <p className="font-mono text-[9px] font-bold text-[#2DD4BF] uppercase tracking-widest leading-none">Persönliche Beratung</p>
+                                    <div>
+                                      <h4 className="font-bold text-xs sm:text-sm text-white leading-tight">Manuel Engelhard</h4>
+                                      <p className="text-[10px] text-slate-400 mt-0.5 leading-none">Experte für KI-Implementierungen</p>
+                                    </div>
+                                    <p className="text-[11px] text-slate-300 leading-snug">
+                                      Haben Sie Fragen zur Auswertung? Klicken Sie hier für eine persönliche Beratung!
+                                    </p>
+                                  </div>
                                 </div>
 
-                                {/* Checkbox & Textfeld unter dem WhatsApp-Button */}
-                                <div className="pt-3 border-t border-slate-800/80 space-y-2">
+                                {/* Checkbox & Textfeld */}
+                                <div className="pt-3 border-t border-slate-800/80 space-y-2.5">
                                   <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-200 hover:text-white transition-colors group">
                                     <input 
                                       type="checkbox"
@@ -810,9 +806,23 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                       value={consultationMessage}
                                       onChange={(e) => setConsultationMessage(e.target.value)}
                                       placeholder="Optionale Nachricht oder konkrete Frage eingeben..."
-                                      className="w-full px-3.5 py-2 bg-slate-950/60 border border-slate-700/60 focus:border-[#2DD4BF] focus:ring-1 focus:ring-[#2DD4BF]/20 rounded-xl text-xs text-slate-100 placeholder-slate-400 outline-none transition-all"
+                                      className="w-full px-3.5 py-2.5 bg-slate-950/60 border border-slate-700/60 focus:border-[#2DD4BF] focus:ring-1 focus:ring-[#2DD4BF]/20 rounded-xl text-xs text-slate-100 placeholder-slate-400 outline-none transition-all"
                                       id="input-consultation-custom-note"
                                     />
+                                  </div>
+
+                                  {/* Button unter dem Eingabefeld (kompakt und zentriert/linksbündig passend) */}
+                                  <div className="pt-1 flex justify-start sm:justify-start">
+                                    <a 
+                                      href={getWhatsAppShareUrl()}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+                                      id="btn-start-consultation-whatsapp"
+                                    >
+                                      <MessageCircle size={16} className="fill-white" />
+                                      <span>WhatsApp Beratung starten</span>
+                                    </a>
                                   </div>
                                 </div>
                               </div>

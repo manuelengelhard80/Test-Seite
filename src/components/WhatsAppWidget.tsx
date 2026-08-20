@@ -107,7 +107,9 @@ export const WhatsAppWidget: React.FC = () => {
             {/* Direct WhatsApp Action Call Button */}
             <div className="space-y-2">
               <a
-                href="https://wa.me/4915257344044"
+                href={`https://wa.me/4915257344044?text=${encodeURIComponent(
+                  `${getGreeting().replace(',', '!')} Ich interessiere mich für eine persönliche Beratung zu Auxilium Assist für meine Praxis.\n\nIch bitte um Rückmeldung für die persönliche Beratung`
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-3 px-4 rounded-xl text-xs md:text-sm transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-emerald-200"
