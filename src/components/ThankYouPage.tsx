@@ -17,6 +17,7 @@ import {
   MessageCircle,
   ArrowRight
 } from 'lucide-react';
+import manuelPhoto from '../assets/manuel-engelhard.png';
 
 interface ThankYouPageProps {
   productType: 'voice' | 'assist' | 'pulse';
@@ -487,10 +488,9 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({ productType, onBack,
                 <div className="flex items-start gap-3.5 bg-white p-4 rounded-2xl transition-all border border-slate-100 text-slate-800 shadow-sm">
                   <div className="relative shrink-0">
                     <img 
-                      src="/manuel-engelhard.jpg" 
+                      src={manuelPhoto} 
                       alt="Manuel Engelhard - Auxilium Support" 
                       className="w-12 h-12 rounded-full object-cover shrink-0 shadow-sm"
-                      referrerPolicy="no-referrer"
                     />
                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-white rounded-full" />
                   </div>

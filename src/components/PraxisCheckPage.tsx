@@ -7,6 +7,7 @@ import {
   TrendingUp, Clock, Euro, ArrowUpRight, ChevronDown, ChevronUp, MessageCircle
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import manuelPhoto from '../assets/manuel-engelhard.png';
 
 interface Question {
   id: number;
@@ -749,10 +750,9 @@ export const PraxisCheckPage: React.FC<PraxisCheckPageProps> = ({ forcePreLaunch
                                 <div className="flex items-start gap-3.5">
                                   <div className="relative shrink-0 mt-0.5">
                                     <img 
-                                      src="/manuel-engelhard.jpg" 
+                                      src={manuelPhoto} 
                                       alt="Manuel Engelhard" 
                                       className="w-10 h-10 rounded-full object-cover border border-white/20 shadow-sm"
-                                      referrerPolicy="no-referrer"
                                     />
                                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-teal-400 border-2 border-slate-900 rounded-full" />
                                   </div>

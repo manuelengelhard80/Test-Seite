@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, X } from 'lucide-react';
+import manuelPhoto from '../assets/manuel-engelhard.png';
 
 export const WhatsAppWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,10 +70,9 @@ export const WhatsAppWidget: React.FC = () => {
             <div className="flex items-center gap-3">
               <div className="relative">
                 <img 
-                  src="/manuel-engelhard.jpg" 
+                  src={manuelPhoto} 
                   alt="Manuel Engelhard" 
                   className="w-10 h-10 rounded-full object-cover border border-white/20"
-                  referrerPolicy="no-referrer"
                 />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#25D366] border-2 border-[#0D9488] rounded-full" />
               </div>
