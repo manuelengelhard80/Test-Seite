@@ -35,7 +35,7 @@ export const FeatureFocus: React.FC = () => {
         <div className="flex flex-col items-center gap-12 mx-auto max-w-4xl">
           
           {/* Image Section - Top */}
-          <div className="relative w-full flex justify-center">
+          <div className="relative w-full flex flex-col items-center">
             {/* Decorative background blob */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-medical opacity-10 blur-3xl rounded-full -z-10"></div>
             
@@ -60,6 +60,11 @@ export const FeatureFocus: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Bildnachweis direkt unter dem Hauptbild */}
+            <p className="text-xs text-slate-500 mt-3 text-center font-medium">
+              Visualisierung: Erstellt unter Einsatz von KI-Technologie
+            </p>
           </div>
 
           {/* Bullets Section - Bottom */}

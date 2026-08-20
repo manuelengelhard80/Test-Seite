@@ -104,6 +104,19 @@ export const ImpressumPage: React.FC<ImpressumPageProps> = ({ onBack }) => {
               </p>
             </div>
 
+            {/* Hinweis zur Nutzung von Künstlicher Intelligenz (EU AI Act) */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-6">
+              <h2 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <span>Hinweis zur Nutzung von Künstlicher Intelligenz (EU AI Act)</span>
+              </h2>
+              <p className="text-slate-600 text-sm leading-relaxed mb-3">
+                Die Texte auf dieser Webseite wurden mit KI-Unterstützung erarbeitet und vor Veröffentlichung redaktionell geprüft. Die Bilder auf der Webseite wurden teilweise mit KI erstellt.
+              </p>
+              <p className="text-xs text-slate-500 font-mono">
+                Visualisierung: Erstellt unter Einsatz von KI-Technologie
+              </p>
+            </div>
+
             {/* Haftung & Urheberrecht */}
             <div className="space-y-6">
               <div>
