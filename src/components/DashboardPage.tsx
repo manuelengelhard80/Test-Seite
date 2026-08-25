@@ -35,6 +35,7 @@ import { Doctor, ServiceType, Resource, CalendarEvent, DOCTOR_COLOR_PALETTE, Doc
 import { BookingWidgetConfigurator } from './BookingWidgetConfigurator';
 import { AuxiWizard, OnboardingData } from './AuxiWizard';
 import { PhoneAiUpsellBanner } from './PhoneAiUpsellBanner';
+import { AuxiSetupBanner } from './AuxiSetupBanner';
 import { AuxiAvatar } from './AuxiAvatar';
 
 interface DashboardPageProps {
@@ -184,7 +185,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   const [practiceName, setPracticeName] = useState('Gemeinschaftspraxis am Marktplatz');
   const [practiceSubtitle, setPracticeSubtitle] = useState('Ihr vertrauensvolles Praxisteam für ganzheitliche Medizin');
   const [primaryBrandColor, setPrimaryBrandColor] = useState('#0D9488');
-  const [hasCompletedWizard, setHasCompletedWizard] = useState(true);
+  const [hasCompletedWizard, setHasCompletedWizard] = useState<boolean>(() => {
+    return localStorage.getItem('auxi_calendar_onboarded') === 'true';
+  });
 
   // Time Slots (08:00 - 18:00)
   const timeSlots = Array.from({ length: 11 }, (_, i) => i + 8); 
@@ -1079,9 +1082,22 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
           ) : activeTab === 'calendar' && (
              <div className="h-full flex flex-col overflow-hidden">
                 
-                {/* Phone AI Upsell Banner (2026 Vertriebs-Integration) */}
+                {/* Auxi Setup vs Phone AI Upsell Banner */}
                 <div className="px-4 pt-2 shrink-0">
-                  <PhoneAiUpsellBanner practiceName={practiceName} />
+                  {!hasCompletedWizard ? (
+                    <AuxiSetupBanner 
+                      onStartSetup={() => setShowAuxiWizard(true)}
+                      onSkip={() => {
+                        setHasCompletedWizard(true);
+                        localStorage.setItem('auxi_calendar_onboarded', 'true');
+                      }}
+                    />
+                  ) : (
+                    <PhoneAiUpsellBanner 
+                      practiceName={practiceName} 
+                      onReopenWizard={() => setShowAuxiWizard(true)}
+                    />
+                  )}
                 </div>
                 
                 {/* 1. TAG (DAY) VIEW */}
@@ -2298,6 +2314,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             setPrimaryBrandColor(data.primaryColor);
             setShowAuxiWizard(false);
             setHasCompletedWizard(true);
+            try {
+              localStorage.setItem('auxi_calendar_onboarded', 'true');
+            } catch (e) {
+              console.error(e);
+            }
           }}
         />
       )}
