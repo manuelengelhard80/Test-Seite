@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Calendar as CalendarIcon, 
   Users, 
@@ -23,9 +23,16 @@ import {
   Clock,
   Sparkles,
   Trash2,
-  Edit2
+  Edit2,
+  List as ListIcon,
+  Phone,
+  Filter,
+  CalendarDays,
+  Globe,
+  Sliders
 } from 'lucide-react';
 import { Doctor, ServiceType, Resource, CalendarEvent, DOCTOR_COLOR_PALETTE, DoctorColorOption } from '../types/calendar';
+import { BookingWidgetConfigurator } from './BookingWidgetConfigurator';
 
 interface DashboardPageProps {
   onLogout: () => void;
@@ -88,9 +95,15 @@ const getMonthMatrix = (d: Date): Date[][] => {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   // Navigation & Layout State
-  const [activeTab, setActiveTab] = useState<'calendar' | 'api' | 'team'>('calendar');
+  const [activeTab, setActiveTab] = useState<'calendar' | 'widget' | 'team' | 'api'>('calendar');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month' | 'list'>('day');
+
+  // List View Specific Filter State
+  const [listSearchQuery, setListSearchQuery] = useState('');
+  const [listDoctorFilter, setListDoctorFilter] = useState<string>('all');
+  const [listTimeFilter, setListTimeFilter] = useState<'all' | 'today' | 'week' | 'month'>('week');
+  const [listInsuranceFilter, setListInsuranceFilter] = useState<'all' | 'kasse' | 'privat'>('all');
 
   // Doctor state with color customization
   const [doctors, setDoctors] = useState<Doctor[]>([
@@ -473,7 +486,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       newD.setDate(newD.getDate() - 1);
     } else if (viewMode === 'week') {
       newD.setDate(newD.getDate() - 7);
-    } else if (viewMode === 'month') {
+    } else if (viewMode === 'month' || viewMode === 'list') {
       newD.setMonth(newD.getMonth() - 1);
     }
     setCurrentDate(newD);
@@ -485,7 +498,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       newD.setDate(newD.getDate() + 1);
     } else if (viewMode === 'week') {
       newD.setDate(newD.getDate() + 7);
-    } else if (viewMode === 'month') {
+    } else if (viewMode === 'month' || viewMode === 'list') {
       newD.setMonth(newD.getMonth() + 1);
     }
     setCurrentDate(newD);
@@ -570,8 +583,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       const last = weekDaysList[6];
       const kw = getCalendarWeek(currentDate);
       return `${first.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })} – ${last.toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })} (KW ${kw})`;
-    } else {
+    } else if (viewMode === 'month') {
       return currentDate.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+    } else {
+      return 'Terminübersicht & Agenda';
     }
   };
 
@@ -585,6 +600,70 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   const getDoctorPalette = (doc?: Doctor): DoctorColorOption => {
     return DOCTOR_COLOR_PALETTE.find(c => c.id === doc?.colorId) || DOCTOR_COLOR_PALETTE[0];
   };
+
+  // Filtered and Sorted Events for List / Agenda View
+  const filteredListEvents = useMemo(() => {
+    return events.filter(evt => {
+      // Doctor filter
+      if (listDoctorFilter !== 'all' && evt.docId !== listDoctorFilter) {
+        return false;
+      }
+      // Insurance filter
+      if (listInsuranceFilter !== 'all' && evt.patientType !== listInsuranceFilter) {
+        return false;
+      }
+      // Time Period filter
+      if (listTimeFilter === 'today') {
+        if (evt.date !== todayISO) return false;
+      } else if (listTimeFilter === 'week') {
+        const isInWeek = weekDays.some(d => formatDateISO(d) === evt.date);
+        if (!isInWeek) return false;
+      } else if (listTimeFilter === 'month') {
+        const monthPrefix = currentDateISO.slice(0, 7);
+        if (!evt.date.startsWith(monthPrefix)) return false;
+      }
+      // Search query filter
+      if (listSearchQuery.trim()) {
+        const q = listSearchQuery.toLowerCase();
+        const doc = getDoctor(evt.docId);
+        const resource = resources.find(r => r.id === evt.resourceId);
+        const matchName = evt.patientName?.toLowerCase().includes(q);
+        const matchTitle = evt.title?.toLowerCase().includes(q);
+        const matchPhone = evt.patientPhone?.toLowerCase().includes(q);
+        const matchType = evt.type?.toLowerCase().includes(q);
+        const matchDesc = evt.desc?.toLowerCase().includes(q);
+        const matchDoc = doc?.name.toLowerCase().includes(q);
+        const matchRes = resource?.name.toLowerCase().includes(q);
+        if (!matchName && !matchTitle && !matchPhone && !matchType && !matchDesc && !matchDoc && !matchRes) {
+          return false;
+        }
+      }
+      return true;
+    }).sort((a, b) => {
+      // Sort chronologically by date then time
+      if (a.date !== b.date) {
+        return a.date.localeCompare(b.date);
+      }
+      return a.time - b.time;
+    });
+  }, [events, listDoctorFilter, listInsuranceFilter, listTimeFilter, listSearchQuery, todayISO, weekDays, currentDateISO, doctors, resources]);
+
+  // Group events by date for the list view
+  const groupedListEvents = useMemo(() => {
+    const groups: { date: string; displayDate: string; isToday: boolean; events: CalendarEvent[] }[] = [];
+    filteredListEvents.forEach(evt => {
+      let group = groups.find(g => g.date === evt.date);
+      if (!group) {
+        const d = new Date(evt.date);
+        const isToday = evt.date === todayISO;
+        const displayDate = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        group = { date: evt.date, displayDate, isToday, events: [] };
+        groups.push(group);
+      }
+      group.events.push(evt);
+    });
+    return groups;
+  }, [filteredListEvents, todayISO]);
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
@@ -603,14 +682,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0
       `}>
         {/* Brand Header */}
-        <div className="p-4 px-5 flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-teal-50/40 via-sky-50/30 to-white">
+        <div className="p-4 px-5 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
            <div className="flex flex-col items-start select-none">
              <div className="flex items-center gap-1.5">
                <span className="relative flex h-2.5 w-2.5 mt-0.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
                </span>
-               <span className="font-extrabold text-gradient text-xl leading-none">Auxilium Assist</span>
+               <span className="font-extrabold text-[#0D9488] text-xl leading-none">Auxilium Assist</span>
              </div>
              <span className="text-[11px] text-slate-500 mt-1 font-semibold tracking-wide pl-4">Praxiskalender</span>
            </div>
@@ -622,13 +701,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         {/* Sidebar Mini Calendar & Nav */}
         <div className="flex-1 overflow-y-auto p-4 space-y-5">
           
-          {/* Create Button with Primary Türkis to Blau Gradient */}
+          {/* Create Button with Solid Türkis */}
           <button 
             onClick={() => {
               handleSlotClick(9, selectedDoctors[0], currentDateISO);
               setSidebarOpen(false);
             }}
-            className="w-full bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] shadow-md hover:shadow-lg text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+            className="w-full bg-[#0D9488] hover:bg-[#0f766e] active:bg-[#115e59] shadow-sm hover:shadow text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Plus size={18} strokeWidth={2.5} /> <span>Neuer Termin</span>
           </button>
@@ -645,6 +724,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             >
               <CalendarIcon size={18} className={activeTab === 'calendar' ? 'text-[#0D9488]' : 'text-slate-500'} /> 
               <span>Kalender</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('widget')} 
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                activeTab === 'widget' 
+                  ? 'bg-gradient-to-r from-teal-50 to-sky-50 text-[#0D9488] font-bold border border-teal-100/80 shadow-xs' 
+                  : 'text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <Globe size={18} className={activeTab === 'widget' ? 'text-[#0D9488]' : 'text-slate-500'} /> 
+              <span>Buchungs-Widget</span>
             </button>
             <button 
               onClick={() => setActiveTab('team')} 
@@ -899,11 +989,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
           </div>
 
           <div className="flex items-center gap-3 lg:gap-4">
-            {/* View Switcher: Tag / Woche / Monat */}
+            {/* View Switcher: Tag / Woche / Monat / Liste */}
             <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/70 shadow-2xs">
                <button 
                  onClick={() => setViewMode('day')}
-                 className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                    viewMode === 'day' 
                      ? 'bg-white shadow-xs text-[#0D9488]' 
                      : 'text-slate-600 hover:text-slate-900'
@@ -913,7 +1003,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                </button>
                <button 
                  onClick={() => setViewMode('week')}
-                 className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                    viewMode === 'week' 
                      ? 'bg-white shadow-xs text-[#0284C7]' 
                      : 'text-slate-600 hover:text-slate-900'
@@ -923,13 +1013,24 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                </button>
                <button 
                   onClick={() => setViewMode('month')}
-                  className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                     viewMode === 'month' 
                       ? 'bg-white shadow-xs text-[#0D9488]' 
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                  <span>Monat</span>
+               </button>
+               <button 
+                  onClick={() => setViewMode('list')}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                    viewMode === 'list' 
+                      ? 'bg-white shadow-xs text-[#0D9488]' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                 <ListIcon size={13} />
+                 <span>Liste</span>
                </button>
             </div>
             
@@ -941,7 +1042,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                >
                  <Palette size={18} />
                </button>
-               <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0D9488] to-[#0284C7] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-teal-100">
+               <div className="w-8 h-8 rounded-xl bg-[#0D9488] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-teal-100">
                  P
                </div>
             </div>
@@ -987,10 +1088,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     <div className="flex-1 overflow-y-auto overflow-x-auto relative scroll-smooth">
                        <div className="relative min-w-[300px]" style={{ minWidth: selectedDoctors.length > 2 ? '700px' : '100%' }}>
                           
-                          {/* Current Time Indicator Line (Türkis to Blau Gradient) */}
+                          {/* Current Time Indicator Line (Solid Türkis) */}
                           {currentDateISO === todayISO && (
                             <div className="absolute left-0 right-0 z-10 pointer-events-none" style={{ top: '240px' }}>
-                               <div className="h-0.5 bg-gradient-to-r from-[#0D9488] via-[#0284C7] to-[#0D9488] w-full relative">
+                               <div className="h-0.5 bg-[#0D9488] w-full relative">
                                  <div className="absolute -left-2 -top-1.5 w-3.5 h-3.5 rounded-full bg-[#0D9488] border-2 border-white shadow-xs"></div>
                                </div>
                             </div>
@@ -1002,7 +1103,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                <div className="w-14 text-right pr-3 -mt-2.5 shrink-0">
                                  <span className="text-xs text-slate-400 font-semibold">{hour}:00</span>
                                </div>
-                               
+                                
                                {/* Doctor Columns */}
                                <div className="flex-1 flex border-t border-slate-100 relative">
                                  {/* Half-hour guide line */}
@@ -1025,7 +1126,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             </div>
                           ))}
 
-                          {/* Render Events for Day View with High-Contrast Doctor Colors */}
+                          {/* Render Events for Day View with Clean Doctor Accent Border */}
                           {events
                             .filter(e => e.date === currentDateISO && selectedDoctors.includes(e.docId))
                             .map(evt => {
@@ -1040,8 +1141,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                <div
                                  key={evt.id}
                                  onClick={(e) => handleEventClick(evt, e)}
-                                 className={`absolute z-20 mx-1 rounded-xl p-2.5 text-xs cursor-pointer shadow-xs border border-slate-200/80 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white ${
-                                   isConflict ? 'ring-2 ring-red-500' : ''
+                                 className={`absolute z-20 mx-1 rounded-xl p-2.5 text-xs cursor-pointer shadow-xs border border-slate-200/90 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white ${
+                                   isConflict ? 'ring-2 ring-amber-400/90 bg-amber-50/20' : ''
                                  }`}
                                  style={{
                                     top: `${(evt.time - 8) * 96 + 1}px`,
@@ -1054,11 +1155,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                >
                                  <div className="font-bold truncate flex items-center justify-between text-slate-900 leading-tight">
                                    <span className="truncate">{evt.title || evt.patientName}</span>
-                                   {evt.patientType === 'privat' && (
-                                     <span className="bg-amber-100 text-amber-900 border border-amber-200 px-1.5 py-0.2 rounded text-[9px] font-extrabold uppercase shrink-0">
-                                       PKV
-                                     </span>
-                                   )}
+                                   <div className="flex items-center gap-1 shrink-0">
+                                     {isConflict && (
+                                       <span className="bg-amber-100 text-amber-900 px-1 py-0.2 rounded text-[8px] font-bold uppercase">
+                                         Konflikt
+                                       </span>
+                                     )}
+                                     {evt.patientType === 'privat' && (
+                                       <span className="bg-amber-100 text-amber-900 border border-amber-200 px-1.5 py-0.2 rounded text-[9px] font-extrabold uppercase">
+                                         PKV
+                                       </span>
+                                     )}
+                                   </div>
                                  </div>
                                  <div className="truncate text-slate-600 mt-1 text-[11px] font-medium flex items-center gap-1">
                                    <Clock size={11} className="text-slate-400 shrink-0" />
@@ -1108,7 +1216,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             <div className="flex justify-center mt-0.5">
                               <span className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
                                 isToday 
-                                  ? 'bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white shadow-xs' 
+                                  ? 'bg-[#0D9488] text-white shadow-xs' 
                                   : isSelectedDay ? 'border-2 border-[#0D9488] text-[#0D9488]' : 'text-slate-800'
                               }`}>
                                 {dayNum}
@@ -1239,7 +1347,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             <div className="flex items-center justify-between mb-1">
                               <span className={`text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center ${
                                 isToday 
-                                  ? 'bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white font-bold shadow-xs' 
+                                  ? 'bg-[#0D9488] text-white font-bold shadow-xs' 
                                   : isCurrentMonth ? 'text-slate-800' : 'text-slate-400'
                               }`}>
                                 {dayDate.getDate()}
@@ -1299,6 +1407,312 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                   </div>
                 )}
 
+                {/* 4. LISTENANSICHT (LIST / AGENDA VIEW) */}
+                {viewMode === 'list' && (
+                  <div className="h-full flex flex-col overflow-hidden bg-slate-50/50">
+                    
+                    {/* List Filter Toolbar */}
+                    <div className="bg-white border-b border-slate-200 p-4 shrink-0 space-y-3">
+                      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                        
+                        {/* Search Input */}
+                        <div className="relative flex-1 min-w-[200px]">
+                          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input 
+                            type="text" 
+                            placeholder="Termine durchsuchen (Patient, Telefon, Grund, Arzt)..."
+                            value={listSearchQuery}
+                            onChange={(e) => setListSearchQuery(e.target.value)}
+                            className="w-full bg-slate-50 pl-10 pr-9 py-2 rounded-xl text-sm border border-slate-200/80 focus:bg-white focus:border-[#0D9488] outline-none transition-all placeholder:text-slate-400"
+                          />
+                          {listSearchQuery && (
+                            <button 
+                              onClick={() => setListSearchQuery('')}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                            >
+                              <X size={14} />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Controls Group */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          
+                          {/* Time Period Filter Pills */}
+                          <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/70 text-xs font-semibold">
+                            <button
+                              onClick={() => setListTimeFilter('today')}
+                              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                                listTimeFilter === 'today' ? 'bg-white shadow-xs text-[#0D9488] font-bold' : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Heute
+                            </button>
+                            <button
+                              onClick={() => setListTimeFilter('week')}
+                              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                                listTimeFilter === 'week' ? 'bg-white shadow-xs text-[#0D9488] font-bold' : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Diese Woche
+                            </button>
+                            <button
+                              onClick={() => setListTimeFilter('month')}
+                              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                                listTimeFilter === 'month' ? 'bg-white shadow-xs text-[#0D9488] font-bold' : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Dieser Monat
+                            </button>
+                            <button
+                              onClick={() => setListTimeFilter('all')}
+                              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                                listTimeFilter === 'all' ? 'bg-white shadow-xs text-[#0D9488] font-bold' : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Alle
+                            </button>
+                          </div>
+
+                          {/* Doctor Filter Select */}
+                          <select
+                            value={listDoctorFilter}
+                            onChange={(e) => setListDoctorFilter(e.target.value)}
+                            className="bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-700 py-1.5 px-3 rounded-xl outline-none focus:border-[#0D9488] cursor-pointer"
+                          >
+                            <option value="all">Alle Behandler</option>
+                            {doctors.map(d => (
+                              <option key={d.id} value={d.id}>{d.name}</option>
+                            ))}
+                          </select>
+
+                          {/* Insurance Filter Select */}
+                          <select
+                            value={listInsuranceFilter}
+                            onChange={(e) => setListInsuranceFilter(e.target.value as any)}
+                            className="bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-700 py-1.5 px-3 rounded-xl outline-none focus:border-[#0D9488] cursor-pointer"
+                          >
+                            <option value="all">Alle Kassenarten</option>
+                            <option value="kasse">Nur GKV (Kasse)</option>
+                            <option value="privat">Nur PKV (Privat)</option>
+                          </select>
+
+                          {/* Direct Create Button */}
+                          <button
+                            onClick={() => handleSlotClick(9, selectedDoctors[0], currentDateISO)}
+                            className="bg-[#0D9488] hover:bg-[#0f766e] text-white font-bold text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer shrink-0"
+                          >
+                            <Plus size={15} strokeWidth={2.5} />
+                            <span className="hidden sm:inline">Neuer Termin</span>
+                          </button>
+
+                        </div>
+                      </div>
+
+                      {/* Summary text */}
+                      <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+                        <span>
+                          {filteredListEvents.length} {filteredListEvents.length === 1 ? 'Termin gefunden' : 'Termine gefunden'}
+                        </span>
+                        {(listSearchQuery || listDoctorFilter !== 'all' || listInsuranceFilter !== 'all' || listTimeFilter !== 'week') && (
+                          <button 
+                            onClick={() => {
+                              setListSearchQuery('');
+                              setListDoctorFilter('all');
+                              setListInsuranceFilter('all');
+                              setListTimeFilter('week');
+                            }}
+                            className="text-[#0D9488] font-semibold hover:underline cursor-pointer flex items-center gap-1"
+                          >
+                            <RefreshCw size={11} /> Filter zurücksetzen
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Scrollable Appointment List */}
+                    <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6">
+                      {groupedListEvents.length === 0 ? (
+                        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-md mx-auto my-8 space-y-4 shadow-xs">
+                          <div className="w-14 h-14 rounded-2xl bg-teal-50 text-[#0D9488] flex items-center justify-center mx-auto border border-teal-100">
+                            <CalendarDays size={28} />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-slate-800 text-base">Keine Termine gefunden</h3>
+                            <p className="text-xs text-slate-500 mt-1">
+                              Im gewählten Zeitraum oder mit den aktiven Filtern liegen keine Termine vor.
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleSlotClick(9, selectedDoctors[0], currentDateISO)}
+                            className="bg-[#0D9488] hover:bg-[#0f766e] text-white font-bold text-xs py-2.5 px-4 rounded-xl inline-flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                          >
+                            <Plus size={15} /> Neuen Termin anlegen
+                          </button>
+                        </div>
+                      ) : (
+                        groupedListEvents.map(group => (
+                          <div key={group.date} className="space-y-3">
+                            
+                            {/* Date Group Header */}
+                            <div className="flex items-center gap-3 sticky top-0 bg-slate-50/95 backdrop-blur-xs py-1.5 z-10">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm font-bold ${group.isToday ? 'text-[#0D9488]' : 'text-slate-800'}`}>
+                                  {group.displayDate}
+                                </span>
+                                {group.isToday && (
+                                  <span className="bg-teal-100 text-[#0D9488] text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+                                    Heute
+                                  </span>
+                                )}
+                              </div>
+                              <div className="h-px bg-slate-200 flex-1"></div>
+                              <span className="text-xs font-semibold text-slate-400">
+                                {group.events.length} {group.events.length === 1 ? 'Termin' : 'Termine'}
+                              </span>
+                            </div>
+
+                            {/* Appointments Grid / List for the Day */}
+                            <div className="space-y-2.5">
+                              {group.events.map(evt => {
+                                const doctor = getDoctor(evt.docId);
+                                const palette = getDoctorPalette(doctor);
+                                const resource = resources.find(r => r.id === evt.resourceId);
+                                const isConflict = checkConflict({...evt, id: 'temp'});
+
+                                return (
+                                  <div
+                                    key={evt.id}
+                                    onClick={(e) => handleEventClick(evt, e)}
+                                    className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group"
+                                    style={{ borderLeftWidth: '5px', borderLeftColor: doctor?.hex || palette.hex }}
+                                  >
+                                    
+                                    {/* Left: Time & Doctor & Patient */}
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 min-w-0">
+                                      
+                                      {/* Time Box */}
+                                      <div className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-center shrink-0 min-w-[95px]">
+                                        <div className="text-xs font-bold text-slate-800 flex items-center justify-center gap-1">
+                                          <Clock size={12} className="text-slate-400" />
+                                          <span>{evt.time % 1 === 0 ? `${evt.time}:00` : `${Math.floor(evt.time)}:30`}</span>
+                                        </div>
+                                        <div className="text-[10px] text-slate-500 font-medium mt-0.5">
+                                          {evt.duration * 60} Min
+                                        </div>
+                                      </div>
+
+                                      {/* Patient and Service Details */}
+                                      <div className="space-y-1 flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <h4 className="font-bold text-slate-900 text-sm hover:text-[#0D9488] transition-colors">
+                                            {evt.patientName || evt.title || 'Unbenannter Patient'}
+                                          </h4>
+                                          
+                                          {evt.patientType === 'privat' ? (
+                                            <span className="bg-amber-100 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase shrink-0">
+                                              PKV (Privat)
+                                            </span>
+                                          ) : (
+                                            <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0">
+                                              GKV (Kasse)
+                                            </span>
+                                          )}
+
+                                          {isConflict && (
+                                            <span className="bg-amber-100 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase shrink-0 flex items-center gap-1">
+                                              <AlertCircle size={11} /> Konflikt
+                                            </span>
+                                          )}
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-500">
+                                          {/* Service Type */}
+                                          <span className="font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                                            {evt.type}
+                                          </span>
+
+                                          {/* Phone */}
+                                          {evt.patientPhone && (
+                                            <span className="flex items-center gap-1 text-slate-600">
+                                              <Phone size={11} className="text-slate-400" />
+                                              <span>{evt.patientPhone}</span>
+                                            </span>
+                                          )}
+
+                                          {/* Room / Resource */}
+                                          {resource && (
+                                            <span className="flex items-center gap-1 text-slate-600">
+                                              <Building2 size={11} className="text-slate-400" />
+                                              <span>{resource.name}</span>
+                                            </span>
+                                          )}
+                                        </div>
+
+                                        {/* Notes snippet */}
+                                        {evt.desc && (
+                                          <p className="text-xs text-slate-400 italic line-clamp-1 pt-0.5">
+                                            "{evt.desc}"
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Right: Doctor Badge & Action Buttons */}
+                                    <div className="flex items-center justify-between sm:justify-end gap-3 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 shrink-0">
+                                      
+                                      {/* Doctor Tag */}
+                                      <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                                        <span 
+                                          className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-2xs"
+                                          style={{ backgroundColor: doctor?.hex || palette.hex }}
+                                        />
+                                        <div className="text-left">
+                                          <span className="text-xs font-bold text-slate-800 block leading-none">{doctor?.name}</span>
+                                          {doctor?.specialty && (
+                                            <span className="text-[10px] text-slate-400 font-medium block mt-0.5">{doctor.specialty}</span>
+                                          )}
+                                        </div>
+                                      </div>
+
+                                      {/* Quick Actions */}
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          onClick={(e) => handleEventClick(evt, e)}
+                                          className="p-2 text-slate-400 hover:text-[#0D9488] hover:bg-teal-50 rounded-xl transition-colors cursor-pointer"
+                                          title="Details bearbeiten"
+                                        >
+                                          <Edit2 size={15} />
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (confirm(`Termin für ${evt.patientName || 'Patient'} wirklich löschen?`)) {
+                                              setEvents(events.filter(item => item.id !== evt.id));
+                                            }
+                                          }}
+                                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                                          title="Termin löschen"
+                                        >
+                                          <Trash2 size={15} />
+                                        </button>
+                                      </div>
+
+                                    </div>
+
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                  </div>
+                )}
+
              </div>
           )}
 
@@ -1318,7 +1732,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                  
                  <button 
                    onClick={() => setShowAddDoctorModal(true)}
-                   className="bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] text-white font-bold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                   className="bg-[#0D9488] hover:bg-[#0f766e] text-white font-bold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all cursor-pointer"
                  >
                    <Plus size={16} /> Neuer Behandler
                  </button>
@@ -1470,6 +1884,35 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
           )}
 
+          {/* BUCHUNGS-WIDGET INTEGRATOR & CONFIGURATOR TAB */}
+          {activeTab === 'widget' && (
+            <BookingWidgetConfigurator 
+              doctors={doctors}
+              serviceTypes={serviceTypes}
+              onNewBookingCreated={(booking) => {
+                // Add booked event directly into calendar events state
+                const [hStr, mStr] = (booking.time || '09:00').split(':');
+                const timeNum = parseInt(hStr, 10) + (parseInt(mStr, 10) === 30 ? 0.5 : 0);
+                const newEvt: CalendarEvent = {
+                  id: `evt_widget_${Date.now()}`,
+                  title: `${booking.patientName} (${booking.serviceName || 'Termin'})`,
+                  patientName: booking.patientName,
+                  patientPhone: booking.patientPhone,
+                  patientType: booking.insuranceType || 'kasse',
+                  docId: booking.doctorId || doctors[0]?.id || 'dr-mueller',
+                  date: booking.date,
+                  time: timeNum,
+                  duration: (booking.duration || 30) / 60,
+                  type: booking.serviceName || 'Online-Buchung',
+                  source: 'ai_voice',
+                  serviceTypeId: 'st_akut',
+                  desc: `Online-Buchung über Website-Widget. E-Mail: ${booking.patientEmail || '-'}, Notiz: ${booking.notes || '-'}`
+                };
+                setEvents(prev => [...prev, newEvt]);
+              }}
+            />
+          )}
+
         </div>
       </div>
 
@@ -1544,7 +1987,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                 </button>
                 <button 
                   type="submit"
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white rounded-xl font-bold text-xs shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  className="px-5 py-2.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-xs shadow-sm hover:shadow transition-all cursor-pointer"
                 >
                   Arzt anlegen
                 </button>
@@ -1787,7 +2230,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                    <button onClick={() => setShowEventModal(false)} className="px-4 py-2 text-slate-500 hover:text-slate-800 font-semibold text-xs cursor-pointer">Abbrechen</button>
                    <button 
                      onClick={saveEvent} 
-                     className="px-5 py-2.5 bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] text-white rounded-xl font-bold text-xs shadow-sm transition-all cursor-pointer"
+                     className="px-5 py-2.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-xs shadow-sm hover:shadow transition-all cursor-pointer"
                    >
                      Termin eintragen
                    </button>

@@ -31,6 +31,7 @@ import { TarifePage } from './components/TarifePage';
 import { WhatsAppWidget } from './components/WhatsAppWidget';
 import { PreLaunchPage } from './components/PreLaunchPage';
 import { PreLaunchPricingPage } from './components/PreLaunchPricingPage';
+import { StandaloneBookingPage } from './components/StandaloneBookingPage';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {
@@ -176,6 +177,14 @@ const AppContent: React.FC = () => {
       <Route 
         path="/kalender" 
         element={<DashboardPage onLogout={handleLogout} />} 
+      />
+      <Route 
+        path="/termin" 
+        element={<StandaloneBookingPage />} 
+      />
+      <Route 
+        path="/buchen" 
+        element={<StandaloneBookingPage />} 
       />
       
       {/* Pages with standard Layout (navbar/footer) */}
