@@ -181,8 +181,8 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
       
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col my-auto max-h-[92vh]">
         
-        {/* Top Gradient Bar */}
-        <div className="h-2 bg-gradient-to-r from-teal-500 via-sky-500 to-indigo-500" />
+        {/* Top Gradient Bar (60% Teal to 40% Blue Brand Gradient) */}
+        <div className="h-2 bg-gradient-to-r from-[#0D9488] via-[#0891b2] to-[#0284C7]" />
 
         {/* Wizard Header Bar */}
         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
@@ -191,7 +191,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none flex items-center gap-2">
                 <span>Auxi • 5-Minuten Einrichtung</span>
-                <span className="text-[10px] bg-teal-100 text-teal-900 font-bold px-2 py-0.5 rounded-full">
+                <span className="text-[10px] bg-teal-50 text-teal-800 border border-teal-200/80 font-bold px-2 py-0.5 rounded-full">
                   Auxilium Praxiskalender
                 </span>
               </h2>
@@ -261,21 +261,21 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
 
               {/* Bento Highlights of Praxiskalender */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left pt-2">
-                <div className="p-3.5 rounded-2xl bg-teal-50/70 border border-teal-100 text-xs space-y-1">
+                <div className="p-3.5 rounded-xl bg-teal-50/70 border border-teal-100 text-xs space-y-1">
                   <span className="font-bold text-teal-950 block flex items-center gap-1.5">
                     <Users size={14} className="text-[#0D9488]" /> 1. Team
                   </span>
                   <span className="text-slate-600 text-[11px]">Ärzte & individuelle Sprechzeiten hinterlegen.</span>
                 </div>
-                <div className="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-100 text-xs space-y-1">
+                <div className="p-3.5 rounded-xl bg-sky-50/70 border border-sky-100 text-xs space-y-1">
                   <span className="font-bold text-sky-950 block flex items-center gap-1.5">
                     <DoorClosed size={14} className="text-[#0284C7]" /> 2. Ressourcen
                   </span>
                   <span className="text-slate-600 text-[11px]">Räume & Geräte automatisch dopplungsfrei sperren.</span>
                 </div>
-                <div className="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 text-xs space-y-1">
-                  <span className="font-bold text-indigo-950 block flex items-center gap-1.5">
-                    <Palette size={14} className="text-[#4F46E5]" /> 3. Ihr Design
+                <div className="p-3.5 rounded-xl bg-cyan-50/70 border border-cyan-100 text-xs space-y-1">
+                  <span className="font-bold text-cyan-950 block flex items-center gap-1.5">
+                    <Palette size={14} className="text-[#0891b2]" /> 3. Ihr Design
                   </span>
                   <span className="text-slate-600 text-[11px]">Praxis-Website Buchungswidget mit 1 Klick bereit.</span>
                 </div>
