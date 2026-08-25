@@ -17,32 +17,35 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
 }) => {
   const sizeMap = {
     sm: 'w-8 h-8',
-    md: 'w-12 h-12',
+    md: 'w-11 h-11',
     lg: 'w-16 h-16',
     xl: 'w-24 h-24',
   };
 
   return (
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
-      {/* Soft Ambient Outer Glow (Luminous Mint/Teal) */}
+      {/* 1. Radar Pulse Ping Ring (Directly inspired by the Logo Dot in Navbar) */}
+      <span className="absolute inset-0 rounded-full animate-ping opacity-60 bg-[#0D9488] pointer-events-none" />
+
+      {/* 2. Soft Ambient Luminous Halo */}
       <motion.div
         animate={{
-          scale: isSpeaking ? [1, 1.14, 1] : [1, 1.05, 1],
-          opacity: isSpeaking ? [0.45, 0.7, 0.45] : [0.25, 0.4, 0.25],
+          scale: isSpeaking ? [1, 1.16, 1] : [1, 1.06, 1],
+          opacity: isSpeaking ? [0.45, 0.75, 0.45] : [0.3, 0.5, 0.3],
         }}
         transition={{
           repeat: Infinity,
-          duration: isSpeaking ? 2 : 3.5,
+          duration: isSpeaking ? 2 : 3.2,
           ease: 'easeInOut',
         }}
-        className={`absolute inset-0 rounded-full bg-gradient-to-tr from-teal-300 via-emerald-200 to-cyan-200 blur-md ${sizeMap[size]}`}
+        className={`absolute inset-0 rounded-full bg-[#0D9488]/30 blur-md ${sizeMap[size]}`}
       />
 
-      {/* Main Floating Sphere */}
+      {/* 3. Main 3D Sphere Container with smooth float motion */}
       <motion.div
         animate={
           isCelebrating
-            ? { y: [0, -7, 0], scale: [1, 1.06, 1] }
+            ? { y: [0, -7, 0], scale: [1, 1.08, 1] }
             : isSpeaking
             ? { y: [0, -2.5, 0], rotate: [-1, 1, -1] }
             : { y: [0, -1.5, 0] }
@@ -52,101 +55,92 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           duration: isCelebrating ? 0.8 : isSpeaking ? 2 : 3.8,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full flex items-center justify-center`}
+        className={`relative ${sizeMap[size]} rounded-full p-[2.5px] bg-gradient-to-b from-white/90 via-teal-100/50 to-teal-300/40 shadow-lg shadow-teal-950/20 border border-teal-200/80 flex items-center justify-center backdrop-blur-md`}
       >
         <svg
-          viewBox="0 0 120 120"
-          className="w-full h-full drop-shadow-sm"
+          viewBox="0 0 100 100"
+          className="w-full h-full rounded-full"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Lighter, Radiant 3D Spherical Gradient (Auxilium Mint-Teal) */}
-            <radialGradient id="auxiBrightSphere" cx="42%" cy="36%" r="62%">
-              <stop offset="0%" stopColor="#5eead4" />       {/* Bright Teal 300 / Mint */}
-              <stop offset="30%" stopColor="#2dd4bf" />      {/* Teal 400 highlight */}
-              <stop offset="65%" stopColor="#0D9488" />      {/* Auxilium Primary Teal */}
-              <stop offset="95%" stopColor="#0f766e" />      {/* Soft Teal 700 edge */}
-              <stop offset="100%" stopColor="#115e59" />     {/* Outer rim */}
+            {/* Auxilium Logo Dot Sphere Radial Gradient (#0D9488 Hero) */}
+            <radialGradient id="auxiLogoDotSphere" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stopColor="#2dd4bf" />       {/* Teal 400 highlight sheen */}
+              <stop offset="35%" stopColor="#0D9488" />      {/* Auxilium Logo Dot #0D9488 */}
+              <stop offset="80%" stopColor="#0f766e" />      {/* Teal 700 depth */}
+              <stop offset="100%" stopColor="#115e59" />     {/* Teal 800 shadow edge */}
             </radialGradient>
 
-            {/* Translucent Outer Glass Capsule Ring */}
-            <linearGradient id="auxiOuterRing" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-              <stop offset="50%" stopColor="#ccfbf1" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#99f6e4" stopOpacity="0.3" />
+            {/* Top Gloss Arc */}
+            <linearGradient id="auxiSphereGloss" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+              <stop offset="40%" stopColor="#ffffff" stopOpacity="0.1" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
 
-            {/* Top Soft Gloss Arc */}
-            <radialGradient id="auxiTopGlint" cx="45%" cy="20%" r="40%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.65" />
-              <stop offset="60%" stopColor="#ffffff" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </radialGradient>
-
-            {/* Faint, Delicate Cheek Blush */}
-            <radialGradient id="auxiSoftBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#99f6e4" stopOpacity="0.55" />
+            {/* Soft Glowing Mint Cheek Blush */}
+            <radialGradient id="auxiDotBlush" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#5eead4" stopOpacity="0.7" />
               <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
             </radialGradient>
 
-            {/* Soft Ambient Ground Shadow */}
-            <radialGradient id="auxiGroundShadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#0f766e" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="#0f766e" stopOpacity="0" />
-            </radialGradient>
+            {/* Subtle glow filter for the facial light lines */}
+            <filter id="eyeGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="0.8" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
           </defs>
 
-          {/* 1. Ambient Drop Shadow underneath */}
-          <ellipse cx="60" cy="112" rx="34" ry="5.5" fill="url(#auxiGroundShadow)" />
+          {/* 1. Base 3D Sphere in Auxilium Logo Dot Color */}
+          <circle cx="50" cy="50" r="48" fill="url(#auxiLogoDotSphere)" />
 
-          {/* 2. Outer Light Translucent Glass Ring (like in image) */}
-          <circle cx="60" cy="58" r="54" fill="url(#auxiOuterRing)" />
-          <circle cx="60" cy="58" r="53.5" stroke="#ffffff" strokeWidth="1" strokeOpacity="0.9" />
-
-          {/* 3. Luminous 3D Inner Sphere */}
-          <circle cx="60" cy="58" r="44" fill="url(#auxiBrightSphere)" />
-
-          {/* 4. Top Soft Specular Gloss Arc */}
-          <ellipse cx="58" cy="34" rx="26" ry="14" fill="url(#auxiTopGlint)" />
-
-          {/* 5. Pure White Sparkle Glint on Top-Right (No Yellow) */}
+          {/* 2. Top Specular Glass Reflection */}
           <path
-            d="M 88 32 Q 89.5 36.5 94 38 Q 89.5 39.5 88 44 Q 86.5 39.5 82 38 Q 86.5 36.5 88 32 Z"
+            d="M 14 38 C 20 18, 80 18, 86 38 C 70 25, 30 25, 14 38 Z"
+            fill="url(#auxiSphereGloss)"
+          />
+
+          {/* 3. Pure White Sparkle Glint on Top Right (No Yellow) */}
+          <path
+            d="M 76 22 Q 78 27 83 29 Q 78 31 76 36 Q 74 31 69 29 Q 74 27 76 22 Z"
             fill="#ffffff"
             opacity="0.95"
           />
-          <circle cx="88" cy="38" r="1.2" fill="#ffffff" />
+          <circle cx="76" cy="29" r="1.2" fill="#a5f3fc" />
 
-          {/* 6. Delicate Soft Cheeks (Blush) */}
-          <circle cx="43" cy="65" r="5.5" fill="url(#auxiSoftBlush)" />
-          <circle cx="77" cy="65" r="5.5" fill="url(#auxiSoftBlush)" />
+          {/* 4. Delicate Glowing Cheeks (Blush) */}
+          <circle cx="28" cy="59" r="7" fill="url(#auxiDotBlush)" />
+          <circle cx="72" cy="59" r="7" fill="url(#auxiDotBlush)" />
 
-          {/* 7. Filigrane, Delicate Smiling Eyes (Thin & Gentle Light Arcs ^ ^) */}
+          {/* 5. Harmonious Curved Eye Arcs (^ ^) - Perfect balanced thickness (3.4px) */}
           {/* Left Eye Arc */}
           <path
-            d="M 40 57.5 C 43.5 49 51 49 54.5 57.5"
+            d="M 29 50 C 33.5 38, 42.5 38, 47 50"
             stroke="#ffffff"
-            strokeWidth="2.4"
+            strokeWidth="3.4"
             strokeLinecap="round"
             strokeLinejoin="round"
+            filter="url(#eyeGlow)"
           />
           {/* Right Eye Arc */}
           <path
-            d="M 65.5 57.5 C 69 49 76.5 49 80 57.5"
+            d="M 53 50 C 57.5 38, 66.5 38, 71 50"
             stroke="#ffffff"
-            strokeWidth="2.4"
+            strokeWidth="3.4"
             strokeLinecap="round"
             strokeLinejoin="round"
+            filter="url(#eyeGlow)"
           />
 
-          {/* 8. Filigrane, Cute Tiny Smiling Mouth (Subtle gentle arc) */}
+          {/* 6. Cute Subtle Smile Arc (2.8px) */}
           <path
-            d="M 57.5 63 C 58.8 66 61.2 66 62.5 63"
+            d="M 46.5 58.5 C 48.5 63, 51.5 63, 53.5 58.5"
             stroke="#ffffff"
-            strokeWidth="2.0"
+            strokeWidth="2.8"
             strokeLinecap="round"
             strokeLinejoin="round"
+            filter="url(#eyeGlow)"
           />
         </svg>
       </motion.div>
@@ -201,7 +195,7 @@ export const AuxiSpeechBubble: React.FC<AuxiSpeechBubbleProps> = ({
           <div className="flex items-center justify-between flex-wrap gap-2">
             <h4 className="text-xs font-bold text-teal-950 flex items-center gap-1.5">
               <span>{title}</span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-ping" />
             </h4>
             {stepIndicator && (
               <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
