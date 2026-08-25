@@ -9,26 +9,23 @@ import {
   ChevronRight, 
   Plus, 
   Search,
-  Bell,
   CheckCircle2,
-  Copy,
   RefreshCw,
-  ExternalLink,
   Menu,
   X,
-  Clock,
-  MapPin,
-  AlignLeft,
-  MoreHorizontal,
-  Key,
-  Stethoscope,
   Building2,
   ShieldCheck,
   AlertCircle,
-  CalendarDays,
-  CalendarRange
+  Palette,
+  Check,
+  Stethoscope,
+  Key,
+  Clock,
+  Sparkles,
+  Trash2,
+  Edit2
 } from 'lucide-react';
-import { Doctor, ServiceType, Resource, CalendarEvent } from '../types/calendar';
+import { Doctor, ServiceType, Resource, CalendarEvent, DOCTOR_COLOR_PALETTE, DoctorColorOption } from '../types/calendar';
 
 interface DashboardPageProps {
   onLogout: () => void;
@@ -91,16 +88,43 @@ const getMonthMatrix = (d: Date): Date[][] => {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   // Navigation & Layout State
-  const [activeTab, setActiveTab] = useState('calendar');
+  const [activeTab, setActiveTab] = useState<'calendar' | 'api' | 'team'>('calendar');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
 
-  // Database / Settings State (Using brand turquoise & harmonious accents)
+  // Doctor state with color customization
   const [doctors, setDoctors] = useState<Doctor[]>([
-    { id: 'dr-mueller', name: 'Dr. Müller', color: 'bg-teal-50 border-teal-200 text-teal-800', border: 'border-[#0D9488]' },
-    { id: 'dr-schmidt', name: 'Dr. Schmidt', color: 'bg-emerald-50 border-emerald-200 text-emerald-800', border: 'border-emerald-500' },
-    { id: 'dr-weber', name: 'Dr. Weber', color: 'bg-cyan-50 border-cyan-200 text-cyan-800', border: 'border-cyan-600' },
+    { 
+      id: 'dr-mueller', 
+      name: 'Dr. Müller', 
+      specialty: 'Allgemeinmedizin',
+      colorId: 'teal',
+      color: DOCTOR_COLOR_PALETTE[0].bgClass,
+      border: DOCTOR_COLOR_PALETTE[0].borderClass,
+      hex: DOCTOR_COLOR_PALETTE[0].hex
+    },
+    { 
+      id: 'dr-schmidt', 
+      name: 'Dr. Schmidt', 
+      specialty: 'Innere Medizin',
+      colorId: 'blue',
+      color: DOCTOR_COLOR_PALETTE[1].bgClass,
+      border: DOCTOR_COLOR_PALETTE[1].borderClass,
+      hex: DOCTOR_COLOR_PALETTE[1].hex
+    },
+    { 
+      id: 'dr-weber', 
+      name: 'Dr. Weber', 
+      specialty: 'Hausärztliche Versorgung',
+      colorId: 'indigo',
+      color: DOCTOR_COLOR_PALETTE[2].bgClass,
+      border: DOCTOR_COLOR_PALETTE[2].borderClass,
+      hex: DOCTOR_COLOR_PALETTE[2].hex
+    },
   ]);
+
+  const [activeColorPickerDocId, setActiveColorPickerDocId] = useState<string | null>(null);
+
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([
     { id: 'st_akut', name: 'Akutsprechstunde', durationMinutes: 15 },
     { id: 'st_checkup', name: 'Check-Up', durationMinutes: 30 },
@@ -108,6 +132,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
     { id: 'st_erst', name: 'Erstgespräch', durationMinutes: 45 },
     { id: 'st_sono', name: 'Ultraschall / Sonografie', durationMinutes: 30 },
   ]);
+
   const [resources, setResources] = useState<Resource[]>([
     { id: 'res_room1', name: 'Behandlungszimmer 1', type: 'room' },
     { id: 'res_room2', name: 'Behandlungszimmer 2', type: 'room' },
@@ -128,6 +153,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   const [selectedEvent, setSelectedEvent] = useState<Partial<CalendarEvent> | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   
+  // New Doctor Modal / Form State
+  const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
+  const [newDoctorName, setNewDoctorName] = useState('');
+  const [newDoctorSpecialty, setNewDoctorSpecialty] = useState('');
+  const [newDoctorColorId, setNewDoctorColorId] = useState('cyan');
+
   // Google Integration
   const [isGoogleConnected, setIsGoogleConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -135,7 +166,47 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   // Time Slots (08:00 - 18:00)
   const timeSlots = Array.from({ length: 11 }, (_, i) => i + 8); 
 
-  // Load Initial Rich Realistic Practice Data
+  // Doctor Color Updater
+  const updateDoctorColor = (docId: string, colorId: string) => {
+    const paletteOption = DOCTOR_COLOR_PALETTE.find(c => c.id === colorId) || DOCTOR_COLOR_PALETTE[0];
+    setDoctors(prev => prev.map(doc => {
+      if (doc.id === docId) {
+        return {
+          ...doc,
+          colorId: paletteOption.id,
+          color: paletteOption.bgClass,
+          border: paletteOption.borderClass,
+          hex: paletteOption.hex
+        };
+      }
+      return doc;
+    }));
+    setActiveColorPickerDocId(null);
+  };
+
+  // Add new doctor
+  const handleAddDoctor = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newDoctorName.trim()) return;
+    const paletteOption = DOCTOR_COLOR_PALETTE.find(c => c.id === newDoctorColorId) || DOCTOR_COLOR_PALETTE[0];
+    const newDocId = `doc_${Date.now()}`;
+    const newDoc: Doctor = {
+      id: newDocId,
+      name: newDoctorName.trim(),
+      specialty: newDoctorSpecialty.trim() || 'Facharzt',
+      colorId: paletteOption.id,
+      color: paletteOption.bgClass,
+      border: paletteOption.borderClass,
+      hex: paletteOption.hex
+    };
+    setDoctors([...doctors, newDoc]);
+    setSelectedDoctors([...selectedDoctors, newDocId]);
+    setNewDoctorName('');
+    setNewDoctorSpecialty('');
+    setShowAddDoctorModal(false);
+  };
+
+  // Load Initial Practice Data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -379,9 +450,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       const isOverlapping = (newStart < eventEnd && newEnd > eventStart);
       
       if (isOverlapping) {
-        // Conflict if same doctor
         if (event.docId === newEvent.docId) return true;
-        // Conflict if same resource (room/device)
         if (newEvent.resourceId && event.resourceId === newEvent.resourceId) return true;
       }
       
@@ -496,9 +565,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
     if (viewMode === 'day') {
       return currentDate.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     } else if (viewMode === 'week') {
-      const weekDays = getWeekDays(currentDate);
-      const first = weekDays[0];
-      const last = weekDays[6];
+      const weekDaysList = getWeekDays(currentDate);
+      const first = weekDaysList[0];
+      const last = weekDaysList[6];
       const kw = getCalendarWeek(currentDate);
       return `${first.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })} – ${last.toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })} (KW ${kw})`;
     } else {
@@ -511,6 +580,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   const weekDays = getWeekDays(currentDate);
   const monthWeeks = getMonthMatrix(currentDate);
   const miniCalWeeks = getMonthMatrix(miniCalDate);
+
+  const getDoctor = (id: string): Doctor | undefined => doctors.find(d => d.id === id);
+  const getDoctorPalette = (doc?: Doctor): DoctorColorOption => {
+    return DOCTOR_COLOR_PALETTE.find(c => c.id === doc?.colorId) || DOCTOR_COLOR_PALETTE[0];
+  };
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
@@ -528,7 +602,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         fixed top-0 left-0 bottom-0 w-72 bg-white border-r border-slate-200 z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-sm
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0
       `}>
-        <div className="p-4 px-5 flex items-center justify-between border-b border-slate-100">
+        {/* Brand Header */}
+        <div className="p-4 px-5 flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-teal-50/40 via-sky-50/30 to-white">
            <div className="flex flex-col items-start select-none">
              <div className="flex items-center gap-1.5">
                <span className="relative flex h-2.5 w-2.5 mt-0.5">
@@ -545,33 +620,58 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         </div>
 
         {/* Sidebar Mini Calendar & Nav */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 space-y-5">
           
-          {/* Create Button */}
+          {/* Create Button with Primary Türkis to Blau Gradient */}
           <button 
             onClick={() => {
               handleSlotClick(9, selectedDoctors[0], currentDateISO);
               setSidebarOpen(false);
             }}
-            className="w-full bg-[#0D9488] hover:bg-[#0f766e] shadow-md hover:shadow-lg text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+            className="w-full bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] shadow-md hover:shadow-lg text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
           >
             <Plus size={18} strokeWidth={2.5} /> <span>Neuer Termin</span>
           </button>
 
+          {/* Nav Tabs */}
           <nav className="space-y-1">
-            <button onClick={() => setActiveTab('calendar')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'calendar' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <CalendarIcon size={18} className={activeTab === 'calendar' ? 'text-[#0D9488]' : 'text-slate-500'} /> Kalender
+            <button 
+              onClick={() => setActiveTab('calendar')} 
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                activeTab === 'calendar' 
+                  ? 'bg-gradient-to-r from-teal-50 to-sky-50 text-[#0D9488] font-bold border border-teal-100/80 shadow-xs' 
+                  : 'text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <CalendarIcon size={18} className={activeTab === 'calendar' ? 'text-[#0D9488]' : 'text-slate-500'} /> 
+              <span>Kalender</span>
             </button>
-            <button onClick={() => setActiveTab('api')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'api' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <Code2 size={18} className={activeTab === 'api' ? 'text-[#0D9488]' : 'text-slate-500'} /> API & Integration
+            <button 
+              onClick={() => setActiveTab('team')} 
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                activeTab === 'team' 
+                  ? 'bg-gradient-to-r from-teal-50 to-sky-50 text-[#0284C7] font-bold border border-sky-100/80 shadow-xs' 
+                  : 'text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <Users size={18} className={activeTab === 'team' ? 'text-[#0284C7]' : 'text-slate-500'} /> 
+              <span>Team & Farben</span>
             </button>
-            <button onClick={() => setActiveTab('team')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'team' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <Users size={18} className={activeTab === 'team' ? 'text-[#0D9488]' : 'text-slate-500'} /> Team & Räume
+            <button 
+              onClick={() => setActiveTab('api')} 
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                activeTab === 'api' 
+                  ? 'bg-gradient-to-r from-teal-50 to-sky-50 text-[#0D9488] font-bold border border-teal-100/80 shadow-xs' 
+                  : 'text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <Code2 size={18} className={activeTab === 'api' ? 'text-[#0D9488]' : 'text-slate-500'} /> 
+              <span>API & Integration</span>
             </button>
           </nav>
 
           {/* Mini Interactive Month Calendar in Sidebar */}
-          <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100">
+          <div className="bg-slate-50/80 rounded-2xl p-3 border border-slate-100">
             <div className="flex items-center justify-between mb-2 px-1">
               <span className="text-xs font-bold text-slate-800">
                 {miniCalDate.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })}
@@ -583,7 +683,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     d.setMonth(d.getMonth() - 1);
                     setMiniCalDate(d);
                   }}
-                  className="p-1 text-slate-400 hover:text-slate-700 hover:bg-white rounded transition-colors"
+                  className="p-1 text-slate-400 hover:text-slate-700 hover:bg-white rounded transition-colors cursor-pointer"
                 >
                   <ChevronLeft size={14} />
                 </button>
@@ -593,7 +693,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     d.setMonth(d.getMonth() + 1);
                     setMiniCalDate(d);
                   }}
-                  className="p-1 text-slate-400 hover:text-slate-700 hover:bg-white rounded transition-colors"
+                  className="p-1 text-slate-400 hover:text-slate-700 hover:bg-white rounded transition-colors cursor-pointer"
                 >
                   <ChevronRight size={14} />
                 </button>
@@ -619,7 +719,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     }}
                     className={`h-6 w-6 mx-auto rounded-full flex items-center justify-center text-[11px] transition-colors cursor-pointer
                       ${!isCurrentMonth ? 'text-slate-300' : 'text-slate-700'}
-                      ${isSelected ? 'bg-[#0D9488] text-white font-bold shadow-sm' : ''}
+                      ${isSelected ? 'bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white font-bold shadow-xs' : ''}
                       ${!isSelected && isToday ? 'border border-[#0D9488] font-bold text-[#0D9488]' : ''}
                       ${!isSelected && isCurrentMonth ? 'hover:bg-slate-200' : ''}
                     `}
@@ -631,25 +731,111 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
           </div>
 
-          {/* Doctor Filter */}
-          <div>
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 px-1 flex items-center justify-between">
-              <span>Behandler</span>
-              <span className="text-[10px] text-[#0D9488] font-semibold hover:underline cursor-pointer" onClick={() => setSelectedDoctors(doctors.map(d => d.id))}>Alle</span>
-            </h3>
-            <div className="space-y-1">
+          {/* Doctor Filter & Inline Color Picker */}
+          <div className="relative">
+            <div className="flex items-center justify-between mb-2 px-1">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Behandler</span>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setSelectedDoctors(doctors.map(d => d.id))} 
+                  className="text-[10px] text-[#0D9488] font-bold hover:underline cursor-pointer"
+                >
+                  Alle
+                </button>
+                <button 
+                  onClick={() => setActiveTab('team')} 
+                  className="text-[10px] text-[#0284C7] font-semibold hover:underline flex items-center gap-0.5 cursor-pointer"
+                  title="Farben verwalten"
+                >
+                  <Palette size={11} />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
               {doctors.map(doc => {
                 const isChecked = selectedDoctors.includes(doc.id);
+                const isColorPickerOpen = activeColorPickerDocId === doc.id;
+                
                 return (
-                  <div 
-                    key={doc.id} 
-                    className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors" 
-                    onClick={() => toggleDoctor(doc.id)}
-                  >
-                     <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${isChecked ? 'bg-[#0D9488] border-[#0D9488]' : 'border-slate-300'}`}>
-                       {isChecked && <CheckCircle2 size={12} className="text-white" />}
-                     </div>
-                     <span className={`text-xs font-medium ${isChecked ? 'text-slate-800' : 'text-slate-400'}`}>{doc.name}</span>
+                  <div key={doc.id} className="relative group">
+                    <div 
+                      className={`flex items-center justify-between px-2.5 py-1.5 rounded-xl cursor-pointer transition-all ${
+                        isChecked ? 'bg-slate-50 hover:bg-slate-100/80' : 'hover:bg-slate-50 opacity-60'
+                      }`}
+                    >
+                      {/* Left: Checkbox + Name */}
+                      <div 
+                        className="flex items-center gap-2.5 flex-1 min-w-0"
+                        onClick={() => toggleDoctor(doc.id)}
+                      >
+                         <div 
+                           className="w-4 h-4 rounded-md border flex items-center justify-center transition-all shrink-0"
+                           style={{ 
+                             backgroundColor: isChecked ? doc.hex : 'transparent',
+                             borderColor: isChecked ? doc.hex : '#CBD5E1'
+                           }}
+                         >
+                           {isChecked && <Check size={11} strokeWidth={3} className="text-white" />}
+                         </div>
+                         <div className="truncate">
+                           <span className={`text-xs font-semibold block truncate ${isChecked ? 'text-slate-800' : 'text-slate-400'}`}>
+                             {doc.name}
+                           </span>
+                         </div>
+                      </div>
+
+                      {/* Right: Color Swatch Trigger */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveColorPickerDocId(isColorPickerOpen ? null : doc.id);
+                        }}
+                        className="p-1 hover:bg-white rounded-lg transition-transform active:scale-90 flex items-center gap-1 shrink-0"
+                        title={`Farbe für ${doc.name} ändern`}
+                      >
+                        <span 
+                          className="w-3.5 h-3.5 rounded-full shadow-xs ring-1 ring-black/10 inline-block"
+                          style={{ backgroundColor: doc.hex }}
+                        />
+                        <Palette size={11} className="text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                    </div>
+
+                    {/* Popover Color Picker */}
+                    {isColorPickerOpen && (
+                      <div className="absolute left-4 right-4 top-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[11px] font-bold text-slate-700">Farbe wählen</span>
+                          <button 
+                            onClick={() => setActiveColorPickerDocId(null)}
+                            className="text-slate-400 hover:text-slate-600"
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                          {DOCTOR_COLOR_PALETTE.map(colorOpt => {
+                            const isSelected = doc.colorId === colorOpt.id;
+                            return (
+                              <button
+                                key={colorOpt.id}
+                                onClick={() => updateDoctorColor(doc.id, colorOpt.id)}
+                                className={`h-7 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer relative ${
+                                  isSelected ? 'ring-2 ring-offset-2 ring-slate-800' : 'hover:opacity-90'
+                                }`}
+                                style={{ backgroundColor: colorOpt.hex }}
+                                title={colorOpt.name}
+                              >
+                                {isSelected && <Check size={14} className="text-white drop-shadow" strokeWidth={2.5} />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-2 text-center font-medium">Design-Farbpalette</p>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -662,14 +848,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             <div className="space-y-1">
               {resources.map(res => (
                 <div key={res.id} className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors">
-                   <div className="w-2 h-2 rounded-full bg-[#0D9488]"></div>
-                   <span className="text-xs text-slate-600">{res.name}</span>
+                   <div className="w-2 h-2 rounded-full bg-[#0284C7]"></div>
+                   <span className="text-xs text-slate-600 font-medium">{res.name}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
+        {/* Footer Logout */}
         <div className="p-3 border-t border-slate-100">
           <button onClick={onLogout} className="flex items-center gap-2.5 px-3 py-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors w-full text-xs font-semibold cursor-pointer">
             <LogOut size={16} /> Abmelden
@@ -680,7 +867,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 bg-white">
         
-        {/* Header / Toolbar */}
+        {/* Header / Toolbar with Türkis & Blau Brand Accents */}
         <header className="h-16 border-b border-slate-200 flex items-center justify-between px-4 lg:px-6 bg-white shrink-0 z-30">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-slate-100 rounded-xl text-slate-600">
@@ -690,54 +877,71 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             {/* Today Button */}
             <button 
               onClick={handleToday}
-              className="text-xs font-bold border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-teal-50 hover:text-[#0D9488] hover:border-teal-200 text-slate-700 transition-colors shadow-2xs cursor-pointer"
+              className="text-xs font-bold border border-slate-200 px-3.5 py-1.5 rounded-xl hover:border-[#0D9488] hover:text-[#0D9488] hover:bg-teal-50/40 text-slate-700 transition-all shadow-2xs cursor-pointer active:scale-95"
             >
               Heute
             </button>
 
             {/* Navigation Chevrons */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
-               <button onClick={handlePrevDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all cursor-pointer" title="Zurück">
-                 <ChevronLeft size={16} className="text-slate-600" />
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+               <button onClick={handlePrevDate} className="p-1 hover:bg-white rounded-lg shadow-2xs transition-all cursor-pointer text-slate-600" title="Zurück">
+                 <ChevronLeft size={16} />
                </button>
-               <button onClick={handleNextDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all cursor-pointer" title="Vor">
-                 <ChevronRight size={16} className="text-slate-600" />
+               <button onClick={handleNextDate} className="p-1 hover:bg-white rounded-lg shadow-2xs transition-all cursor-pointer text-slate-600" title="Vor">
+                 <ChevronRight size={16} />
                </button>
             </div>
 
             {/* Dynamic Date Title */}
             <div className="flex items-center gap-2 ml-1">
-               <span className="text-base sm:text-lg font-bold text-slate-800">{getHeaderTitle()}</span>
+               <span className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">{getHeaderTitle()}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3 lg:gap-4">
             {/* View Switcher: Tag / Woche / Monat */}
-            <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/60 shadow-2xs">
+            <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/70 shadow-2xs">
                <button 
                  onClick={() => setViewMode('day')}
-                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'day' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
+                 className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                   viewMode === 'day' 
+                     ? 'bg-white shadow-xs text-[#0D9488]' 
+                     : 'text-slate-600 hover:text-slate-900'
+                 }`}
                >
                  <span>Tag</span>
                </button>
                <button 
                  onClick={() => setViewMode('week')}
-                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'week' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
+                 className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                   viewMode === 'week' 
+                     ? 'bg-white shadow-xs text-[#0284C7]' 
+                     : 'text-slate-600 hover:text-slate-900'
+                 }`}
                >
                  <span>Woche</span>
                </button>
                <button 
                   onClick={() => setViewMode('month')}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'month' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
+                  className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    viewMode === 'month' 
+                      ? 'bg-white shadow-xs text-[#0D9488]' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
                 >
                  <span>Monat</span>
                </button>
             </div>
             
             <div className="flex items-center gap-2">
-               <button className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors cursor-pointer"><Search size={18} /></button>
-               <button onClick={() => setActiveTab('api')} className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors hidden sm:block cursor-pointer"><Settings size={18} /></button>
-               <div className="w-8 h-8 rounded-xl bg-[#0D9488] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-teal-100">
+               <button 
+                 onClick={() => setActiveTab('team')}
+                 className="p-2 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-[#0284C7] transition-colors cursor-pointer"
+                 title="Behandler & Farbpalette anpassen"
+               >
+                 <Palette size={18} />
+               </button>
+               <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0D9488] to-[#0284C7] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-teal-100">
                  P
                </div>
             </div>
@@ -757,14 +961,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                 {/* 1. TAG (DAY) VIEW */}
                 {viewMode === 'day' && (
                   <div className="h-full flex flex-col overflow-hidden">
-                    {/* Header: Doctors list */}
+                    {/* Header: Doctors list with distinct high-contrast color badges */}
                     <div className="flex border-b border-slate-200 bg-white ml-14 pr-4 overflow-hidden shrink-0">
                       {selectedDoctors.map(docId => {
-                        const doc = doctors.find(d => d.id === docId);
+                        const doc = getDoctor(docId);
+                        const palette = getDoctorPalette(doc);
                         return (
-                          <div key={docId} className="flex-1 py-3 text-center border-l border-slate-100 flex items-center justify-center gap-2">
-                            <div className={`w-2.5 h-2.5 rounded-full ${doc?.id === 'dr-mueller' ? 'bg-[#0D9488]' : doc?.id === 'dr-schmidt' ? 'bg-emerald-500' : 'bg-cyan-500'}`}></div>
-                            <span className="text-xs font-bold text-slate-800">{doc?.name}</span>
+                          <div key={docId} className="flex-1 py-3 text-center border-l border-slate-100 flex items-center justify-center gap-2 px-2">
+                            <span 
+                              className="w-3 h-3 rounded-full shadow-xs shrink-0 ring-2 ring-white"
+                              style={{ backgroundColor: doc?.hex || palette.hex }}
+                            />
+                            <span className="text-xs font-bold text-slate-800 truncate">{doc?.name}</span>
+                            {doc?.specialty && (
+                              <span className="hidden xl:inline text-[10px] text-slate-400 font-medium truncate">
+                                ({doc.specialty})
+                              </span>
+                            )}
                           </div>
                         );
                       })}
@@ -774,11 +987,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     <div className="flex-1 overflow-y-auto overflow-x-auto relative scroll-smooth">
                        <div className="relative min-w-[300px]" style={{ minWidth: selectedDoctors.length > 2 ? '700px' : '100%' }}>
                           
-                          {/* Current Time Indicator Line (if today) */}
+                          {/* Current Time Indicator Line (Türkis to Blau Gradient) */}
                           {currentDateISO === todayISO && (
                             <div className="absolute left-0 right-0 z-10 pointer-events-none" style={{ top: '240px' }}>
-                               <div className="border-t-2 border-[#0D9488] w-full relative">
-                                 <div className="absolute -left-2 -top-1.5 w-3 h-3 rounded-full bg-[#0D9488]"></div>
+                               <div className="h-0.5 bg-gradient-to-r from-[#0D9488] via-[#0284C7] to-[#0D9488] w-full relative">
+                                 <div className="absolute -left-2 -top-1.5 w-3.5 h-3.5 rounded-full bg-[#0D9488] border-2 border-white shadow-xs"></div>
                                </div>
                             </div>
                           )}
@@ -787,7 +1000,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             <div key={hour} className="flex group h-24">
                                {/* Time Column */}
                                <div className="w-14 text-right pr-3 -mt-2.5 shrink-0">
-                                 <span className="text-xs text-slate-400 font-medium">{hour}:00</span>
+                                 <span className="text-xs text-slate-400 font-semibold">{hour}:00</span>
                                </div>
                                
                                {/* Doctor Columns */}
@@ -799,10 +1012,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                    <div 
                                      key={docId} 
                                      onClick={() => handleSlotClick(hour, docId, currentDateISO)}
-                                     className="flex-1 border-l border-slate-100 hover:bg-teal-50/30 transition-colors cursor-pointer relative group/slot"
+                                     className="flex-1 border-l border-slate-100 hover:bg-slate-50/80 transition-colors cursor-pointer relative group/slot"
                                    >
                                      <div className="hidden group-hover/slot:flex absolute inset-0 items-center justify-center opacity-0 group-hover/slot:opacity-100 pointer-events-none">
-                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-teal-100">
+                                        <div className="bg-white p-1 rounded-md shadow-xs border border-slate-200">
                                           <Plus className="text-[#0D9488]" size={16} />
                                         </div>
                                      </div>
@@ -812,40 +1025,52 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             </div>
                           ))}
 
-                          {/* Render Events for Day View */}
+                          {/* Render Events for Day View with High-Contrast Doctor Colors */}
                           {events
                             .filter(e => e.date === currentDateISO && selectedDoctors.includes(e.docId))
                             .map(evt => {
                              const docIndex = selectedDoctors.indexOf(evt.docId);
                              const widthPercent = 100 / selectedDoctors.length;
                              const leftPercent = docIndex * widthPercent;
-                             const doctor = doctors.find(d => d.id === evt.docId);
+                             const doctor = getDoctor(evt.docId);
+                             const palette = getDoctorPalette(doctor);
                              const isConflict = checkConflict({...evt, id: 'temp'});
 
                              return (
                                <div
                                  key={evt.id}
                                  onClick={(e) => handleEventClick(evt, e)}
-                                 className={`absolute z-20 mx-1 rounded-lg p-2 text-xs cursor-pointer shadow-sm border-l-4 hover:brightness-95 hover:z-30 transition-all overflow-hidden ${doctor?.color} ${doctor?.border} ${isConflict ? 'ring-2 ring-red-500' : ''}`}
+                                 className={`absolute z-20 mx-1 rounded-xl p-2.5 text-xs cursor-pointer shadow-xs border border-slate-200/80 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white ${
+                                   isConflict ? 'ring-2 ring-red-500' : ''
+                                 }`}
                                  style={{
                                     top: `${(evt.time - 8) * 96 + 1}px`,
                                     height: `${evt.duration * 96 - 2}px`,
                                     left: `calc(3.5rem + ${leftPercent}%)`,
-                                    width: `calc(${widthPercent}% - 3.5rem / ${selectedDoctors.length} - 6px)`
+                                    width: `calc(${widthPercent}% - 3.5rem / ${selectedDoctors.length} - 6px)`,
+                                    borderLeftWidth: '5px',
+                                    borderLeftColor: doctor?.hex || palette.hex
                                  }}
                                >
-                                 <div className="font-bold truncate flex items-center justify-between text-slate-900">
+                                 <div className="font-bold truncate flex items-center justify-between text-slate-900 leading-tight">
                                    <span className="truncate">{evt.title || evt.patientName}</span>
                                    {evt.patientType === 'privat' && (
-                                     <span className="bg-amber-100 text-amber-800 px-1 rounded text-[9px] font-extrabold uppercase shrink-0">PKV</span>
+                                     <span className="bg-amber-100 text-amber-900 border border-amber-200 px-1.5 py-0.2 rounded text-[9px] font-extrabold uppercase shrink-0">
+                                       PKV
+                                     </span>
                                    )}
                                  </div>
-                                 <div className="truncate opacity-80 mt-0.5 text-[11px] font-medium">
-                                   {evt.type} • {evt.time % 1 === 0 ? `${evt.time}:00` : `${Math.floor(evt.time)}:30`} - {((evt.time + evt.duration) % 1 === 0) ? `${evt.time + evt.duration}:00` : `${Math.floor(evt.time + evt.duration)}:30`}
+                                 <div className="truncate text-slate-600 mt-1 text-[11px] font-medium flex items-center gap-1">
+                                   <Clock size={11} className="text-slate-400 shrink-0" />
+                                   <span>
+                                     {evt.time % 1 === 0 ? `${evt.time}:00` : `${Math.floor(evt.time)}:30`} - {((evt.time + evt.duration) % 1 === 0) ? `${evt.time + evt.duration}:00` : `${Math.floor(evt.time + evt.duration)}:30`}
+                                   </span>
+                                   <span className="opacity-40">•</span>
+                                   <span className="truncate">{evt.type}</span>
                                  </div>
                                  {evt.resourceId && (
-                                   <div className="text-[10px] opacity-70 truncate mt-0.5 flex items-center gap-1">
-                                     <Building2 size={10} />
+                                   <div className="text-[10px] text-slate-500 truncate mt-1 flex items-center gap-1">
+                                     <Building2 size={10} className="text-slate-400" />
                                      <span>{resources.find(r => r.id === evt.resourceId)?.name}</span>
                                    </div>
                                  )}
@@ -875,11 +1100,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             onClick={() => {
                               setCurrentDate(dayDate);
                             }}
-                            className={`flex-1 py-2.5 text-center border-l border-slate-100 cursor-pointer transition-colors ${isSelectedDay ? 'bg-teal-50/50' : 'hover:bg-slate-50'}`}
+                            className={`flex-1 py-2.5 text-center border-l border-slate-100 cursor-pointer transition-colors ${
+                              isSelectedDay ? 'bg-teal-50/40' : 'hover:bg-slate-50'
+                            }`}
                           >
                             <span className="text-[11px] font-bold text-slate-500 uppercase block">{dayName}</span>
                             <div className="flex justify-center mt-0.5">
-                              <span className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isToday ? 'bg-[#0D9488] text-white shadow-sm' : 'text-slate-800'}`}>
+                              <span className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                                isToday 
+                                  ? 'bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white shadow-xs' 
+                                  : isSelectedDay ? 'border-2 border-[#0D9488] text-[#0D9488]' : 'text-slate-800'
+                              }`}>
                                 {dayNum}
                               </span>
                             </div>
@@ -895,7 +1126,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                           <div key={hour} className="flex group h-24">
                              {/* Time Column */}
                              <div className="w-14 text-right pr-3 -mt-2.5 shrink-0">
-                               <span className="text-xs text-slate-400 font-medium">{hour}:00</span>
+                               <span className="text-xs text-slate-400 font-semibold">{hour}:00</span>
                              </div>
                              
                              {/* 7 Day Columns */}
@@ -909,10 +1140,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                    <div 
                                      key={dayIdx} 
                                      onClick={() => handleSlotClick(hour, selectedDoctors[0], dayISO)}
-                                     className="flex-1 border-l border-slate-100 hover:bg-teal-50/30 transition-colors cursor-pointer relative group/slot"
+                                     className="flex-1 border-l border-slate-100 hover:bg-slate-50/80 transition-colors cursor-pointer relative group/slot"
                                    >
                                      <div className="hidden group-hover/slot:flex absolute inset-0 items-center justify-center opacity-0 group-hover/slot:opacity-100 pointer-events-none">
-                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-teal-100">
+                                        <div className="bg-white p-1 rounded-md shadow-xs border border-slate-200">
                                           <Plus className="text-[#0D9488]" size={14} />
                                         </div>
                                      </div>
@@ -928,35 +1159,42 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                           .filter(e => selectedDoctors.includes(e.docId))
                           .map(evt => {
                             const eventDayIdx = weekDays.findIndex(d => formatDateISO(d) === evt.date);
-                            if (eventDayIdx === -1) return null; // Outside this week
+                            if (eventDayIdx === -1) return null;
 
                             const widthPercent = 100 / 7;
                             const leftPercent = eventDayIdx * widthPercent;
-                            const doctor = doctors.find(d => d.id === evt.docId);
+                            const doctor = getDoctor(evt.docId);
+                            const palette = getDoctorPalette(doctor);
 
                             return (
                               <div
                                 key={evt.id}
                                 onClick={(e) => handleEventClick(evt, e)}
-                                className={`absolute z-20 mx-0.5 rounded-lg p-1.5 text-xs cursor-pointer shadow-sm border-l-4 hover:brightness-95 hover:z-30 transition-all overflow-hidden ${doctor?.color} ${doctor?.border}`}
+                                className="absolute z-20 mx-0.5 rounded-lg p-1.5 text-xs cursor-pointer shadow-xs border border-slate-200/80 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white"
                                 style={{
                                    top: `${(evt.time - 8) * 96 + 1}px`,
                                    height: `${evt.duration * 96 - 2}px`,
                                    left: `calc(3.5rem + ${leftPercent}%)`,
-                                   width: `calc(${widthPercent}% - 3.5rem / 7 - 3px)`
+                                   width: `calc(${widthPercent}% - 3.5rem / 7 - 3px)`,
+                                   borderLeftWidth: '4px',
+                                   borderLeftColor: doctor?.hex || palette.hex
                                 }}
                               >
-                                <div className="font-bold truncate flex items-center justify-between text-slate-900 text-[11px]">
+                                <div className="font-bold truncate flex items-center justify-between text-slate-900 text-[11px] leading-tight">
                                   <span className="truncate">{evt.patientName || evt.title}</span>
                                   {evt.patientType === 'privat' && (
-                                    <span className="bg-amber-100 text-amber-800 px-0.5 rounded text-[8px] font-bold uppercase">PKV</span>
+                                    <span className="bg-amber-100 text-amber-900 px-1 rounded text-[8px] font-bold uppercase">PKV</span>
                                   )}
                                 </div>
-                                <div className="truncate opacity-80 text-[10px]">
+                                <div className="truncate text-slate-500 text-[10px] mt-0.5">
                                   {evt.type} • {evt.time % 1 === 0 ? `${evt.time}:00` : `${Math.floor(evt.time)}:30`}
                                 </div>
-                                <div className="truncate text-[9px] opacity-75 font-medium mt-0.5">
-                                  {doctor?.name}
+                                <div 
+                                  className="truncate text-[9px] font-semibold mt-0.5 flex items-center gap-1"
+                                  style={{ color: doctor?.hex || palette.hex }}
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: doctor?.hex }} />
+                                  <span>{doctor?.name}</span>
                                 </div>
                               </div>
                             );
@@ -994,10 +1232,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             onClick={() => {
                               setCurrentDate(dayDate);
                             }}
-                            className={`min-h-[100px] p-2 flex flex-col transition-colors group relative ${isCurrentMonth ? 'bg-white hover:bg-teal-50/20' : 'bg-slate-50/70 text-slate-400'}`}
+                            className={`min-h-[100px] p-2 flex flex-col transition-colors group relative ${
+                              isCurrentMonth ? 'bg-white hover:bg-teal-50/20' : 'bg-slate-50/70 text-slate-400'
+                            }`}
                           >
                             <div className="flex items-center justify-between mb-1">
-                              <span className={`text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center ${isToday ? 'bg-[#0D9488] text-white font-bold shadow-xs' : isCurrentMonth ? 'text-slate-800' : 'text-slate-400'}`}>
+                              <span className={`text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center ${
+                                isToday 
+                                  ? 'bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white font-bold shadow-xs' 
+                                  : isCurrentMonth ? 'text-slate-800' : 'text-slate-400'
+                              }`}>
                                 {dayDate.getDate()}
                               </span>
                               
@@ -1006,7 +1250,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                   e.stopPropagation();
                                   handleSlotClick(9, selectedDoctors[0], dayISO);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-teal-50 rounded text-slate-400 hover:text-[#0D9488] transition-opacity cursor-pointer"
+                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-[#0D9488] transition-opacity cursor-pointer"
                                 title="Termin hinzufügen"
                               >
                                 <Plus size={14} />
@@ -1016,19 +1260,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             {/* Appointments list */}
                             <div className="flex-1 space-y-1 overflow-y-auto max-h-[85px] scrollbar-none">
                               {dayEvents.slice(0, 3).map(evt => {
-                                const doc = doctors.find(d => d.id === evt.docId);
+                                const doc = getDoctor(evt.docId);
                                 return (
                                   <div
                                     key={evt.id}
                                     onClick={(e) => handleEventClick(evt, e)}
-                                    className={`px-1.5 py-0.5 rounded text-[10px] font-medium truncate cursor-pointer shadow-2xs border-l-2 hover:opacity-90 flex items-center justify-between gap-1 ${doc?.color} ${doc?.border}`}
-                                    title={`${evt.patientName} (${evt.type}) - ${evt.time}:00 Uhr`}
+                                    className="px-1.5 py-0.5 rounded-md text-[10px] font-medium truncate cursor-pointer shadow-2xs border border-slate-200/60 bg-white hover:bg-slate-50 flex items-center justify-between gap-1"
+                                    style={{ borderLeftWidth: '3px', borderLeftColor: doc?.hex }}
+                                    title={`${evt.patientName} (${evt.type}) - ${doc?.name}`}
                                   >
-                                    <span className="truncate">
+                                    <span className="truncate text-slate-800 font-semibold">
                                       {evt.time % 1 === 0 ? `${evt.time}:00` : `${Math.floor(evt.time)}:30`} {evt.patientName}
                                     </span>
                                     {evt.patientType === 'privat' && (
-                                      <span className="text-[8px] font-bold text-amber-700">P</span>
+                                      <span className="text-[8px] font-bold text-amber-700 bg-amber-50 px-0.5 rounded">P</span>
                                     )}
                                   </div>
                                 );
@@ -1057,21 +1302,131 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
              </div>
           )}
 
+          {/* TEAM, ÄRZTE & FARBPALETTE TAB */}
+          {activeTab === 'team' && (
+            <div className="p-4 lg:p-8 max-w-5xl mx-auto h-full overflow-y-auto space-y-8">
+               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                 <div>
+                   <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+                     <Users size={24} className="text-[#0D9488]" />
+                     <span>Behandler, Farben & Räume</span>
+                   </h2>
+                   <p className="text-sm text-slate-500 mt-1">
+                     Wählen Sie für jeden Arzt eine individuelle, kontrastreiche Farbe aus unserer abgestimmten Design-Palette.
+                   </p>
+                 </div>
+                 
+                 <button 
+                   onClick={() => setShowAddDoctorModal(true)}
+                   className="bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] text-white font-bold py-2.5 px-4 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                 >
+                   <Plus size={16} /> Neuer Behandler
+                 </button>
+               </div>
+
+               {/* Doctors Management with Color Picker Palette */}
+               <div className="space-y-4">
+                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                   <Palette size={16} className="text-[#0284C7]" /> Behandler-Farben anpassen ({doctors.length})
+                 </h3>
+
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                   {doctors.map(doc => {
+                     const currentPalette = getDoctorPalette(doc);
+                     return (
+                       <div 
+                         key={doc.id}
+                         className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                         style={{ borderTopWidth: '4px', borderTopColor: doc.hex }}
+                       >
+                         <div>
+                           <div className="flex items-center justify-between mb-2">
+                             <h4 className="font-bold text-slate-900 text-base">{doc.name}</h4>
+                             <span 
+                               className="text-xs px-2.5 py-0.5 rounded-full font-bold shadow-2xs"
+                               style={{ backgroundColor: `${doc.hex}15`, color: doc.hex }}
+                             >
+                               {currentPalette.name}
+                             </span>
+                           </div>
+                           <p className="text-xs text-slate-500 mb-4">{doc.specialty || 'Allgemeinmedizin'}</p>
+
+                           {/* Color Picker Swatches */}
+                           <div>
+                             <label className="text-[11px] font-bold text-slate-600 block mb-2">Farbe wählen:</label>
+                             <div className="grid grid-cols-4 gap-2">
+                               {DOCTOR_COLOR_PALETTE.map(colorOpt => {
+                                 const isSelected = doc.colorId === colorOpt.id;
+                                 return (
+                                   <button
+                                     key={colorOpt.id}
+                                     onClick={() => updateDoctorColor(doc.id, colorOpt.id)}
+                                     className={`h-8 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-2xs ${
+                                       isSelected ? 'ring-2 ring-offset-2 ring-slate-800 scale-105' : 'hover:opacity-90'
+                                     }`}
+                                     style={{ backgroundColor: colorOpt.hex }}
+                                     title={colorOpt.name}
+                                   >
+                                     {isSelected && <Check size={14} className="text-white drop-shadow" strokeWidth={3} />}
+                                   </button>
+                                 );
+                               })}
+                             </div>
+                           </div>
+                         </div>
+
+                         {/* Preview Preview Box */}
+                         <div className="mt-5 pt-3 border-t border-slate-100">
+                           <div className="text-[10px] text-slate-400 font-medium mb-1">Vorschau im Kalender:</div>
+                           <div 
+                             className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs text-xs font-semibold flex items-center justify-between"
+                             style={{ borderLeftWidth: '4px', borderLeftColor: doc.hex }}
+                           >
+                             <span className="text-slate-800">Mustermann, Max</span>
+                             <span className="text-[10px] text-slate-500 font-normal">09:00</span>
+                           </div>
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+               </div>
+
+               {/* Resources Section */}
+               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+                 <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                   <Building2 size={18} className="text-[#0D9488]" /> Behandlungszimmer & Geräte ({resources.length})
+                 </h3>
+                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                   {resources.map(r => (
+                     <div key={r.id} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                       <span className="font-semibold text-sm text-slate-800">{r.name}</span>
+                       <span className="text-xs px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 font-bold capitalize">{r.type}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </div>
+          )}
+
           {/* API & INTEGRATIONS TAB */}
           {activeTab === 'api' && (
-            <div className="p-4 lg:p-8 max-w-4xl mx-auto overflow-y-auto h-full">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Integrationen & API</h2>
+            <div className="p-4 lg:p-8 max-w-4xl mx-auto overflow-y-auto h-full space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Integrationen & Schnittstellen</h2>
+                <p className="text-sm text-slate-500 mt-1">Verbinden Sie Ihren Praxiskalender nahtlos mit Praxisverwaltungssystemen (PVS) und Google Kalender.</p>
+              </div>
               
               {/* Google Card */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-8 relative overflow-hidden">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between relative z-10">
                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-teal-50 text-[#0D9488] rounded-xl flex items-center justify-center shrink-0 border border-teal-100">
+                      <div className="w-12 h-12 bg-gradient-to-tr from-teal-50 to-sky-50 text-[#0D9488] rounded-2xl flex items-center justify-center shrink-0 border border-teal-100">
                         <CalendarIcon size={24} />
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 text-lg">Google Kalender</h3>
-                        <p className="text-sm text-slate-500">2-Wege-Synchronisation für private Termine</p>
+                        <h3 className="font-bold text-slate-900 text-lg">Google Kalender Synchronisation</h3>
+                        <p className="text-sm text-slate-500">Automatische 2-Wege-Synchronisation für Termine und Abwesenheiten</p>
                       </div>
                    </div>
                    
@@ -1079,7 +1434,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       <button 
                         onClick={handleConnectGoogle}
                         disabled={isSyncing}
-                        className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm hover:bg-teal-50 hover:text-[#0D9488] hover:border-teal-200 transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
+                        className="bg-white border border-slate-300 text-slate-700 px-4 py-2.5 rounded-xl font-bold text-sm hover:border-[#0D9488] hover:text-[#0D9488] hover:bg-teal-50/50 transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
                       >
                         {isSyncing ? <RefreshCw className="animate-spin text-[#0D9488]" size={16} /> : <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />}
                         Verbinden
@@ -1087,70 +1442,117 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                    ) : (
                       <div className="flex items-center gap-3">
                          <span className="text-sm text-slate-600 font-medium">praxis@gmail.com</span>
-                         <span className="text-xs font-bold text-[#0D9488] bg-teal-50 px-2 py-1 rounded border border-teal-100 flex items-center gap-1">
-                           <CheckCircle2 size={12} /> Aktiv
+                         <span className="text-xs font-bold text-[#0D9488] bg-teal-50 px-2.5 py-1 rounded-full border border-teal-100 flex items-center gap-1">
+                           <CheckCircle2 size={13} /> Aktiv
                          </span>
-                         <button onClick={() => setIsGoogleConnected(false)} className="text-slate-400 hover:text-red-500 cursor-pointer"><LogOut size={16} /></button>
+                         <button onClick={() => setIsGoogleConnected(false)} className="text-slate-400 hover:text-red-500 cursor-pointer p-1"><LogOut size={16} /></button>
                       </div>
                    )}
                 </div>
               </div>
 
-              {/* API Credentials Section */}
-              <h3 className="text-lg font-bold text-slate-900 mb-4 mt-8">Entwickler-Einstellungen (Turso/libsql)</h3>
-              
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
-                 <div className="mb-6">
-                    <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-2">
-                      <Key size={14} className="text-[#0D9488]" /> Turso Database Endpoint
-                    </label>
-                    <div className="flex gap-2">
-                       <code className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-mono text-sm text-slate-600 flex items-center">
-                         libsql://auxilium-db-username.turso.io
-                       </code>
-                    </div>
+              {/* PVS & Voice Assistant API Section */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                   <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+                     <Key size={16} className="text-[#0284C7]" />
+                     <span>Auxilium Voice API Endpunkt</span>
+                   </h3>
+                   <span className="text-xs font-bold text-[#0284C7] bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">Live</span>
+                 </div>
+                 <p className="text-xs text-slate-500">Dieser Endpunkt ermöglicht dem KI-Telefonassistenten das direkte Prüfen von freien Slots und Buchen von Terminen.</p>
+                 <div className="flex gap-2">
+                    <code className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-mono text-xs sm:text-sm text-slate-700 flex items-center">
+                      https://api.auxilium-assist.de/v1/practice/calendar/slots
+                    </code>
                  </div>
               </div>
             </div>
           )}
 
-          {/* TEAM & RÄUME TAB */}
-          {(activeTab === 'team' || activeTab === 'settings') && (
-            <div className="p-6 max-w-4xl mx-auto h-full overflow-y-auto">
-               <h2 className="text-2xl font-bold text-slate-900 mb-6">Ärzte, Team & Ressourcen</h2>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                     <Users size={18} className="text-[#0D9488]" /> Behandler ({doctors.length})
-                   </h3>
-                   <div className="space-y-3">
-                     {doctors.map(d => (
-                       <div key={d.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
-                         <span className="font-semibold text-sm text-slate-800">{d.name}</span>
-                         <span className="text-xs px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold">Aktiv</span>
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-
-                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                     <Building2 size={18} className="text-[#0D9488]" /> Räume & Geräte ({resources.length})
-                   </h3>
-                   <div className="space-y-3">
-                     {resources.map(r => (
-                       <div key={r.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
-                         <span className="font-semibold text-sm text-slate-800">{r.name}</span>
-                         <span className="text-xs px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold capitalize">{r.type}</span>
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* NEW DOCTOR MODAL */}
+      {showAddDoctorModal && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-4 border-b border-slate-100 bg-gradient-to-r from-teal-50/50 via-sky-50/40 to-white">
+               <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
+                 <Users size={18} className="text-[#0D9488]" /> Neuen Behandler hinzufügen
+               </h3>
+               <button onClick={() => setShowAddDoctorModal(false)} className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">
+                 <X size={20} />
+               </button>
+            </div>
+
+            <form onSubmit={handleAddDoctor} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Name des Arztes</label>
+                <input 
+                  type="text" 
+                  required
+                  autoFocus
+                  placeholder="z.B. Dr. med. Sarah Klein"
+                  className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-800 outline-none border border-slate-200 focus:border-[#0D9488] focus:bg-white text-sm font-semibold"
+                  value={newDoctorName}
+                  onChange={(e) => setNewDoctorName(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Fachrichtung / Funktion</label>
+                <input 
+                  type="text" 
+                  placeholder="z.B. Kardiologie & Innere Medizin"
+                  className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-800 outline-none border border-slate-200 focus:border-[#0D9488] focus:bg-white text-sm"
+                  value={newDoctorSpecialty}
+                  onChange={(e) => setNewDoctorSpecialty(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Farbe im Kalender</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {DOCTOR_COLOR_PALETTE.map(colorOpt => {
+                    const isSelected = newDoctorColorId === colorOpt.id;
+                    return (
+                      <button
+                        type="button"
+                        key={colorOpt.id}
+                        onClick={() => setNewDoctorColorId(colorOpt.id)}
+                        className={`h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 cursor-pointer ${
+                          isSelected ? 'ring-2 ring-offset-2 ring-slate-800 scale-105' : 'opacity-90'
+                        }`}
+                        style={{ backgroundColor: colorOpt.hex }}
+                        title={colorOpt.name}
+                      >
+                        {isSelected && <Check size={16} className="text-white drop-shadow" strokeWidth={3} />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-4 flex justify-end gap-2 border-t border-slate-100">
+                <button 
+                  type="button" 
+                  onClick={() => setShowAddDoctorModal(false)}
+                  className="px-4 py-2 text-slate-500 hover:text-slate-800 font-semibold text-xs cursor-pointer"
+                >
+                  Abbrechen
+                </button>
+                <button 
+                  type="submit"
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#0D9488] to-[#0284C7] text-white rounded-xl font-bold text-xs shadow-sm hover:shadow-md transition-all cursor-pointer"
+                >
+                  Arzt anlegen
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* EVENT DETAILS / CREATE MODAL */}
       {showEventModal && (
@@ -1236,7 +1638,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                           onChange={(e) => setSelectedEvent({...selectedEvent, docId: e.target.value})}
                         >
                           {doctors.map(d => (
-                            <option key={d.id} value={d.id}>{d.name}</option>
+                            <option key={d.id} value={d.id}>
+                              {d.name} {d.specialty ? `(${d.specialty})` : ''}
+                            </option>
                           ))}
                         </select>
                       </div>
@@ -1276,10 +1680,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                        </div>
                        <div>
                           <label className="block text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-1.5">
-                            <Building2 size={14} className="text-[#0D9488]" /> Raum / Gerät (Opt.)
+                            <Building2 size={14} className="text-[#0284C7]" /> Raum / Gerät (Opt.)
                           </label>
                           <select 
-                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium cursor-pointer"
+                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0284C7] focus:bg-white text-sm font-medium cursor-pointer"
                             value={selectedEvent?.resourceId || ''}
                             onChange={(e) => setSelectedEvent({...selectedEvent, resourceId: e.target.value})}
                           >
@@ -1312,7 +1716,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                  <div className="space-y-5">
                     <div className="flex items-start justify-between">
                        <div className="flex items-start gap-3.5">
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${doctors.find(d => d.id === selectedEvent?.docId)?.color}`}>
+                          <div 
+                            className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs"
+                            style={{ backgroundColor: `${getDoctor(selectedEvent?.docId || '')?.hex}20`, color: getDoctor(selectedEvent?.docId || '')?.hex }}
+                          >
                             <Users size={22} />
                           </div>
                           <div>
@@ -1334,7 +1741,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       </div>
                       <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">Behandler</p>
-                        <p className="text-sm font-semibold text-slate-800">{doctors.find(d => d.id === selectedEvent?.docId)?.name}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span 
+                            className="w-2.5 h-2.5 rounded-full inline-block"
+                            style={{ backgroundColor: getDoctor(selectedEvent?.docId || '')?.hex }}
+                          />
+                          <p className="text-sm font-semibold text-slate-800">{getDoctor(selectedEvent?.docId || '')?.name}</p>
+                        </div>
                       </div>
                     </div>
 
@@ -1360,7 +1773,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       </div>
                     )}
 
-                    <div className="flex items-center gap-2 text-xs text-[#0D9488] bg-teal-50 p-2.5 rounded-xl border border-teal-100 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-[#0D9488] bg-gradient-to-r from-teal-50 to-sky-50 p-3 rounded-xl border border-teal-100 font-medium">
                       <ShieldCheck size={16} className="shrink-0 text-[#0D9488]" />
                       <span>Terminbuchung synchronisiert mit Praxis-PVS / Auxilium Assist.</span>
                     </div>
@@ -1374,7 +1787,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                    <button onClick={() => setShowEventModal(false)} className="px-4 py-2 text-slate-500 hover:text-slate-800 font-semibold text-xs cursor-pointer">Abbrechen</button>
                    <button 
                      onClick={saveEvent} 
-                     className="px-5 py-2 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-xs shadow-sm transition-colors cursor-pointer"
+                     className="px-5 py-2.5 bg-gradient-to-r from-[#0D9488] to-[#0284C7] hover:from-[#0f766e] hover:to-[#0369a1] text-white rounded-xl font-bold text-xs shadow-sm transition-all cursor-pointer"
                    >
                      Termin eintragen
                    </button>
