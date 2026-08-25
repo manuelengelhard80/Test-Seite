@@ -125,6 +125,10 @@ const AppContent: React.FC = () => {
       'bewertungen': '/bewertungen',
       'bewertung': '/bewertungen',
       'rechner': '/rechner',
+      'kalender': '/praxiskalender',
+      'praxiskalender': '/praxiskalender',
+      'calendar': '/praxiskalender',
+      'dashboard': '/praxiskalender',
       'impressum': '/impressum',
       'agb': '/agb',
       'privacy': '/datenschutz',
@@ -146,7 +150,7 @@ const AppContent: React.FC = () => {
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
-    navigate('/dashboard');
+    navigate('/praxiskalender');
   };
 
   const handleLogout = () => {
@@ -162,7 +166,15 @@ const AppContent: React.FC = () => {
         element={<LoginPage onNavigate={handleNavigate} onLoginSuccess={handleLoginSuccess} />} 
       />
       <Route 
+        path="/praxiskalender" 
+        element={<DashboardPage onLogout={handleLogout} />} 
+      />
+      <Route 
         path="/dashboard" 
+        element={<DashboardPage onLogout={handleLogout} />} 
+      />
+      <Route 
+        path="/kalender" 
         element={<DashboardPage onLogout={handleLogout} />} 
       />
       
