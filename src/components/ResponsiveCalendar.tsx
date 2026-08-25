@@ -309,7 +309,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
         <button
           type="button"
           onClick={() => setSelectedDoctorFilter('all')}
-          className={`px-3 py-1 rounded-full font-bold transition-all shrink-0 cursor-pointer ${
+          className={`px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 cursor-pointer ${
             selectedDoctorFilter === 'all'
               ? 'bg-slate-800 text-white shadow-xs'
               : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -325,7 +325,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
               key={doc.id}
               type="button"
               onClick={() => setSelectedDoctorFilter(doc.id)}
-              className={`px-3 py-1 rounded-full font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer ${
                 isSelected
                   ? 'bg-white border-2 text-slate-900 shadow-xs'
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -346,7 +346,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
             <select
               value={selectedResourceFilter}
               onChange={(e) => setSelectedResourceFilter(e.target.value)}
-              className="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-700 outline-none cursor-pointer shrink-0"
+              className="bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 outline-none cursor-pointer shrink-0"
             >
               <option value="all">Alle Räume & Geräte</option>
               {resources.map((r) => (
@@ -429,7 +429,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
                                   e.stopPropagation();
                                   openEditModal(evt);
                                 }}
-                                className="w-full p-2 rounded-xl text-left shadow-xs hover:shadow-md transition-all border text-xs relative overflow-hidden"
+                                className="w-full p-2 rounded-lg text-left shadow-xs hover:shadow-md transition-all border text-xs relative overflow-hidden"
                                 style={{
                                   backgroundColor: '#FFFFFF',
                                   borderColor: doc.hex,
@@ -566,7 +566,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
-              className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col"
+              className="w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col"
             >
               {/* Header */}
               <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">

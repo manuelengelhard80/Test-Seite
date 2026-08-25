@@ -1186,7 +1186,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                <div
                                  key={evt.id}
                                  onClick={(e) => handleEventClick(evt, e)}
-                                 className={`absolute z-20 mx-1 rounded-xl p-2.5 text-xs cursor-pointer shadow-xs border border-slate-200/90 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white ${
+                                 className={`absolute z-20 mx-1 rounded-lg p-2.5 text-xs cursor-pointer shadow-xs border border-slate-200/90 hover:shadow-md hover:z-30 transition-all overflow-hidden bg-white ${
                                    isConflict ? 'ring-2 ring-amber-400/90 bg-amber-50/20' : ''
                                  }`}
                                  style={{
@@ -1194,7 +1194,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                     height: `${evt.duration * 96 - 2}px`,
                                     left: `calc(3.5rem + ${leftPercent}%)`,
                                     width: `calc(${widthPercent}% - 3.5rem / ${selectedDoctors.length} - 6px)`,
-                                    borderLeftWidth: '5px',
+                                    borderLeftWidth: '4px',
                                     borderLeftColor: doctor?.hex || palette.hex
                                  }}
                                >

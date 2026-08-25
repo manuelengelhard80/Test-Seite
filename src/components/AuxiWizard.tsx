@@ -179,7 +179,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 backdrop-blur-md overflow-y-auto font-sans">
       
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col my-auto max-h-[92vh]">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col my-auto max-h-[92vh]">
         
         {/* Top Gradient Bar */}
         <div className="h-2 bg-gradient-to-r from-teal-500 via-sky-500 to-indigo-500" />
@@ -285,7 +285,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-2xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-3.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Jetzt Praxiskalender einrichten</span>
                   <ArrowRight size={16} />
@@ -294,7 +294,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
                   <button
                     type="button"
                     onClick={onCancel}
-                    className="w-full sm:w-auto px-4 py-3 text-slate-500 hover:text-slate-800 text-xs font-semibold rounded-2xl transition-colors cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-3 text-slate-500 hover:text-slate-800 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
                   >
                     Überspringen & direkt zum Kalender
                   </button>
@@ -873,7 +873,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
                 <button
                   type="button"
                   onClick={handleFinish}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-2xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-3.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 mx-auto cursor-pointer"
                 >
                   <CheckCircle2 size={18} />
                   <span>Praxiskalender öffnen</span>
