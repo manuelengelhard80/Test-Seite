@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Lock, Mail, Stethoscope, Info } from 'lucide-react';
 
@@ -24,7 +23,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
       <button 
         onClick={() => onNavigate('home')}
-        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-medium"
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-medium cursor-pointer"
       >
         <ArrowLeft size={20} /> Zurück zur Startseite
       </button>
@@ -32,15 +31,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         <div className="p-8 text-center border-b border-slate-100 bg-slate-50/50">
           <div className="flex justify-center mb-4">
-            <div className="flex flex-col items-start pl-6">
-              <div className="flex items-center gap-[6px]">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-1.5 justify-center">
                 <span className="relative flex h-2.5 w-2.5 mt-0.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
                 </span>
-                <span className="font-extrabold text-gradient text-2xl leading-none ml-1">Auxilium Assist</span>
+                <span className="font-extrabold text-gradient text-2xl leading-none">Auxilium Assist</span>
               </div>
-              <span className="text-[11px] sm:text-xs text-slate-500 mt-1.5 leading-none tracking-tight font-semibold pl-[22px] text-left">Der KI-Telefonassistent für die Arztpraxis</span>
+              <span className="text-xs text-slate-500 mt-1.5 font-semibold tracking-wide">Praxiskalender</span>
             </div>
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Praxis-Login</h2>
@@ -55,7 +54,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
               <input 
                 type="email" 
                 required
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#0D9488] focus:ring-2 focus:ring-[#0D9488]/20 outline-none transition-all"
                 placeholder="praxis@beispiel.de"
               />
             </div>
@@ -68,15 +67,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
               <input 
                 type="password" 
                 required
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-[#0D9488] focus:ring-2 focus:ring-[#0D9488]/20 outline-none transition-all"
                 placeholder="••••••••"
               />
             </div>
           </div>
 
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex gap-3 items-start">
-            <Info size={18} className="text-blue-500 shrink-0 mt-0.5" />
-            <p className="text-xs text-blue-700 leading-relaxed">
+          <div className="bg-teal-50 border border-teal-100 rounded-lg p-3 flex gap-3 items-start">
+            <Info size={18} className="text-[#0D9488] shrink-0 mt-0.5" />
+            <p className="text-xs text-teal-800 leading-relaxed">
               <strong>Demo-Modus:</strong> Geben Sie beliebige Daten ein oder klicken Sie einfach auf den Button, um das Dashboard zu testen.
             </p>
           </div>
@@ -84,7 +83,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
           <button 
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-medical text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-glow hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-gradient-medical text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-glow hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
           >
             {isLoading ? (
               <>
@@ -103,7 +102,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, onLoginSuccess
         
         <div className="bg-slate-50 p-6 text-center border-t border-slate-100">
           <p className="text-sm text-slate-600">
-            Noch keinen Account? <button onClick={() => onNavigate('pricing')} className="text-primary font-bold hover:underline">Jetzt registrieren</button>
+            Noch keinen Account? <button onClick={() => onNavigate('pricing')} className="text-[#0D9488] font-bold hover:underline cursor-pointer">Jetzt registrieren</button>
           </p>
         </div>
       </div>

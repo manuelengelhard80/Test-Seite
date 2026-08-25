@@ -95,11 +95,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
 
-  // Database / Settings State
+  // Database / Settings State (Using brand turquoise & harmonious accents)
   const [doctors, setDoctors] = useState<Doctor[]>([
-    { id: 'dr-mueller', name: 'Dr. Müller', color: 'bg-blue-50 border-blue-200 text-blue-700', border: 'border-blue-500' },
-    { id: 'dr-schmidt', name: 'Dr. Schmidt', color: 'bg-emerald-50 border-emerald-200 text-emerald-700', border: 'border-emerald-500' },
-    { id: 'dr-weber', name: 'Dr. Weber', color: 'bg-purple-50 border-purple-200 text-purple-700', border: 'border-purple-500' },
+    { id: 'dr-mueller', name: 'Dr. Müller', color: 'bg-teal-50 border-teal-200 text-teal-800', border: 'border-[#0D9488]' },
+    { id: 'dr-schmidt', name: 'Dr. Schmidt', color: 'bg-emerald-50 border-emerald-200 text-emerald-800', border: 'border-emerald-500' },
+    { id: 'dr-weber', name: 'Dr. Weber', color: 'bg-cyan-50 border-cyan-200 text-cyan-800', border: 'border-cyan-600' },
   ]);
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([
     { id: 'st_akut', name: 'Akutsprechstunde', durationMinutes: 15 },
@@ -528,13 +528,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         fixed top-0 left-0 bottom-0 w-72 bg-white border-r border-slate-200 z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-sm
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0
       `}>
-        <div className="p-5 flex items-center justify-between border-b border-slate-100">
-           <div className="flex items-center gap-2">
-             <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488]"></span>
-             </span>
-             <span className="font-bold text-slate-800 text-lg tracking-tight">Auxilium Praxiskalender</span>
+        <div className="p-4 px-5 flex items-center justify-between border-b border-slate-100">
+           <div className="flex flex-col items-start select-none">
+             <div className="flex items-center gap-1.5">
+               <span className="relative flex h-2.5 w-2.5 mt-0.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
+               </span>
+               <span className="font-extrabold text-gradient text-xl leading-none">Auxilium Assist</span>
+             </div>
+             <span className="text-[11px] text-slate-500 mt-1 font-semibold tracking-wide pl-4">Praxiskalender</span>
            </div>
            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-600">
              <X size={20} />
@@ -550,20 +553,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
               handleSlotClick(9, selectedDoctors[0], currentDateISO);
               setSidebarOpen(false);
             }}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md hover:shadow-lg text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full bg-[#0D9488] hover:bg-[#0f766e] shadow-md hover:shadow-lg text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
           >
             <Plus size={18} strokeWidth={2.5} /> <span>Neuer Termin</span>
           </button>
 
           <nav className="space-y-1">
-            <button onClick={() => setActiveTab('calendar')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors ${activeTab === 'calendar' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <CalendarIcon size={18} /> Kalender
+            <button onClick={() => setActiveTab('calendar')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'calendar' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
+              <CalendarIcon size={18} className={activeTab === 'calendar' ? 'text-[#0D9488]' : 'text-slate-500'} /> Kalender
             </button>
-            <button onClick={() => setActiveTab('api')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors ${activeTab === 'api' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <Code2 size={18} /> API & Integration
+            <button onClick={() => setActiveTab('api')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'api' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
+              <Code2 size={18} className={activeTab === 'api' ? 'text-[#0D9488]' : 'text-slate-500'} /> API & Integration
             </button>
-            <button onClick={() => setActiveTab('team')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors ${activeTab === 'team' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}>
-              <Users size={18} /> Team & Räume
+            <button onClick={() => setActiveTab('team')} className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${activeTab === 'team' ? 'bg-teal-50 text-[#0D9488] font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>
+              <Users size={18} className={activeTab === 'team' ? 'text-[#0D9488]' : 'text-slate-500'} /> Team & Räume
             </button>
           </nav>
 
@@ -614,10 +617,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       setCurrentDate(date);
                       setMiniCalDate(date);
                     }}
-                    className={`h-6 w-6 mx-auto rounded-full flex items-center justify-center text-[11px] transition-colors
+                    className={`h-6 w-6 mx-auto rounded-full flex items-center justify-center text-[11px] transition-colors cursor-pointer
                       ${!isCurrentMonth ? 'text-slate-300' : 'text-slate-700'}
-                      ${isSelected ? 'bg-blue-600 text-white font-bold shadow-sm' : ''}
-                      ${!isSelected && isToday ? 'border border-blue-500 font-bold text-blue-600' : ''}
+                      ${isSelected ? 'bg-[#0D9488] text-white font-bold shadow-sm' : ''}
+                      ${!isSelected && isToday ? 'border border-[#0D9488] font-bold text-[#0D9488]' : ''}
                       ${!isSelected && isCurrentMonth ? 'hover:bg-slate-200' : ''}
                     `}
                   >
@@ -632,7 +635,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
           <div>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 px-1 flex items-center justify-between">
               <span>Behandler</span>
-              <span className="text-[10px] text-blue-600 font-normal cursor-pointer" onClick={() => setSelectedDoctors(doctors.map(d => d.id))}>Alle</span>
+              <span className="text-[10px] text-[#0D9488] font-semibold hover:underline cursor-pointer" onClick={() => setSelectedDoctors(doctors.map(d => d.id))}>Alle</span>
             </h3>
             <div className="space-y-1">
               {doctors.map(doc => {
@@ -643,7 +646,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors" 
                     onClick={() => toggleDoctor(doc.id)}
                   >
-                     <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${isChecked ? 'bg-blue-600 border-blue-600' : 'border-slate-300'}`}>
+                     <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors ${isChecked ? 'bg-[#0D9488] border-[#0D9488]' : 'border-slate-300'}`}>
                        {isChecked && <CheckCircle2 size={12} className="text-white" />}
                      </div>
                      <span className={`text-xs font-medium ${isChecked ? 'text-slate-800' : 'text-slate-400'}`}>{doc.name}</span>
@@ -659,7 +662,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             <div className="space-y-1">
               {resources.map(res => (
                 <div key={res.id} className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors">
-                   <div className="w-2 h-2 rounded-full bg-slate-400"></div>
+                   <div className="w-2 h-2 rounded-full bg-[#0D9488]"></div>
                    <span className="text-xs text-slate-600">{res.name}</span>
                 </div>
               ))}
@@ -668,7 +671,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
         </div>
 
         <div className="p-3 border-t border-slate-100">
-          <button onClick={onLogout} className="flex items-center gap-2.5 px-3 py-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors w-full text-xs font-semibold">
+          <button onClick={onLogout} className="flex items-center gap-2.5 px-3 py-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors w-full text-xs font-semibold cursor-pointer">
             <LogOut size={16} /> Abmelden
           </button>
         </div>
@@ -687,17 +690,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             {/* Today Button */}
             <button 
               onClick={handleToday}
-              className="text-xs font-bold border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 text-slate-700 transition-colors shadow-2xs"
+              className="text-xs font-bold border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-teal-50 hover:text-[#0D9488] hover:border-teal-200 text-slate-700 transition-colors shadow-2xs cursor-pointer"
             >
               Heute
             </button>
 
             {/* Navigation Chevrons */}
             <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
-               <button onClick={handlePrevDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all" title="Zurück">
+               <button onClick={handlePrevDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all cursor-pointer" title="Zurück">
                  <ChevronLeft size={16} className="text-slate-600" />
                </button>
-               <button onClick={handleNextDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all" title="Vor">
+               <button onClick={handleNextDate} className="p-1 hover:bg-white rounded shadow-2xs transition-all cursor-pointer" title="Vor">
                  <ChevronRight size={16} className="text-slate-600" />
                </button>
             </div>
@@ -713,28 +716,28 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/60 shadow-2xs">
                <button 
                  onClick={() => setViewMode('day')}
-                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${viewMode === 'day' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}
+                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'day' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
                >
                  <span>Tag</span>
                </button>
                <button 
                  onClick={() => setViewMode('week')}
-                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${viewMode === 'week' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}
+                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'week' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
                >
                  <span>Woche</span>
                </button>
                <button 
                   onClick={() => setViewMode('month')}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${viewMode === 'month' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-600 hover:text-slate-900'}`}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${viewMode === 'month' ? 'bg-white shadow-sm text-[#0D9488]' : 'text-slate-600 hover:text-slate-900'}`}
                 >
                  <span>Monat</span>
                </button>
             </div>
             
             <div className="flex items-center gap-2">
-               <button className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors"><Search size={18} /></button>
-               <button onClick={() => setActiveTab('api')} className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors hidden sm:block"><Settings size={18} /></button>
-               <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-blue-100">
+               <button className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors cursor-pointer"><Search size={18} /></button>
+               <button onClick={() => setActiveTab('api')} className="text-slate-500 hover:bg-slate-100 p-2 rounded-xl transition-colors hidden sm:block cursor-pointer"><Settings size={18} /></button>
+               <div className="w-8 h-8 rounded-xl bg-[#0D9488] text-white flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer ring-2 ring-teal-100">
                  P
                </div>
             </div>
@@ -746,7 +749,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
           
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
-              <RefreshCw className="animate-spin text-blue-500" size={32} />
+              <RefreshCw className="animate-spin text-[#0D9488]" size={32} />
             </div>
           ) : activeTab === 'calendar' && (
              <div className="h-full flex flex-col overflow-hidden">
@@ -760,7 +763,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                         const doc = doctors.find(d => d.id === docId);
                         return (
                           <div key={docId} className="flex-1 py-3 text-center border-l border-slate-100 flex items-center justify-center gap-2">
-                            <div className={`w-2.5 h-2.5 rounded-full ${doc?.border ? 'bg-blue-500' : 'bg-slate-400'}`}></div>
+                            <div className={`w-2.5 h-2.5 rounded-full ${doc?.id === 'dr-mueller' ? 'bg-[#0D9488]' : doc?.id === 'dr-schmidt' ? 'bg-emerald-500' : 'bg-cyan-500'}`}></div>
                             <span className="text-xs font-bold text-slate-800">{doc?.name}</span>
                           </div>
                         );
@@ -774,8 +777,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                           {/* Current Time Indicator Line (if today) */}
                           {currentDateISO === todayISO && (
                             <div className="absolute left-0 right-0 z-10 pointer-events-none" style={{ top: '240px' }}>
-                               <div className="border-t-2 border-red-500 w-full relative">
-                                 <div className="absolute -left-2 -top-1.5 w-3 h-3 rounded-full bg-red-500"></div>
+                               <div className="border-t-2 border-[#0D9488] w-full relative">
+                                 <div className="absolute -left-2 -top-1.5 w-3 h-3 rounded-full bg-[#0D9488]"></div>
                                </div>
                             </div>
                           )}
@@ -796,11 +799,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                    <div 
                                      key={docId} 
                                      onClick={() => handleSlotClick(hour, docId, currentDateISO)}
-                                     className="flex-1 border-l border-slate-100 hover:bg-blue-50/30 transition-colors cursor-pointer relative group/slot"
+                                     className="flex-1 border-l border-slate-100 hover:bg-teal-50/30 transition-colors cursor-pointer relative group/slot"
                                    >
                                      <div className="hidden group-hover/slot:flex absolute inset-0 items-center justify-center opacity-0 group-hover/slot:opacity-100 pointer-events-none">
-                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-slate-200">
-                                          <Plus className="text-blue-500" size={16} />
+                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-teal-100">
+                                          <Plus className="text-[#0D9488]" size={16} />
                                         </div>
                                      </div>
                                    </div>
@@ -872,11 +875,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             onClick={() => {
                               setCurrentDate(dayDate);
                             }}
-                            className={`flex-1 py-2.5 text-center border-l border-slate-100 cursor-pointer transition-colors ${isSelectedDay ? 'bg-blue-50/50' : 'hover:bg-slate-50'}`}
+                            className={`flex-1 py-2.5 text-center border-l border-slate-100 cursor-pointer transition-colors ${isSelectedDay ? 'bg-teal-50/50' : 'hover:bg-slate-50'}`}
                           >
                             <span className="text-[11px] font-bold text-slate-500 uppercase block">{dayName}</span>
                             <div className="flex justify-center mt-0.5">
-                              <span className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isToday ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-800'}`}>
+                              <span className={`h-7 w-7 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isToday ? 'bg-[#0D9488] text-white shadow-sm' : 'text-slate-800'}`}>
                                 {dayNum}
                               </span>
                             </div>
@@ -906,11 +909,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                    <div 
                                      key={dayIdx} 
                                      onClick={() => handleSlotClick(hour, selectedDoctors[0], dayISO)}
-                                     className="flex-1 border-l border-slate-100 hover:bg-blue-50/30 transition-colors cursor-pointer relative group/slot"
+                                     className="flex-1 border-l border-slate-100 hover:bg-teal-50/30 transition-colors cursor-pointer relative group/slot"
                                    >
                                      <div className="hidden group-hover/slot:flex absolute inset-0 items-center justify-center opacity-0 group-hover/slot:opacity-100 pointer-events-none">
-                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-slate-200">
-                                          <Plus className="text-blue-500" size={14} />
+                                        <div className="bg-white/80 p-1 rounded-md shadow-2xs border border-teal-100">
+                                          <Plus className="text-[#0D9488]" size={14} />
                                         </div>
                                      </div>
                                    </div>
@@ -991,10 +994,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             onClick={() => {
                               setCurrentDate(dayDate);
                             }}
-                            className={`min-h-[100px] p-2 flex flex-col transition-colors group relative ${isCurrentMonth ? 'bg-white hover:bg-blue-50/20' : 'bg-slate-50/70 text-slate-400'}`}
+                            className={`min-h-[100px] p-2 flex flex-col transition-colors group relative ${isCurrentMonth ? 'bg-white hover:bg-teal-50/20' : 'bg-slate-50/70 text-slate-400'}`}
                           >
                             <div className="flex items-center justify-between mb-1">
-                              <span className={`text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center ${isToday ? 'bg-blue-600 text-white font-bold shadow-xs' : isCurrentMonth ? 'text-slate-800' : 'text-slate-400'}`}>
+                              <span className={`text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center ${isToday ? 'bg-[#0D9488] text-white font-bold shadow-xs' : isCurrentMonth ? 'text-slate-800' : 'text-slate-400'}`}>
                                 {dayDate.getDate()}
                               </span>
                               
@@ -1003,7 +1006,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                   e.stopPropagation();
                                   handleSlotClick(9, selectedDoctors[0], dayISO);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 rounded text-slate-400 hover:text-blue-600 transition-opacity"
+                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-teal-50 rounded text-slate-400 hover:text-[#0D9488] transition-opacity cursor-pointer"
                                 title="Termin hinzufügen"
                               >
                                 <Plus size={14} />
@@ -1038,7 +1041,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                                     setCurrentDate(dayDate);
                                     setViewMode('day');
                                   }}
-                                  className="text-[10px] font-bold text-blue-600 hover:underline block text-center w-full pt-0.5"
+                                  className="text-[10px] font-bold text-[#0D9488] hover:underline block text-center w-full pt-0.5 cursor-pointer"
                                 >
                                   +{dayEvents.length - 3} weitere
                                 </button>
@@ -1063,7 +1066,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-8 relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between relative z-10">
                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 bg-teal-50 text-[#0D9488] rounded-xl flex items-center justify-center shrink-0 border border-teal-100">
                         <CalendarIcon size={24} />
                       </div>
                       <div>
@@ -1076,18 +1079,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       <button 
                         onClick={handleConnectGoogle}
                         disabled={isSyncing}
-                        className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-2xs"
+                        className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm hover:bg-teal-50 hover:text-[#0D9488] hover:border-teal-200 transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
                       >
-                        {isSyncing ? <RefreshCw className="animate-spin" size={16} /> : <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />}
+                        {isSyncing ? <RefreshCw className="animate-spin text-[#0D9488]" size={16} /> : <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />}
                         Verbinden
                       </button>
                    ) : (
                       <div className="flex items-center gap-3">
                          <span className="text-sm text-slate-600 font-medium">praxis@gmail.com</span>
-                         <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 flex items-center gap-1">
+                         <span className="text-xs font-bold text-[#0D9488] bg-teal-50 px-2 py-1 rounded border border-teal-100 flex items-center gap-1">
                            <CheckCircle2 size={12} /> Aktiv
                          </span>
-                         <button onClick={() => setIsGoogleConnected(false)} className="text-slate-400 hover:text-red-500"><LogOut size={16} /></button>
+                         <button onClick={() => setIsGoogleConnected(false)} className="text-slate-400 hover:text-red-500 cursor-pointer"><LogOut size={16} /></button>
                       </div>
                    )}
                 </div>
@@ -1099,7 +1102,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
                  <div className="mb-6">
                     <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1.5 mb-2">
-                      <Key size={14} /> Turso Database Endpoint
+                      <Key size={14} className="text-[#0D9488]" /> Turso Database Endpoint
                     </label>
                     <div className="flex gap-2">
                        <code className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-mono text-sm text-slate-600 flex items-center">
@@ -1118,13 +1121,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                    <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                     <Users size={18} className="text-blue-600" /> Behandler ({doctors.length})
+                     <Users size={18} className="text-[#0D9488]" /> Behandler ({doctors.length})
                    </h3>
                    <div className="space-y-3">
                      {doctors.map(d => (
                        <div key={d.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
                          <span className="font-semibold text-sm text-slate-800">{d.name}</span>
-                         <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold">Aktiv</span>
+                         <span className="text-xs px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold">Aktiv</span>
                        </div>
                      ))}
                    </div>
@@ -1132,13 +1135,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
 
                  <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                    <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                     <Building2 size={18} className="text-indigo-600" /> Räume & Geräte ({resources.length})
+                     <Building2 size={18} className="text-[#0D9488]" /> Räume & Geräte ({resources.length})
                    </h3>
                    <div className="space-y-3">
                      {resources.map(r => (
                        <div key={r.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
                          <span className="font-semibold text-sm text-slate-800">{r.name}</span>
-                         <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold capitalize">{r.type}</span>
+                         <span className="text-xs px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold capitalize">{r.type}</span>
                        </div>
                      ))}
                    </div>
@@ -1157,7 +1160,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                <h3 className="font-bold text-slate-800 text-lg">
                  {isCreating ? 'Neuer Praxis-Termin' : 'Termin-Details'}
                </h3>
-               <button onClick={() => setShowEventModal(false)} className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200 transition-colors">
+               <button onClick={() => setShowEventModal(false)} className="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">
                  <X size={20} />
                </button>
             </div>
@@ -1171,7 +1174,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       <input 
                         type="text" 
                         autoFocus
-                        className="w-full border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-900 focus:border-blue-500 outline-none bg-transparent"
+                        className="w-full border-b-2 border-slate-200 pb-2 text-lg font-bold text-slate-900 focus:border-[#0D9488] outline-none bg-transparent"
                         placeholder="Name des Patienten eingeben"
                         value={selectedEvent?.patientName || ''} 
                         onChange={(e) => setSelectedEvent({...selectedEvent, patientName: e.target.value})}
@@ -1184,7 +1187,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Telefonnummer</label>
                         <input 
                           type="tel"
-                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm"
+                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm"
                           placeholder="z.B. 0151 12345678"
                           value={selectedEvent?.patientPhone || ''} 
                           onChange={(e) => setSelectedEvent({...selectedEvent, patientPhone: e.target.value})}
@@ -1197,14 +1200,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                           <button 
                             type="button"
                             onClick={() => setSelectedEvent({...selectedEvent, patientType: 'kasse'})}
-                            className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${selectedEvent?.patientType === 'kasse' ? 'bg-white shadow text-blue-700' : 'text-slate-500'}`}
+                            className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${selectedEvent?.patientType === 'kasse' ? 'bg-white shadow text-[#0D9488]' : 'text-slate-500'}`}
                           >
                             Kasse (GKV)
                           </button>
                           <button 
                             type="button"
                             onClick={() => setSelectedEvent({...selectedEvent, patientType: 'privat'})}
-                            className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${selectedEvent?.patientType === 'privat' ? 'bg-white shadow text-amber-700' : 'text-slate-500'}`}
+                            className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${selectedEvent?.patientType === 'privat' ? 'bg-white shadow text-amber-700' : 'text-slate-500'}`}
                           >
                             Privat (PKV)
                           </button>
@@ -1218,7 +1221,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Datum</label>
                         <input 
                           type="date"
-                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm font-medium"
+                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium"
                           value={selectedEvent?.date || currentDateISO}
                           onChange={(e) => setSelectedEvent({...selectedEvent, date: e.target.value})}
                         />
@@ -1228,7 +1231,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Behandler</label>
                         <select 
-                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm font-medium"
+                          className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium cursor-pointer"
                           value={selectedEvent?.docId || doctors[0].id}
                           onChange={(e) => setSelectedEvent({...selectedEvent, docId: e.target.value})}
                         >
@@ -1242,10 +1245,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     {/* Service Type (Behandlungsgrund) */}
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-1.5">
-                        <Stethoscope size={14} /> Behandlungsgrund
+                        <Stethoscope size={14} className="text-[#0D9488]" /> Behandlungsgrund
                       </label>
                       <select 
-                        className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm font-medium"
+                        className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium cursor-pointer"
                         value={selectedEvent?.serviceTypeId || serviceTypes[0].id}
                         onChange={(e) => handleServiceTypeChange(e.target.value)}
                       >
@@ -1259,7 +1262,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                        <div>
                           <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Startzeit</label>
                           <select 
-                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm font-medium"
+                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium cursor-pointer"
                             value={selectedEvent?.time || 9}
                             onChange={(e) => setSelectedEvent({...selectedEvent, time: parseFloat(e.target.value)})}
                           >
@@ -1273,10 +1276,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                        </div>
                        <div>
                           <label className="block text-xs font-bold text-slate-500 uppercase mb-1 flex items-center gap-1.5">
-                            <Building2 size={14} /> Raum / Gerät (Opt.)
+                            <Building2 size={14} className="text-[#0D9488]" /> Raum / Gerät (Opt.)
                           </label>
                           <select 
-                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-blue-400 focus:bg-white text-sm font-medium"
+                            className="w-full bg-slate-50 p-2.5 rounded-xl text-slate-700 outline-none border border-slate-200/60 focus:border-[#0D9488] focus:bg-white text-sm font-medium cursor-pointer"
                             value={selectedEvent?.resourceId || ''}
                             onChange={(e) => setSelectedEvent({...selectedEvent, resourceId: e.target.value})}
                           >
@@ -1298,7 +1301,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Anmerkungen</label>
                       <textarea 
-                        className="w-full bg-slate-50 p-3 rounded-xl text-sm border border-slate-200/60 focus:bg-white focus:border-blue-400 transition-all resize-none h-18 outline-none" 
+                        className="w-full bg-slate-50 p-3 rounded-xl text-sm border border-slate-200/60 focus:bg-white focus:border-[#0D9488] transition-all resize-none h-18 outline-none" 
                         placeholder="Zusätzliche medizinische Notizen..."
                         value={selectedEvent?.desc || ''}
                         onChange={(e) => setSelectedEvent({...selectedEvent, desc: e.target.value})}
@@ -1319,7 +1322,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                             </p>
                           </div>
                        </div>
-                       <div className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${selectedEvent?.patientType === 'privat' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-700'}`}>
+                       <div className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${selectedEvent?.patientType === 'privat' ? 'bg-amber-100 text-amber-800' : 'bg-teal-100 text-teal-800'}`}>
                          {selectedEvent?.patientType === 'privat' ? 'Privat' : 'Kasse'}
                        </div>
                     </div>
@@ -1343,7 +1346,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                        {selectedEvent?.resourceId && (
                          <div className="flex items-center justify-between text-xs border-t border-slate-200/50 pt-1.5">
                             <span className="text-slate-500 font-medium">Ressource:</span>
-                            <span className="font-bold text-indigo-700">{resources.find(r => r.id === selectedEvent?.resourceId)?.name}</span>
+                            <span className="font-bold text-[#0D9488]">{resources.find(r => r.id === selectedEvent?.resourceId)?.name}</span>
                          </div>
                        )}
                     </div>
@@ -1357,8 +1360,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                       </div>
                     )}
 
-                    <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                      <ShieldCheck size={16} className="shrink-0" />
+                    <div className="flex items-center gap-2 text-xs text-[#0D9488] bg-teal-50 p-2.5 rounded-xl border border-teal-100 font-medium">
+                      <ShieldCheck size={16} className="shrink-0 text-[#0D9488]" />
                       <span>Terminbuchung synchronisiert mit Praxis-PVS / Auxilium Assist.</span>
                     </div>
                  </div>
@@ -1368,10 +1371,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2.5">
                {isCreating ? (
                  <>
-                   <button onClick={() => setShowEventModal(false)} className="px-4 py-2 text-slate-500 hover:text-slate-800 font-semibold text-xs">Abbrechen</button>
+                   <button onClick={() => setShowEventModal(false)} className="px-4 py-2 text-slate-500 hover:text-slate-800 font-semibold text-xs cursor-pointer">Abbrechen</button>
                    <button 
                      onClick={saveEvent} 
-                     className="px-5 py-2 bg-blue-600 text-white rounded-xl font-bold text-xs hover:bg-blue-700 shadow-sm transition-colors"
+                     className="px-5 py-2 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-xs shadow-sm transition-colors cursor-pointer"
                    >
                      Termin eintragen
                    </button>
@@ -1385,11 +1388,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                          setShowEventModal(false);
                        }
                      }} 
-                     className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-xs font-semibold mr-auto transition-colors"
+                     className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-xs font-semibold mr-auto transition-colors cursor-pointer"
                    >
                      Löschen
                    </button>
-                   <button onClick={() => setShowEventModal(false)} className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs hover:bg-slate-50 transition-colors">Schließen</button>
+                   <button onClick={() => setShowEventModal(false)} className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs hover:bg-slate-50 transition-colors cursor-pointer">Schließen</button>
                  </>
                )}
             </div>
