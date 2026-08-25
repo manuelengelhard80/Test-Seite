@@ -24,38 +24,35 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
 
   return (
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
-      {/* 1. Radar Pulse Ping Ring (Directly inspired by the Logo Dot in Navbar) */}
-      <span className="absolute inset-0 rounded-full animate-ping opacity-60 bg-[#0D9488] pointer-events-none" />
-
-      {/* 2. Soft Ambient Luminous Halo */}
+      {/* 1. Very subtle, soft ambient glow (smooth, calm breathing - no harsh ping) */}
       <motion.div
         animate={{
-          scale: isSpeaking ? [1, 1.16, 1] : [1, 1.06, 1],
-          opacity: isSpeaking ? [0.45, 0.75, 0.45] : [0.3, 0.5, 0.3],
+          scale: isSpeaking ? [1, 1.08, 1] : [1, 1.03, 1],
+          opacity: isSpeaking ? [0.2, 0.35, 0.2] : [0.12, 0.22, 0.12],
         }}
         transition={{
           repeat: Infinity,
-          duration: isSpeaking ? 2 : 3.2,
+          duration: isSpeaking ? 2.5 : 4.5,
           ease: 'easeInOut',
         }}
-        className={`absolute inset-0 rounded-full bg-[#0D9488]/30 blur-md ${sizeMap[size]}`}
+        className={`absolute inset-0 rounded-full bg-[#0D9488]/20 blur-md ${sizeMap[size]}`}
       />
 
-      {/* 3. Main 3D Sphere Container with smooth float motion */}
+      {/* 2. Main 3D Sphere Container with gentle smooth float motion */}
       <motion.div
         animate={
           isCelebrating
-            ? { y: [0, -7, 0], scale: [1, 1.08, 1] }
+            ? { y: [0, -6, 0], scale: [1, 1.05, 1] }
             : isSpeaking
-            ? { y: [0, -2.5, 0], rotate: [-1, 1, -1] }
-            : { y: [0, -1.5, 0] }
+            ? { y: [0, -2, 0] }
+            : { y: [0, -1.2, 0] }
         }
         transition={{
           repeat: Infinity,
-          duration: isCelebrating ? 0.8 : isSpeaking ? 2 : 3.8,
+          duration: isCelebrating ? 0.9 : isSpeaking ? 2.2 : 4,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full p-[2.5px] bg-gradient-to-b from-white/90 via-teal-100/50 to-teal-300/40 shadow-lg shadow-teal-950/20 border border-teal-200/80 flex items-center justify-center backdrop-blur-md`}
+        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/80 via-teal-100/40 to-teal-300/30 shadow-md shadow-teal-950/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
       >
         <svg
           viewBox="0 0 100 100"
@@ -74,20 +71,20 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
 
             {/* Top Gloss Arc */}
             <linearGradient id="auxiSphereGloss" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
               <stop offset="40%" stopColor="#ffffff" stopOpacity="0.1" />
               <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
 
             {/* Soft Glowing Mint Cheek Blush */}
             <radialGradient id="auxiDotBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#5eead4" stopOpacity="0.7" />
+              <stop offset="0%" stopColor="#5eead4" stopOpacity="0.65" />
               <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
             </radialGradient>
 
             {/* Subtle glow filter for the facial light lines */}
             <filter id="eyeGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="0.8" result="blur" />
+              <feGaussianBlur stdDeviation="0.6" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
@@ -101,19 +98,11 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
             fill="url(#auxiSphereGloss)"
           />
 
-          {/* 3. Pure White Sparkle Glint on Top Right (No Yellow) */}
-          <path
-            d="M 76 22 Q 78 27 83 29 Q 78 31 76 36 Q 74 31 69 29 Q 74 27 76 22 Z"
-            fill="#ffffff"
-            opacity="0.95"
-          />
-          <circle cx="76" cy="29" r="1.2" fill="#a5f3fc" />
+          {/* 3. Delicate Glowing Cheeks (Blush) */}
+          <circle cx="28" cy="59" r="6.5" fill="url(#auxiDotBlush)" />
+          <circle cx="72" cy="59" r="6.5" fill="url(#auxiDotBlush)" />
 
-          {/* 4. Delicate Glowing Cheeks (Blush) */}
-          <circle cx="28" cy="59" r="7" fill="url(#auxiDotBlush)" />
-          <circle cx="72" cy="59" r="7" fill="url(#auxiDotBlush)" />
-
-          {/* 5. Harmonious Curved Eye Arcs (^ ^) - Perfect balanced thickness (3.4px) */}
+          {/* 4. Harmonious Curved Eye Arcs (^ ^) - Balanced pleasant thickness (3.4px) */}
           {/* Left Eye Arc */}
           <path
             d="M 29 50 C 33.5 38, 42.5 38, 47 50"
@@ -133,7 +122,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
             filter="url(#eyeGlow)"
           />
 
-          {/* 6. Cute Subtle Smile Arc (2.8px) */}
+          {/* 5. Cute Subtle Smile Arc (2.8px) */}
           <path
             d="M 46.5 58.5 C 48.5 63, 51.5 63, 53.5 58.5"
             stroke="#ffffff"
@@ -195,7 +184,7 @@ export const AuxiSpeechBubble: React.FC<AuxiSpeechBubbleProps> = ({
           <div className="flex items-center justify-between flex-wrap gap-2">
             <h4 className="text-xs font-bold text-teal-950 flex items-center gap-1.5">
               <span>{title}</span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-ping" />
+              <span className="inline-block w-2 h-2 rounded-full bg-[#0D9488]" />
             </h4>
             {stepIndicator && (
               <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
