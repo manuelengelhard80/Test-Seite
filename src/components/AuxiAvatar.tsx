@@ -1,6 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Heart } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export interface AuxiAvatarProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -15,7 +14,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
   isSpeaking = false,
   isCelebrating = false,
   className = '',
-  showBadge = true,
+  showBadge = false, // removed yellow badge by default
 }) => {
   const sizeMap = {
     sm: 'w-8 h-8',
@@ -24,139 +23,132 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
     xl: 'w-24 h-24',
   };
 
-  const eyeSizeMap = {
-    sm: 'w-1.5 h-2',
-    md: 'w-2 h-2.5',
-    lg: 'w-3 h-4',
-    xl: 'w-4 h-5',
-  };
-
-  const catchlightMap = {
-    sm: 'w-0.5 h-0.5',
-    md: 'w-1 h-1',
-    lg: 'w-1.5 h-1.5',
-    xl: 'w-2 h-2',
-  };
-
   return (
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
-      {/* Outer Glow Halo with warm & magical pulse */}
+      {/* Outer Soft Glow Halo in Auxilium Teal/Cyan */}
       <motion.div
         animate={{
-          scale: isSpeaking ? [1, 1.18, 1] : [1, 1.08, 1],
-          opacity: isSpeaking ? [0.45, 0.75, 0.45] : [0.3, 0.45, 0.3],
+          scale: isSpeaking ? [1, 1.15, 1] : [1, 1.06, 1],
+          opacity: isSpeaking ? [0.4, 0.7, 0.4] : [0.25, 0.45, 0.25],
         }}
         transition={{
           repeat: Infinity,
           duration: isSpeaking ? 2 : 3.5,
           ease: 'easeInOut',
         }}
-        className={`absolute inset-0 rounded-full bg-gradient-to-tr from-teal-300 via-sky-300 to-rose-200 blur-md ${sizeMap[size]}`}
+        className={`absolute inset-0 rounded-full bg-gradient-to-tr from-teal-400 via-teal-300 to-cyan-300 blur-md ${sizeMap[size]}`}
       />
 
-      {/* Main Avatar Character: Cute round Auxi Bot with cute antennas/ears, big sparkling anime eyes, rosy blush, and sweet smile */}
+      {/* Main 3D Glass Orb Container */}
       <motion.div
         animate={
           isCelebrating
-            ? { y: [0, -10, 0], rotate: [0, -8, 8, 0], scale: [1, 1.06, 1] }
+            ? { y: [0, -8, 0], scale: [1, 1.08, 1] }
             : isSpeaking
-            ? { y: [0, -3.5, 0], rotate: [-1, 1, -1] }
+            ? { y: [0, -3, 0], rotate: [-1, 1, -1] }
             : { y: [0, -2, 0] }
         }
         transition={{
           repeat: Infinity,
-          duration: isCelebrating ? 0.7 : isSpeaking ? 2 : 3.8,
+          duration: isCelebrating ? 0.8 : isSpeaking ? 2 : 3.8,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full bg-gradient-to-b from-white via-teal-50 to-teal-100 p-[2.5px] shadow-lg shadow-teal-900/15 border-2 border-white flex items-center justify-center backdrop-blur-md`}
+        className={`relative ${sizeMap[size]} rounded-full p-[3px] bg-gradient-to-b from-white/90 via-teal-100/60 to-teal-200/50 shadow-lg shadow-teal-950/20 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
       >
-        {/* Cute Auxi Antenna on top */}
-        <motion.div 
-          animate={{ rotate: isSpeaking ? [-10, 10, -10] : [-4, 4, -4] }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-          className="absolute -top-2 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
-        >
-          <div className="w-2 h-2 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 shadow-xs border border-white" />
-          <div className="w-0.5 h-1.5 bg-teal-400" />
-        </motion.div>
-
-        <div className="w-full h-full rounded-full bg-gradient-to-br from-teal-500 via-teal-600 to-cyan-600 flex items-center justify-center text-white relative overflow-hidden shadow-inner">
-          {/* Glass reflection gradient */}
-          <div className="absolute -top-3 -right-2 w-7 h-7 rounded-full bg-white/35 blur-xs" />
-          <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-full bg-cyan-300/30 blur-xs" />
-
-          {/* Cute Face Container */}
-          <div className="relative z-10 flex flex-col items-center justify-center w-full h-full pt-1">
-            {isCelebrating ? (
-              <div className="flex flex-col items-center">
-                {/* Happy closed arched eyes ^^ */}
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2 sm:w-3 h-1.5 border-t-2 border-white rounded-t-full font-bold" />
-                  <div className="w-2 sm:w-3 h-1.5 border-t-2 border-white rounded-t-full font-bold" />
-                </div>
-                {/* Cheerful open mouth :D */}
-                <div className="w-2 sm:w-2.5 h-1.5 bg-rose-300 rounded-b-full mt-0.5 border-t border-rose-400" />
-                {/* Rosy Blush */}
-                <div className="flex justify-between w-full px-2 mt--0.5">
-                  <div className="w-1.5 h-1 rounded-full bg-rose-400/60 blur-[0.5px]" />
-                  <div className="w-1.5 h-1 rounded-full bg-rose-400/60 blur-[0.5px]" />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center w-full px-1">
-                {/* Big sparkling anime-style cute eyes */}
-                <div className="flex items-center justify-center gap-1 sm:gap-2">
-                  {/* Left Eye */}
-                  <motion.div
-                    animate={{ scaleY: [1, 1, 0.1, 1, 1] }}
-                    transition={{ repeat: Infinity, duration: 3.6, times: [0, 0.88, 0.92, 0.96, 1] }}
-                    className={`${eyeSizeMap[size]} rounded-full bg-slate-900 border border-teal-200/40 relative shadow-[0_0_8px_rgba(255,255,255,0.7)] flex items-start justify-start p-0.5`}
-                  >
-                    {/* Big glossy sparkle */}
-                    <div className={`${catchlightMap[size]} rounded-full bg-white`} />
-                    {/* Secondary tiny sparkle */}
-                    <div className="w-0.5 h-0.5 rounded-full bg-white/90 absolute bottom-0.5 right-0.5" />
-                  </motion.div>
-
-                  {/* Right Eye */}
-                  <motion.div
-                    animate={{ scaleY: [1, 1, 0.1, 1, 1] }}
-                    transition={{ repeat: Infinity, duration: 3.6, times: [0, 0.88, 0.92, 0.96, 1] }}
-                    className={`${eyeSizeMap[size]} rounded-full bg-slate-900 border border-teal-200/40 relative shadow-[0_0_8px_rgba(255,255,255,0.7)] flex items-start justify-start p-0.5`}
-                  >
-                    {/* Big glossy sparkle */}
-                    <div className={`${catchlightMap[size]} rounded-full bg-white`} />
-                    {/* Secondary tiny sparkle */}
-                    <div className="w-0.5 h-0.5 rounded-full bg-white/90 absolute bottom-0.5 right-0.5" />
-                  </motion.div>
-                </div>
-
-                {/* Cute Rosy Cheeks & Sweet Smile */}
-                <div className="flex items-center justify-center gap-1 mt-0.5 w-full">
-                  {/* Left Cheek Blush */}
-                  <div className="w-1.5 h-1 sm:w-2 sm:h-1.5 rounded-full bg-rose-300/80 shadow-[0_0_4px_#fda4af]" />
-                  
-                  {/* Sweet Smile Arc */}
-                  <div className="w-2 sm:w-2.5 h-1 border-b-[2px] border-white rounded-b-full -mt-0.5" />
-                  
-                  {/* Right Cheek Blush */}
-                  <div className="w-1.5 h-1 sm:w-2 sm:h-1.5 rounded-full bg-rose-300/80 shadow-[0_0_4px_#fda4af]" />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Floating Sparkle / Heart Badge */}
-        {showBadge && (
-          <motion.div
-            animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.15, 1] }}
-            transition={{ repeat: Infinity, duration: 2.8 }}
-            className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-tr from-amber-400 to-amber-300 border-2 border-white shadow-xs flex items-center justify-center text-slate-900"
+        {/* Soft Inner Glow Ring */}
+        <div className="w-full h-full rounded-full p-[2px] bg-gradient-to-tr from-teal-500/30 via-transparent to-cyan-200/40 flex items-center justify-center relative overflow-hidden">
+          
+          {/* Main 3D Sphere SVG Face */}
+          <svg
+            viewBox="0 0 100 100"
+            className="w-full h-full rounded-full"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <Sparkles size={size === 'sm' ? 8 : 10} className="text-amber-950 fill-amber-950" />
-          </motion.div>
-        )}
+            <defs>
+              {/* 3D Sphere Radial Gradient using Auxilium Teal #0D9488 & Petrol Shades */}
+              <radialGradient id="auxiSphereGrad" cx="38%" cy="32%" r="65%">
+                <stop offset="0%" stopColor="#2dd4bf" />       {/* Teal 400 highlight */}
+                <stop offset="35%" stopColor="#0D9488" />      {/* Auxilium Primary Teal */}
+                <stop offset="75%" stopColor="#0f766e" />      {/* Teal 700 depth */}
+                <stop offset="100%" stopColor="#115e59" />     {/* Teal 800 shadow */}
+              </radialGradient>
+
+              {/* Upper Glass Specular Reflection */}
+              <linearGradient id="auxiGlassGloss" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+                <stop offset="40%" stopColor="#ffffff" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Soft Cheek Blush Radial Gradient (Mint / Soft Cyan) */}
+              <radialGradient id="auxiBlushGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#5eead4" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
+              </radialGradient>
+
+              {/* Glow Filter for White Light Arcs */}
+              <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="1.2" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* 1. Base 3D Sphere */}
+            <circle cx="50" cy="50" r="48" fill="url(#auxiSphereGrad)" />
+
+            {/* 2. Soft Bottom Ambient Shadow */}
+            <ellipse cx="50" cy="88" rx="30" ry="8" fill="#134e4a" opacity="0.35" />
+
+            {/* 3. Glass Top Light Arch */}
+            <path
+              d="M 12 40 C 18 18, 82 18, 88 40 C 72 26, 28 26, 12 40 Z"
+              fill="url(#auxiGlassGloss)"
+            />
+
+            {/* 4. White / Cyan Sparkle Catchlight (Top-Right, matching image in Auxilium palette) */}
+            <path
+              d="M 76 22 Q 78 27 83 29 Q 78 31 76 36 Q 74 31 69 29 Q 74 27 76 22 Z"
+              fill="#ffffff"
+              opacity="0.9"
+            />
+            <circle cx="76" cy="29" r="1.5" fill="#a5f3fc" />
+
+            {/* 5. Glowing Cheeks (Blush) */}
+            <circle cx="28" cy="58" r="7.5" fill="url(#auxiBlushGrad)" />
+            <circle cx="72" cy="58" r="7.5" fill="url(#auxiBlushGrad)" />
+
+            {/* 6. Cheerful Smiling Eyes (Curved Glowing Light Arcs ^ ^) */}
+            {/* Left Eye Arc */}
+            <path
+              d="M 28 50 C 33 37, 43 37, 47 50"
+              stroke="#ffffff"
+              strokeWidth="4.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#softGlow)"
+            />
+            {/* Right Eye Arc */}
+            <path
+              d="M 53 50 C 57 37, 67 37, 72 50"
+              stroke="#ffffff"
+              strokeWidth="4.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#softGlow)"
+            />
+
+            {/* 7. Cute Small Smiling Mouth in Center */}
+            <path
+              d="M 46 59 C 48 64, 52 64, 54 59"
+              stroke="#ffffff"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#softGlow)"
+            />
+          </svg>
+        </div>
       </motion.div>
     </div>
   );
