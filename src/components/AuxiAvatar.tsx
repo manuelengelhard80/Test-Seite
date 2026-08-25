@@ -24,7 +24,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
 
   return (
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
-      {/* 1. Subtle, soft ambient glow matching Favicon Gradient (Teal #0D9488 to Blue #0284C7) */}
+      {/* 1. Subtle, soft ambient glow matching predominant Teal with soft blue touch */}
       <motion.div
         animate={{
           scale: isSpeaking ? [1, 1.08, 1] : [1, 1.03, 1],
@@ -35,7 +35,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           duration: isSpeaking ? 2.5 : 4.5,
           ease: 'easeInOut',
         }}
-        className={`absolute inset-0 rounded-full bg-gradient-to-br from-[#0D9488] to-[#0284C7] blur-md ${sizeMap[size]}`}
+        className={`absolute inset-0 rounded-full bg-gradient-to-br from-[#14b8a6] via-[#0D9488] to-[#0284C7]/60 blur-md ${sizeMap[size]}`}
       />
 
       {/* 2. Main 3D Sphere Container with gentle smooth float motion */}
@@ -52,7 +52,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           duration: isCelebrating ? 0.9 : isSpeaking ? 2.2 : 4,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/80 via-teal-100/40 to-sky-200/40 shadow-md shadow-slate-900/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
+        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/80 via-teal-100/50 to-teal-200/40 shadow-md shadow-slate-900/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
       >
         <svg
           viewBox="0 0 100 100"
@@ -61,18 +61,20 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Auxilium Favicon Linear/Spherical Gradient: #0D9488 (Teal) to #0284C7 (Blue) */}
-            <linearGradient id="auxiFaviconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0D9488" />
-              <stop offset="100%" stopColor="#0284C7" />
+            {/* Predominant Teal from top-left (75% teal base) with subtle Blue depth bottom-right */}
+            <linearGradient id="auxiTealHeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2dd4bf" />       {/* Bright Teal 400 top-left */}
+              <stop offset="30%" stopColor="#0D9488" />      {/* Primary Auxilium Teal */}
+              <stop offset="70%" stopColor="#0f766e" />      {/* Deep Teal */}
+              <stop offset="100%" stopColor="#0284C7" />     {/* Soft Sky Blue accent only at bottom-right edge */}
             </linearGradient>
 
-            {/* 3D Sphere Highlight Overlay */}
+            {/* 3D Sphere Highlight Overlay for spherical volume */}
             <radialGradient id="auxiSphereShade" cx="36%" cy="30%" r="68%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
               <stop offset="45%" stopColor="#ffffff" stopOpacity="0" />
-              <stop offset="80%" stopColor="#0f172a" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#0f172a" stopOpacity="0.4" />
+              <stop offset="85%" stopColor="#0f172a" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#0f172a" stopOpacity="0.35" />
             </radialGradient>
 
             {/* Top Gloss Arc */}
@@ -82,10 +84,10 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
               <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
 
-            {/* Soft Glowing Cheek Blush */}
+            {/* Soft Glowing Cheek Blush (Mint Glow) */}
             <radialGradient id="auxiDotBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#a5f3fc" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#a5f3fc" stopOpacity="0" />
+              <stop offset="0%" stopColor="#5eead4" stopOpacity="0.65" />
+              <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
             </radialGradient>
 
             {/* Subtle glow filter for the facial light lines */}
@@ -95,8 +97,8 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
             </filter>
           </defs>
 
-          {/* 1. Base 3D Sphere with Favicon Gradient (#0D9488 -> #0284C7) */}
-          <circle cx="50" cy="50" r="48" fill="url(#auxiFaviconGrad)" />
+          {/* 1. Base 3D Sphere with rich Teal from top-left */}
+          <circle cx="50" cy="50" r="48" fill="url(#auxiTealHeroGrad)" />
 
           {/* 2. 3D Spherical Volume Overlay */}
           <circle cx="50" cy="50" r="48" fill="url(#auxiSphereShade)" />
