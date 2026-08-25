@@ -95,7 +95,7 @@ export const PhoneAiUpsellBanner: React.FC<PhoneAiUpsellBannerProps> = ({
               type="button"
               onClick={onReopenWizard}
               className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
-              title="Praxiskalender-Einstellungen mit Auxi anpassen"
+              title="Praxiskalender-Einstellungen mit Auxilia anpassen"
             >
               <Settings size={16} />
             </button>

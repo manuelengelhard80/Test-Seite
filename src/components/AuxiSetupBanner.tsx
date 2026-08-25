@@ -61,7 +61,7 @@ export const AuxiSetupBanner: React.FC<AuxiSetupBannerProps> = ({
             </div>
 
             <h3 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-              Guten Tag! Ich bin Auxi. 💫 Wollen wir Ihren Praxiskalender jetzt einrichten?
+              Guten Tag! Ich bin Auxilia. 💫 Wollen wir Ihren Praxiskalender jetzt einrichten?
             </h3>
 
             <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">
@@ -91,7 +91,7 @@ export const AuxiSetupBanner: React.FC<AuxiSetupBannerProps> = ({
             className="w-full sm:w-auto px-6 py-3 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl font-bold text-xs sm:text-sm shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
           >
             <Play size={15} className="fill-white" />
-            <span>Jetzt mit Auxi einrichten</span>
+            <span>Jetzt mit Auxilia einrichten</span>
             <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>

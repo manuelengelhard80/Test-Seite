@@ -190,7 +190,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
             <AuxiAvatar size="sm" isSpeaking={true} />
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none flex items-center gap-2">
-                <span>Auxi • 5-Minuten Einrichtung</span>
+                <span>Auxilia • 5-Minuten Einrichtung</span>
                 <span className="text-[10px] bg-teal-50 text-teal-800 border border-teal-200/80 font-bold px-2 py-0.5 rounded-full">
                   Auxilium Praxiskalender
                 </span>
@@ -252,7 +252,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
 
               <div className="space-y-2">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Guten Tag! Ich bin Auxi. 💫
+                  Guten Tag! Ich bin Auxilia. 💫
                 </h1>
                 <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
                   Ich richte Ihren <strong className="text-slate-900">Auxilium Praxiskalender</strong> in unter 5 Minuten mit Ihnen ein. Ganz ohne Handbuch, komplizierte IT-Schulungen oder Stress. Wollen wir starten?

@@ -1052,10 +1052,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                  type="button"
                  onClick={() => setShowAuxiWizard(true)}
                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-teal-50 to-sky-50 hover:from-teal-100 hover:to-sky-100 border border-teal-200/80 text-teal-900 text-xs font-bold shadow-2xs transition-all cursor-pointer"
-                 title="Praxiskalender-Einrichtung mit Auxi starten"
+                 title="Praxiskalender-Einrichtung mit Auxilia starten"
                >
                  <AuxiAvatar size="sm" showBadge={false} isSpeaking={true} />
-                 <span className="hidden sm:inline">Auxi Assistentin</span>
+                 <span className="hidden sm:inline">Auxilia Assistentin</span>
                </button>
                
                <button 

@@ -163,7 +163,7 @@ export interface AuxiSpeechBubbleProps {
 }
 
 export const AuxiSpeechBubble: React.FC<AuxiSpeechBubbleProps> = ({
-  title = 'Auxi • Ihre Praxiskalender-Assistentin',
+  title = 'Auxilia • Ihre Praxiskalender-Assistentin',
   message,
   subtext,
   stepIndicator,
