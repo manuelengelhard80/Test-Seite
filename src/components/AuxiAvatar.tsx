@@ -61,12 +61,13 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Perfectly Balanced Teal-to-Blue Linear Gradient (Harmonious 55/45 Blend) */}
+            {/* 60% Teal to 40% Blue Gradient */}
             <linearGradient id="auxiHarmonicGrad" x1="10%" y1="10%" x2="90%" y2="90%">
               <stop offset="0%" stopColor="#14b8a6" />       {/* Fresh Teal top-left */}
               <stop offset="35%" stopColor="#0D9488" />      {/* Auxilium Primary Teal */}
-              <stop offset="65%" stopColor="#0891b2" />      {/* Smooth transition Cyan-Ocean */}
-              <stop offset="100%" stopColor="#0284C7" />     {/* Rich Sky/Ocean Blue bottom-right */}
+              <stop offset="60%" stopColor="#0f766e" />      {/* 60% Teal boundary */}
+              <stop offset="75%" stopColor="#0891b2" />      {/* Cyan transition into blue */}
+              <stop offset="100%" stopColor="#0284C7" />     {/* 40% Rich Sky/Ocean Blue bottom-right */}
             </linearGradient>
 
             {/* 3D Sphere Highlight Overlay for spherical volume */}
