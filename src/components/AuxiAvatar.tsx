@@ -24,18 +24,18 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
 
   return (
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
-      {/* 1. Very subtle, soft ambient glow (smooth, calm breathing - no harsh ping) */}
+      {/* 1. Subtle, soft ambient glow matching Favicon Gradient (Teal #0D9488 to Blue #0284C7) */}
       <motion.div
         animate={{
           scale: isSpeaking ? [1, 1.08, 1] : [1, 1.03, 1],
-          opacity: isSpeaking ? [0.2, 0.35, 0.2] : [0.12, 0.22, 0.12],
+          opacity: isSpeaking ? [0.25, 0.4, 0.25] : [0.15, 0.25, 0.15],
         }}
         transition={{
           repeat: Infinity,
           duration: isSpeaking ? 2.5 : 4.5,
           ease: 'easeInOut',
         }}
-        className={`absolute inset-0 rounded-full bg-[#0D9488]/20 blur-md ${sizeMap[size]}`}
+        className={`absolute inset-0 rounded-full bg-gradient-to-br from-[#0D9488] to-[#0284C7] blur-md ${sizeMap[size]}`}
       />
 
       {/* 2. Main 3D Sphere Container with gentle smooth float motion */}
@@ -52,7 +52,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           duration: isCelebrating ? 0.9 : isSpeaking ? 2.2 : 4,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/80 via-teal-100/40 to-teal-300/30 shadow-md shadow-teal-950/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
+        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/80 via-teal-100/40 to-sky-200/40 shadow-md shadow-slate-900/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
       >
         <svg
           viewBox="0 0 100 100"
@@ -61,25 +61,31 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Auxilium Logo Dot Sphere Radial Gradient (#0D9488 Hero) */}
-            <radialGradient id="auxiLogoDotSphere" cx="38%" cy="32%" r="65%">
-              <stop offset="0%" stopColor="#2dd4bf" />       {/* Teal 400 highlight sheen */}
-              <stop offset="35%" stopColor="#0D9488" />      {/* Auxilium Logo Dot #0D9488 */}
-              <stop offset="80%" stopColor="#0f766e" />      {/* Teal 700 depth */}
-              <stop offset="100%" stopColor="#115e59" />     {/* Teal 800 shadow edge */}
+            {/* Auxilium Favicon Linear/Spherical Gradient: #0D9488 (Teal) to #0284C7 (Blue) */}
+            <linearGradient id="auxiFaviconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0D9488" />
+              <stop offset="100%" stopColor="#0284C7" />
+            </linearGradient>
+
+            {/* 3D Sphere Highlight Overlay */}
+            <radialGradient id="auxiSphereShade" cx="36%" cy="30%" r="68%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+              <stop offset="45%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="80%" stopColor="#0f172a" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#0f172a" stopOpacity="0.4" />
             </radialGradient>
 
             {/* Top Gloss Arc */}
             <linearGradient id="auxiSphereGloss" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
               <stop offset="40%" stopColor="#ffffff" stopOpacity="0.1" />
               <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
 
-            {/* Soft Glowing Mint Cheek Blush */}
+            {/* Soft Glowing Cheek Blush */}
             <radialGradient id="auxiDotBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#5eead4" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
+              <stop offset="0%" stopColor="#a5f3fc" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#a5f3fc" stopOpacity="0" />
             </radialGradient>
 
             {/* Subtle glow filter for the facial light lines */}
@@ -89,20 +95,23 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
             </filter>
           </defs>
 
-          {/* 1. Base 3D Sphere in Auxilium Logo Dot Color */}
-          <circle cx="50" cy="50" r="48" fill="url(#auxiLogoDotSphere)" />
+          {/* 1. Base 3D Sphere with Favicon Gradient (#0D9488 -> #0284C7) */}
+          <circle cx="50" cy="50" r="48" fill="url(#auxiFaviconGrad)" />
 
-          {/* 2. Top Specular Glass Reflection */}
+          {/* 2. 3D Spherical Volume Overlay */}
+          <circle cx="50" cy="50" r="48" fill="url(#auxiSphereShade)" />
+
+          {/* 3. Top Specular Glass Reflection */}
           <path
             d="M 14 38 C 20 18, 80 18, 86 38 C 70 25, 30 25, 14 38 Z"
             fill="url(#auxiSphereGloss)"
           />
 
-          {/* 3. Delicate Glowing Cheeks (Blush) */}
+          {/* 4. Delicate Glowing Cheeks (Blush) */}
           <circle cx="28" cy="59" r="6.5" fill="url(#auxiDotBlush)" />
           <circle cx="72" cy="59" r="6.5" fill="url(#auxiDotBlush)" />
 
-          {/* 4. Harmonious Curved Eye Arcs (^ ^) - Balanced pleasant thickness (3.4px) */}
+          {/* 5. Harmonious Curved Eye Arcs (^ ^) */}
           {/* Left Eye Arc */}
           <path
             d="M 29 50 C 33.5 38, 42.5 38, 47 50"
@@ -122,7 +131,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
             filter="url(#eyeGlow)"
           />
 
-          {/* 5. Cute Subtle Smile Arc (2.8px) */}
+          {/* 6. Cute Subtle Smile Arc */}
           <path
             d="M 46.5 58.5 C 48.5 63, 51.5 63, 53.5 58.5"
             stroke="#ffffff"
@@ -184,7 +193,7 @@ export const AuxiSpeechBubble: React.FC<AuxiSpeechBubbleProps> = ({
           <div className="flex items-center justify-between flex-wrap gap-2">
             <h4 className="text-xs font-bold text-teal-950 flex items-center gap-1.5">
               <span>{title}</span>
-              <span className="inline-block w-2 h-2 rounded-full bg-[#0D9488]" />
+              <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-[#0D9488] to-[#0284C7]" />
             </h4>
             {stepIndicator && (
               <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
