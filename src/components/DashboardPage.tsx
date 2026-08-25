@@ -1087,9 +1087,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                   {!hasCompletedWizard ? (
                     <AuxiSetupBanner 
                       onStartSetup={() => setShowAuxiWizard(true)}
-                      onSkip={() => {
+                      onDismiss={() => {
                         setHasCompletedWizard(true);
-                        localStorage.setItem('auxi_calendar_onboarded', 'true');
+                        try {
+                          localStorage.setItem('auxi_calendar_onboarded', 'true');
+                        } catch (e) {
+                          console.error(e);
+                        }
                       }}
                     />
                   ) : (

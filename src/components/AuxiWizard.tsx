@@ -22,7 +22,8 @@ import {
   Bot,
   HelpCircle,
   Clock,
-  Layers
+  Layers,
+  X
 } from 'lucide-react';
 import { AuxiAvatar, AuxiSpeechBubble } from './AuxiAvatar';
 import { Doctor, ServiceType, Resource, DOCTOR_COLOR_PALETTE } from '../types/calendar';
@@ -189,7 +190,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
             <AuxiAvatar size="sm" isSpeaking={true} />
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none flex items-center gap-2">
-                <span>Auxi • 4-Minuten Einrichtung</span>
+                <span>Auxi • 5-Minuten Einrichtung</span>
                 <span className="text-[10px] bg-teal-100 text-teal-900 font-bold px-2 py-0.5 rounded-full">
                   Auxilium Praxiskalender
                 </span>
@@ -200,22 +201,37 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
             </div>
           </div>
 
-          {/* Progress Indicator */}
-          {currentStep > 0 && (
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-              <span>Schritt {currentStep} von 5</span>
-              <div className="flex gap-1 ml-1.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <div
-                    key={s}
-                    className={`w-2.5 h-2.5 rounded-full transition-all ${
-                      currentStep >= s ? 'bg-[#0D9488]' : 'bg-slate-200'
-                    }`}
-                  />
-                ))}
+          <div className="flex items-center gap-3">
+            {/* Progress Indicator */}
+            {currentStep > 0 && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+                <span>Schritt {currentStep} von 5</span>
+                <div className="flex gap-1 ml-1.5">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <div
+                      key={s}
+                      className={`w-2.5 h-2.5 rounded-full transition-all ${
+                        currentStep >= s ? 'bg-[#0D9488]' : 'bg-slate-200'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Top Right Close (X) Button */}
+            {onCancel && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/70 transition-colors cursor-pointer"
+                title="Schließen"
+                aria-label="Schließen"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Body Area */}
@@ -239,7 +255,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
                   Guten Tag! Ich bin Auxi. 💫
                 </h1>
                 <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                  Ich richte Ihren <strong className="text-slate-900">Auxilium Praxiskalender</strong> in unter 4 Minuten mit Ihnen ein. Ganz ohne Handbuch, komplizierte IT-Schulungen oder Stress. Wollen wir starten?
+                  Ich richte Ihren <strong className="text-slate-900">Auxilium Praxiskalender</strong> in unter 5 Minuten mit Ihnen ein. Ganz ohne Handbuch, komplizierte IT-Schulungen oder Stress. Wollen wir starten?
                 </p>
               </div>
 
