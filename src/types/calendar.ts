@@ -115,6 +115,7 @@ export interface ServiceType {
   id: string;
   name: string;
   durationMinutes: number;
+  requiredResourceId?: string;
 }
 
 export interface Resource {

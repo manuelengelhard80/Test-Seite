@@ -33,6 +33,9 @@ import {
 } from 'lucide-react';
 import { Doctor, ServiceType, Resource, CalendarEvent, DOCTOR_COLOR_PALETTE, DoctorColorOption } from '../types/calendar';
 import { BookingWidgetConfigurator } from './BookingWidgetConfigurator';
+import { AuxiWizard, OnboardingData } from './AuxiWizard';
+import { PhoneAiUpsellBanner } from './PhoneAiUpsellBanner';
+import { AuxiAvatar } from './AuxiAvatar';
 
 interface DashboardPageProps {
   onLogout: () => void;
@@ -175,6 +178,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
   // Google Integration
   const [isGoogleConnected, setIsGoogleConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // Auxi Onboarding Wizard State
+  const [showAuxiWizard, setShowAuxiWizard] = useState(false);
+  const [practiceName, setPracticeName] = useState('Gemeinschaftspraxis am Marktplatz');
+  const [practiceSubtitle, setPracticeSubtitle] = useState('Ihr vertrauensvolles Praxisteam für ganzheitliche Medizin');
+  const [primaryBrandColor, setPrimaryBrandColor] = useState('#0D9488');
+  const [hasCompletedWizard, setHasCompletedWizard] = useState(true);
 
   // Time Slots (08:00 - 18:00)
   const timeSlots = Array.from({ length: 11 }, (_, i) => i + 8); 
@@ -689,7 +699,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-[#0D9488]"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0D9488] shadow-sm"></span>
                </span>
-               <span className="font-extrabold text-[#0D9488] text-xl leading-none">Auxilium Assist</span>
+               <span className="font-extrabold text-gradient bg-gradient-to-r from-[#0D9488] to-[#0284C7] bg-clip-text text-transparent text-xl leading-none">Auxilium Assist</span>
              </div>
              <span className="text-[11px] text-slate-500 mt-1 font-semibold tracking-wide pl-4">Praxiskalender</span>
            </div>
@@ -1035,6 +1045,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
             
             <div className="flex items-center gap-2">
+               <button
+                 type="button"
+                 onClick={() => setShowAuxiWizard(true)}
+                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-teal-50 to-sky-50 hover:from-teal-100 hover:to-sky-100 border border-teal-200/80 text-teal-900 text-xs font-bold shadow-2xs transition-all cursor-pointer"
+                 title="Praxiskalender-Einrichtung mit Auxi starten"
+               >
+                 <AuxiAvatar size="sm" showBadge={false} isSpeaking={true} />
+                 <span className="hidden sm:inline">Auxi Assistentin</span>
+               </button>
+               
                <button 
                  onClick={() => setActiveTab('team')}
                  className="p-2 hover:bg-slate-100 rounded-xl text-slate-500 hover:text-[#0284C7] transition-colors cursor-pointer"
@@ -1058,6 +1078,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
           ) : activeTab === 'calendar' && (
              <div className="h-full flex flex-col overflow-hidden">
+                
+                {/* Phone AI Upsell Banner (2026 Vertriebs-Integration) */}
+                <div className="px-4 pt-2 shrink-0">
+                  <PhoneAiUpsellBanner practiceName={practiceName} />
+                </div>
                 
                 {/* 1. TAG (DAY) VIEW */}
                 {viewMode === 'day' && (
@@ -2254,6 +2279,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Auxi 4-Minuten Onboarding Wizard Modal */}
+      {showAuxiWizard && (
+        <AuxiWizard
+          initialDoctors={doctors}
+          initialResources={resources}
+          initialServices={serviceTypes}
+          onCancel={() => setShowAuxiWizard(false)}
+          onComplete={(data: OnboardingData) => {
+            setDoctors(data.doctors);
+            setSelectedDoctors(data.doctors.map(d => d.id));
+            setResources(data.resources);
+            setServiceTypes(data.serviceTypes);
+            setPracticeName(data.practiceName);
+            setPracticeSubtitle(data.practiceSubtitle);
+            setPrimaryBrandColor(data.primaryColor);
+            setShowAuxiWizard(false);
+            setHasCompletedWizard(true);
+          }}
+        />
       )}
 
     </div>
