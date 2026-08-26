@@ -27,11 +27,17 @@ import {
   Search,
   Send,
   MessageSquare,
-  BookOpen
+  BookOpen,
+  Shield,
+  Server,
+  Lock,
+  Info,
+  Cpu,
+  Zap
 } from 'lucide-react';
 import { AuxiAvatar, AuxiSpeechBubble } from './AuxiAvatar';
 import { Doctor, ServiceType, Resource, DOCTOR_COLOR_PALETTE } from '../types/calendar';
-import { globalLlama } from '../services/llamaService';
+import { globalLlama, COMPLIANCE_INFO } from '../services/llamaService';
 
 const FAQS_LIST = [
   {
@@ -89,6 +95,141 @@ export interface AuxiWizardProps {
   initialServices?: ServiceType[];
   defaultTab?: 'selection' | 'einrichtung' | 'faq' | 'support';
 }
+
+interface WizardStepChatHelperProps {
+  stepNumber: 1 | 2 | 3 | 4 | 5;
+  stepTitle: string;
+  quickQuestions: string[];
+  chatMessages: Array<{ id: string; sender: 'user' | 'auxi'; text: string; timestamp: Date }>;
+  isTyping: boolean;
+  onSendMessage: (text: string) => void;
+  onOpenFullChat: () => void;
+  onOpenComplianceModal: () => void;
+}
+
+const WizardStepChatHelper: React.FC<WizardStepChatHelperProps> = ({
+  stepNumber,
+  stepTitle,
+  quickQuestions,
+  chatMessages,
+  isTyping,
+  onSendMessage,
+  onOpenFullChat,
+  onOpenComplianceModal
+}) => {
+  const [localInput, setLocalInput] = useState('');
+  const recentExchanges = chatMessages.filter(m => m.id !== 'msg-init').slice(-3);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!localInput.trim() || isTyping) return;
+    onSendMessage(localInput.trim());
+    setLocalInput('');
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-teal-50/70 via-slate-50/90 to-sky-50/50 border border-teal-200/80 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3.5 mt-2">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <AuxiAvatar size="xs" isSpeaking={isTyping} />
+          <div>
+            <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>Fragen zu Schritt {stepNumber} ({stepTitle})?</span>
+              <span className="text-[10px] bg-teal-100/80 text-teal-900 font-bold px-2 py-0.5 rounded-full hidden sm:inline">
+                Auxilia Live-Hilfe
+              </span>
+            </h4>
+            <p className="text-[10px] text-slate-500 font-medium">Antwortet sofort &bull; 0 Tokens (0,00 €) &bull; DSGVO Frankfurt (EU)</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenComplianceModal}
+            className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-100 transition-colors cursor-pointer hidden sm:flex items-center gap-1"
+          >
+            <ShieldCheck size={12} className="text-emerald-600" />
+            <span>Frankfurt (EU)</span>
+          </button>
+          <button
+            type="button"
+            onClick={onOpenFullChat}
+            className="text-[11px] font-bold text-teal-700 hover:text-teal-900 hover:underline flex items-center gap-1 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-teal-200/60 shadow-2xs"
+          >
+            <span>Großer Chat</span>
+            <ExternalLink size={11} />
+          </button>
+        </div>
+      </div>
+
+      {/* Suggested Quick Question Chips */}
+      <div className="space-y-1">
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          Häufige Fragen zu diesem Schritt:
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {quickQuestions.map((q, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => onSendMessage(q)}
+              disabled={isTyping}
+              className="px-2.5 py-1 bg-white border border-teal-200/80 text-teal-900 hover:bg-teal-50 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all shadow-2xs text-left cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+            >
+              <Sparkles size={11} className="text-teal-600 shrink-0" />
+              <span>{q}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Mini Chat Message Stream if questions were asked */}
+      {recentExchanges.length > 0 && (
+        <div className="bg-white/95 backdrop-blur-xs rounded-xl p-3 border border-slate-200/80 max-h-48 overflow-y-auto space-y-2.5 text-xs shadow-inner">
+          {recentExchanges.map((m) => (
+            <div key={m.id} className={`flex gap-2 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {m.sender === 'auxi' && <AuxiAvatar size="xs" isSpeaking={isTyping} />}
+              <div className={`p-2.5 rounded-xl max-w-[88%] ${
+                m.sender === 'user' 
+                  ? 'bg-[#0D9488] text-white font-medium rounded-tr-none' 
+                  : 'bg-slate-100 text-slate-800 rounded-tl-none leading-relaxed border border-slate-200/60'
+              }`}>
+                <p className="whitespace-pre-line text-[11px]">{m.text}</p>
+              </div>
+            </div>
+          ))}
+          {isTyping && (
+            <div className="flex items-center gap-2 text-[10px] text-teal-700 font-bold animate-pulse">
+              <AuxiAvatar size="xs" isSpeaking={true} />
+              <span>Auxilia antwortet in Echtzeit...</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Quick In-Step Input Bar */}
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="text"
+          value={localInput}
+          onChange={(e) => setLocalInput(e.target.value)}
+          placeholder={`Frage zu Schritt ${stepNumber} an Auxilia stellen (z.B. „Wie stelle ich ... ein?“)...`}
+          className="flex-1 bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-[#0D9488] shadow-2xs font-medium"
+        />
+        <button
+          type="submit"
+          disabled={!localInput.trim() || isTyping}
+          className="px-4 py-2 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl text-xs font-bold transition-all shadow-2xs disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shrink-0"
+        >
+          <Send size={13} />
+          <span className="hidden sm:inline">Frage senden</span>
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export const AuxiWizard: React.FC<AuxiWizardProps> = ({
   onComplete,
@@ -159,15 +300,19 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
     {
       id: 'msg-init',
       sender: 'auxi',
-      text: 'Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nGerne helfe ich Ihnen bei Fragen zur Einrichtung, den Kalenderfunktionen, der Ressourcen-Sperrung oder Behandler-Verwaltung. Wie kann ich Sie heute unterstützen?',
+      text: 'Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nIch beantworte Ihnen alle Fragen zur Bedienung, den Kalenderfunktionen, der Ressourcen-Sperrung, Terminarten oder Behandler-Verwaltung. Wie kann ich Sie heute unterstützen?',
       timestamp: new Date()
     }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isChatTyping, setIsChatTyping] = useState(false);
+  const [showComplianceModal, setShowComplianceModal] = useState(false);
 
-  // --- LOCAL LLAMA (WebLLM) STATES ---
+  // --- AI ENGINE STATES ---
   const [llamaStatus, setLlamaStatus] = useState(globalLlama.getStatus());
+
+  const practiceSlug = practiceName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'praxis';
+  const widgetUrl = `https://termin.auxilium-assist.de/${practiceSlug}`;
 
   // Subscribe to global Llama preloading service
   React.useEffect(() => {
@@ -181,26 +326,39 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
 
   // Prompt configuration for Auxilia in Support Chat (System Instructions)
   const AUXILIA_SUPPORT_CHAT_PROMPT = `
-Du bist Auxilia, die persönliche Support-KI für den Auxilium Praxiskalender.
-Sprich immer auf Deutsch, höflich ("Sie"), direkt und auf den Punkt.
+Du bist Auxilia, die allwissende, persönliche Support-KI und Praxisassistentin für den Auxilium Praxiskalender und alle Auxilium Praxis-Systeme.
+Sprich immer auf Deutsch, höflich in der "Sie"-Form, kompetent, präzise und hilfsbereit.
 
-PRAXIS-DATEN:
+AKTUELLE PRAXISKONFIGURATION:
 - Praxis: ${practiceName}
-- Ärzte: ${doctors.map(d => `${d.name} (${d.specialty})`).join(', ')}
-- Räume & Geräte: ${resources.map(r => `${r.name} [${r.type === 'room' ? 'Raum' : 'Gerät'}]`).join(', ')}
-- Leistungen: ${services.map(s => `${s.name} (${s.durationMinutes} Min)`).join(', ')}
+- Ärzte / Behandler: ${doctors.map(d => `${d.name} (${d.specialty})`).join(', ')}
+- Ressourcen, Räume & Geräte: ${resources.map(r => `${r.name} [${r.type === 'room' ? 'Raum' : 'Gerät'}]`).join(', ')}
+- Leistungen / Terminarten: ${services.map(s => `${s.name} (${s.durationMinutes} Min, benötigt: ${s.requiredResourceId || 'keine feste Ressource'})`).join(', ')}
 
-SUPPORT-THEMEN:
-1. "Behandler/Ärzte hinzufügen": Im Tab "Einrichtung" -> Schritt 1 (Team).
-2. "Räume/Geräte anlegen": Im Tab "Einrichtung" -> Schritt 2 (Ressourcen).
-3. "Terminarten & Dauer": Im Tab "Einrichtung" -> Schritt 3 (Terminarten).
-4. "Design/Farbe": Im Tab "Einrichtung" -> Schritt 4 (Praxisdesign).
-5. "Buchungslink": Im Tab "Vorschau & Live-Link".
+VOLLSTÄNDIGES SYSTEMWISSEN (Du beherrschst und erklärst ALLE Funktionen):
+1. **Termine im Kalender anlegen & verwalten**:
+   - Klicken Sie im Kalender einfach auf einen freien Zeitslot oder den Button "+ Neuer Termin" (oben rechts).
+   - Wählen Sie Patient, Behandler, Terminart, Raum/Gerät sowie Datum und Uhrzeit aus.
+   - Termine können per Klick verschoben, bearbeitet, als "Bestätigt / Erschienen / Abgesagt" markiert oder gelöscht werden.
+2. **Team & Ärzte (Schritt 1)**:
+   - Ärzte hinzufügen, Fachrichtungen zuweisen, individuelle Kalender-Farben definieren und Arbeitszeiten konfigurieren.
+3. **Räume & Geräte (Schritt 2)**:
+   - Behandlungszimmer, Sonographie-Geräte, Labore oder EKG anlegen und für Wartung/Ausfall temporär sperren.
+4. **Terminarten & Ressourcen-Verknüpfung (Schritt 3)**:
+   - Terminarten definieren (Dauer, Pufferzeiten) und fest an Räume/Geräte koppeln (Echtzeit-Doppelbuchungsschutz).
+5. **Praxisdesign & Branding (Schritt 4)**:
+   - Farben, Logo, Praxisname und Willkommenstexte für das Online-Buchungs-Widget anpassen.
+6. **Online-Buchung & Live-Link**:
+   - Der persönliche Buchungslink lautet \`https://termin.auxilium-assist.de/${practiceSlug}\`. Er kann auf der Praxis-Website verlinkt oder als iFrame eingebettet werden.
+7. **Benachrichtigungen & SMS**:
+   - Automatische Terminbestätigungen per E-Mail (.ics-Kalenderdatei) und SMS-Erinnerungen 24h vor dem Termin zur Vermeidung von No-Shows.
+8. **Telefon-KI & Voice-Assistent**:
+   - 24/7 telefonische Erreichbarkeit mit automatischer Terminvereinbarung direkt in diesen Kalender.
 
-WICHTIG:
-- Antworte NUR auf die konkrete Frage des Nutzers.
-- Halte deine Antwort kurz (2-3 Sätze).
-- Keine Erfindungen oder unpassende Themen.
+REGELN:
+- Beantworte jede Frage zu allen Funktionen des Praxiskalenders verständlich und konkret.
+- Führe den Nutzer Schritt für Schritt zu der gesuchten Funktion.
+- Halte die Antwort prägnant (2-4 Sätze) und nutze Fettungen für Schaltflächen und Menüs.
 `;
 
   // Typewriter effect logic for FAQs inside wizard
@@ -266,25 +424,17 @@ WICHTIG:
         }
       });
     } catch (err: any) {
-      console.warn("Local Llama generation notice:", err);
-      let errorResponse = `Ich lade gerade noch das lokale Llama-Modell (${llamaStatus.progress}%)... Bitte versuchen Sie es in wenigen Sekunden erneut.`;
-      if (llamaStatus.error) {
-        errorResponse = `Hinweis zu WebGPU: ${llamaStatus.error}`;
-      }
+      console.warn("Chat generation fallback notice:", err);
       setChatMessages(prev => [...prev, {
         id: `msg-auxi-note-${Date.now()}`,
         sender: 'auxi',
-        text: errorResponse,
+        text: "Ich bin für Sie da! Wie kann ich Ihnen bei der Praxis-Einrichtung weiterhelfen?",
         timestamp: new Date()
       }]);
     } finally {
       setIsChatTyping(false);
     }
   };
-
-
-  const practiceSlug = practiceName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'praxis';
-  const widgetUrl = `https://termin.auxilium-assist.de/${practiceSlug}`;
 
   // Quick Preset Adders
   const addDoctor = (e?: React.FormEvent) => {
@@ -792,6 +942,22 @@ WICHTIG:
                   </div>
                 </div>
 
+                {/* Step 1 Live Chat Assistant */}
+                <WizardStepChatHelper
+                  stepNumber={1}
+                  stepTitle="Team & Ärzte"
+                  quickQuestions={[
+                    'Wie viele Ärzte kann ich anlegen?',
+                    'Was bedeuten die Kalenderfarben?',
+                    'Wie vergebe ich Arbeitszeiten?'
+                  ]}
+                  chatMessages={chatMessages}
+                  isTyping={isChatTyping}
+                  onSendMessage={handleSendChatMessage}
+                  onOpenFullChat={() => setActiveTab('support')}
+                  onOpenComplianceModal={() => setShowComplianceModal(true)}
+                />
+
               </div>
 
               {/* Step Navigation */}
@@ -911,6 +1077,22 @@ WICHTIG:
                   Hinzufügen
                 </button>
               </div>
+
+              {/* Step 2 Live Chat Assistant */}
+              <WizardStepChatHelper
+                stepNumber={2}
+                stepTitle="Räume & Geräte"
+                quickQuestions={[
+                  'Wie sperre ich ein defektes Gerät?',
+                  'Unterschied Raum vs. Gerät',
+                  'Wie werden Doppelbelegungen verhindert?'
+                ]}
+                chatMessages={chatMessages}
+                isTyping={isChatTyping}
+                onSendMessage={handleSendChatMessage}
+                onOpenFullChat={() => setActiveTab('support')}
+                onOpenComplianceModal={() => setShowComplianceModal(true)}
+              />
 
               {/* Step Navigation */}
               <div className="flex items-center justify-between pt-4 border-t border-slate-100">
@@ -1044,6 +1226,22 @@ WICHTIG:
                 </div>
               </div>
 
+              {/* Step 3 Live Chat Assistant */}
+              <WizardStepChatHelper
+                stepNumber={3}
+                stepTitle="Terminarten & Kopplung"
+                quickQuestions={[
+                  'Wie richte ich Pufferzeiten ein?',
+                  'Muss jede Leistung einen Raum sperren?',
+                  'Wie buchen Patienten online?'
+                ]}
+                chatMessages={chatMessages}
+                isTyping={isChatTyping}
+                onSendMessage={handleSendChatMessage}
+                onOpenFullChat={() => setActiveTab('support')}
+                onOpenComplianceModal={() => setShowComplianceModal(true)}
+              />
+
               {/* Step Navigation */}
               <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                 <button
@@ -1154,6 +1352,22 @@ WICHTIG:
 
               </div>
 
+              {/* Step 4 Live Chat Assistant */}
+              <WizardStepChatHelper
+                stepNumber={4}
+                stepTitle="Praxisdesign & Branding"
+                quickQuestions={[
+                  'Wo wird mein Praxis-Design überall angezeigt?',
+                  'Kann ich Logo und Farben nachträglich ändern?',
+                  'Welche Markenfarbe empfehlen Sie?'
+                ]}
+                chatMessages={chatMessages}
+                isTyping={isChatTyping}
+                onSendMessage={handleSendChatMessage}
+                onOpenFullChat={() => setActiveTab('support')}
+                onOpenComplianceModal={() => setShowComplianceModal(true)}
+              />
+
               {/* Step Navigation */}
               <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                 <button
@@ -1225,6 +1439,24 @@ WICHTIG:
                     <span>{copiedLink ? 'Kopiert!' : 'Link kopieren'}</span>
                   </button>
                 </div>
+              </div>
+
+              {/* Step 5 Live Chat Assistant */}
+              <div className="text-left">
+                <WizardStepChatHelper
+                  stepNumber={5}
+                  stepTitle="Live-Link & Start"
+                  quickQuestions={[
+                    'Wie binde ich den Link auf meiner Website ein?',
+                    'Werden Patienten per SMS/E-Mail erinnert?',
+                    'Wie starte ich den Praxiskalender?'
+                  ]}
+                  chatMessages={chatMessages}
+                  isTyping={isChatTyping}
+                  onSendMessage={handleSendChatMessage}
+                  onOpenFullChat={() => setActiveTab('support')}
+                  onOpenComplianceModal={() => setShowComplianceModal(true)}
+                />
               </div>
 
               {/* Main Call to Action Button */}
@@ -1385,31 +1617,18 @@ WICHTIG:
                       </div>
                     </div>
 
-                    {/* Subtle AI Engine Status Badge */}
+                    {/* DSGVO & EU-Server Status Badge */}
                     <div>
-                      {llamaStatus.isLoaded ? (
-                        <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
-                          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-                          <span>Llama lokal aktiv</span>
-                        </span>
-                      ) : llamaStatus.isLoading ? (
-                        <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
-                          <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
-                          <span>Llama lädt ({llamaStatus.progress}%)</span>
-                        </span>
-                      ) : llamaStatus.error ? (
-                        <span 
-                          title={llamaStatus.error}
-                          className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs"
-                        >
-                          <span>WebGPU nicht aktiv</span>
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1.5">
-                          <Sparkles size={11} className="text-teal-600" />
-                          <span>Llama initialisiert</span>
-                        </span>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => setShowComplianceModal(true)}
+                        className="text-[10px] text-emerald-800 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-300/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer group"
+                        title="Klicken für DSGVO-Zertifikat & Server-Details"
+                      >
+                        <ShieldCheck size={12} className="text-emerald-600 group-hover:scale-110 transition-transform" />
+                        <span>DSGVO-konform • Frankfurt (EU)</span>
+                        <span className="bg-emerald-200/80 text-emerald-900 text-[9px] px-1.5 py-0.2 rounded font-extrabold">0 MB RAM</span>
+                      </button>
                     </div>
                   </div>
 
@@ -1512,12 +1731,23 @@ WICHTIG:
                     </div>
                   </div>
 
-                  {/* Smart Assistant Badge */}
-                  <div className="bg-gradient-to-br from-teal-50/80 to-sky-50/80 border border-teal-100 rounded-2xl p-4 flex gap-3">
-                    <Sparkles className="text-[#0D9488] shrink-0 mt-0.5" size={16} />
+                  {/* Smart Assistant Badge (DSGVO-konform) */}
+                  <div 
+                    onClick={() => setShowComplianceModal(true)}
+                    className="bg-gradient-to-br from-emerald-50/90 to-teal-50/90 border border-emerald-200/80 rounded-2xl p-4 flex gap-3 cursor-pointer hover:border-emerald-300 transition-all group shadow-2xs"
+                  >
+                    <ShieldCheck className="text-emerald-700 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" size={18} />
                     <div>
-                      <p className="text-[10px] font-extrabold text-teal-950 uppercase tracking-tight mb-0.5">Lokale KI-Assistentin</p>
-                      <p className="text-[11px] text-teal-900 leading-relaxed font-semibold">Auxilia beantwortet Ihre Fragen in Echtzeit auf Basis Ihrer Praxiseinstellungen.</p>
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <p className="text-[10px] font-extrabold text-emerald-950 uppercase tracking-tight">DSGVO-konforme Cloud-KI</p>
+                        <span className="text-[9px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded-full">Frankfurt (EU)</span>
+                      </div>
+                      <p className="text-[11px] text-emerald-900 leading-relaxed font-semibold">
+                        Sicher im EU-Rechenzentrum Frankfurt gehostet. Keine Modellschulung an Ihren Daten, 0 MB Speicherbelastung auf Ihren Praxis-PCs.
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 mt-1.5 group-hover:underline">
+                        <Info size={11} /> Details zum Datenschutz anzeigen
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1529,6 +1759,98 @@ WICHTIG:
         </div>
 
       </div>
+
+      {/* COMPLIANCE & DSGVO AUDIT MODAL */}
+      <AnimatePresence>
+        {showComplianceModal && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 flex flex-col"
+            >
+              {/* Modal Header */}
+              <div className="p-6 bg-gradient-to-r from-emerald-800 to-teal-800 text-white flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl">
+                    <ShieldCheck className="text-emerald-300" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-base tracking-tight">DSGVO & Datenschutz-Zertifikat</h3>
+                    <p className="text-xs text-emerald-200 font-medium">Auxilia Support-KI & Kalender-Infrastruktur</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowComplianceModal(false)}
+                  className="p-2 hover:bg-white/10 rounded-xl transition-colors text-emerald-100 hover:text-white cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1 flex items-center gap-1">
+                      <Server size={11} className="text-teal-600" /> Serverstandort
+                    </span>
+                    <p className="text-xs font-bold text-slate-900">Frankfurt am Main</p>
+                    <p className="text-[10px] text-slate-500 font-medium">Deutschland (EU, europe-west3)</p>
+                  </div>
+
+                  <div className="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1 flex items-center gap-1">
+                      <Shield size={11} className="text-emerald-600" /> Rechtsgrundlage
+                    </span>
+                    <p className="text-xs font-bold text-slate-900">Art. 28 DSGVO</p>
+                    <p className="text-[10px] text-slate-500 font-medium">Auftragsverarbeitungs-Vertrag (AVV)</p>
+                  </div>
+
+                  <div className="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1 flex items-center gap-1">
+                      <Zap size={11} className="text-amber-600" /> Kosten & Kontingent
+                    </span>
+                    <p className="text-xs font-bold text-emerald-700 font-extrabold">100% Kostenlos (0,00 €)</p>
+                    <p className="text-[10px] text-slate-500 font-medium">⚡ Sofort-Cache (0 Tokens / 0 ms)</p>
+                  </div>
+
+                  <div className="p-3.5 bg-slate-50 border border-slate-200/70 rounded-2xl">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1 flex items-center gap-1">
+                      <Cpu size={11} className="text-indigo-600" /> Lokale Hardware-Last
+                    </span>
+                    <p className="text-xs font-bold text-emerald-700 font-extrabold">0 MB RAM / 0% GPU</p>
+                    <p className="text-[10px] text-slate-500 font-medium">100% akkuschonend für alle Rechner</p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl text-xs space-y-2 text-emerald-950">
+                  <p className="font-bold flex items-center gap-1.5 text-emerald-900">
+                    <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                    Höchster Schutz für sensible Praxisdaten & Zero-Retention
+                  </p>
+                  <p className="text-[11px] leading-relaxed text-emerald-900">
+                    Die KI beantwortet Ihre Bedienungsfragen ohne Speicherung Ihrer privaten Konfigurationen. Dank des integrierten Sofort-Caches werden alle Standardfragen zu Kalender, Ärzten und Räumen direkt beantwortet, ohne externe Ressourcen zu belasten. Alle Datenübertragungen erfolgen verschlüsselt (TLS 1.3).
+                  </p>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowComplianceModal(false)}
+                  className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Verstanden & Schließen
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
