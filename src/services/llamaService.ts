@@ -107,7 +107,7 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
   {
     keywords: ["hallo", "guten tag", "servus", "moin", "hi", "hey", "wer bist du"],
     generateAnswer: () =>
-      `Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nIch helfe Ihnen bei allen Schritten der Praxiseinrichtung, Behandlerverwaltung, Terminvergabe und Website-Einbindung. Worüber möchten Sie mehr erfahren?`
+      `Hallo! Ich bin Auxilia, Ihre persönliche KI-Assistentin für den Praxiskalender. 💫\n\nIch helfe Ihnen bei allen Schritten der Kalendereinrichtung, Behandlerverwaltung, Ressourcen-Sperrung, Terminvergabe und Website-Einbindung. Worüber möchten Sie mehr erfahren?`
   },
   {
     keywords: ["hilfe", "anleitung", "was kann ich tun", "wie geht das", "funktionen", "übersicht"],
@@ -190,23 +190,17 @@ class AIManager {
     try {
       const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')?.content || '';
       
-      // 1. FAST INSTANT CACHE CHECK (0 Tokens, 0ms, 100% Free)
-      const instantAnswer = this.matchInstantCache(lastUserMsg);
-      if (instantAnswer) {
-        const words = instantAnswer.split(' ');
-        let currentText = '';
-        for (let i = 0; i < words.length; i++) {
-          currentText += (i === 0 ? '' : ' ') + words[i];
-          onChunk(currentText);
-          if (words.length > 10 && i < words.length - 1 && i % 4 === 0) {
-            await new Promise(r => setTimeout(r, 12));
-          }
-        }
-        onChunk(instantAnswer);
-        return instantAnswer;
+      // Check session cache for exact repeated identical queries in this browser session
+      const cleanKey = lastUserMsg.trim().toLowerCase();
+      if (cleanKey && this.sessionCache.has(cleanKey)) {
+        const cached = this.sessionCache.get(cleanKey)!;
+        onChunk(cached);
+        this.isLoading = false;
+        this.notify();
+        return cached;
       }
 
-      // 2. SERVER-SIDE CLOUD INFERENCE WITH CACHE (Frankfurt am Main, DSGVO)
+      // Dynamic Gemini AI inference (Server-side, DSGVO EU Frankfurt)
       const systemPrompt = messages.find(m => m.role === 'system')?.content;
       const conversationMessages = messages.filter(m => m.role !== 'system');
 
@@ -225,33 +219,34 @@ class AIManager {
       }
 
       const data = await res.json();
-      const answer = data.answer || "Ich bin für Sie da! Wie kann ich Ihnen bei der Praxis-Einrichtung helfen?";
+      const answer = data.answer || "Hallo! Ich bin für Sie da. Wie kann ich Sie unterstützen?";
 
       // Save into session cache
-      if (lastUserMsg.trim()) {
-        this.sessionCache.set(lastUserMsg.toLowerCase().trim(), answer);
+      if (cleanKey && answer) {
+        this.sessionCache.set(cleanKey, answer);
       }
 
-      // Fluid typewriter streaming
+      // Fluid typewriter streaming effect for pleasant, real-time feel
       const words = answer.split(' ');
       let currentText = '';
       for (let i = 0; i < words.length; i++) {
         currentText += (i === 0 ? '' : ' ') + words[i];
         onChunk(currentText);
-        if (words.length > 20 && i < words.length - 1 && i % 3 === 0) {
-          await new Promise(r => setTimeout(r, 15));
+        if (words.length > 15 && i < words.length - 1 && i % 3 === 0) {
+          await new Promise(r => setTimeout(r, 12));
         }
       }
       onChunk(answer);
+      this.isLoading = false;
+      this.notify();
       return answer;
     } catch (err: any) {
       console.error('Chat error:', err);
-      const fallback = "Ich bin für Sie da! Wie kann ich Ihnen bei der Einrichtung Ihrer Praxis oder des Kalenders weiterhelfen?";
+      const fallback = "Hallo! Ich bin Auxilia, Ihre KI-Assistentin für den Praxiskalender. Es gab eine kurze Verbindungsunterbrechung, aber ich bin für Sie da. Wie kann ich Ihnen bei der Kalendereinrichtung oder Terminvergabe helfen?";
       onChunk(fallback);
-      return fallback;
-    } finally {
       this.isLoading = false;
       this.notify();
+      return fallback;
     }
   }
 

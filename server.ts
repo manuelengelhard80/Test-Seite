@@ -105,7 +105,7 @@ app.post("/api/cache/clear", (req, res) => {
   res.json({ success: true, message: `Cache geleert (${previousSize} Einträge zurückgesetzt)` });
 });
 
-// AI Chat Support Assistant Endpoint (DSGVO-konform, EU-Rechenzentrum Frankfurt, 0-Token Dauer-Cache)
+// AI Chat Support Assistant Endpoint (Gemini AI, DSGVO-konform, EU-Rechenzentrum Frankfurt)
 app.post("/api/chat", async (req, res) => {
   try {
     const { messages, systemPrompt, stream } = req.body;
@@ -117,75 +117,54 @@ app.post("/api/chat", async (req, res) => {
     res.setHeader("X-Zero-Data-Retention", "true");
 
     const userMessage = [...(messages || [])].reverse().find((m: any) => m.role === 'user')?.content || '';
-    const cacheKey = `${(systemPrompt || '').slice(0, 50)}:::${userMessage.trim().toLowerCase()}`;
 
-    // Check permanent server cache
-    const cached = chatResponseCache.get(cacheKey);
-    if (cached) {
-      res.setHeader("X-Cache-Hit", "true");
-      return res.json({
-        answer: cached.answer,
-        cached: true,
-        tokensUsed: 0,
-        compliance: {
-          dsgvo: true,
-          location: "Frankfurt am Main (EU)",
-          zeroRetention: true,
-          clientRamUsage: "0 MB"
-        }
-      });
-    }
-
-    // Format messages for Gemini
+    // Format messages for Gemini API
     const contents = (messages || []).map((m: any) => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{ text: m.content || m.text || '' }]
     }));
 
     const systemInstruction = systemPrompt || 
-      'Du bist Auxilia, die persönliche KI-Praxisassistentin für den Auxilium Praxiskalender. Antworte auf Deutsch in der höflichen Sie-Form, hilfsbereit, präzise und lösungsorientiert. Erkläre Funktionen verständlich und Schritt für Schritt.';
+      'Du bist Auxilia, eine hochintelligente, empathische, sympathische und kompetente KI-Assistentin für den Praxiskalender (Auxilium Praxiskalender-Assistentin). Deine Kernaufgabe ist die Unterstützung bei der Kalenderverwaltung, Terminkoordination, Ressourcen-/Raum-/Geräte-Sperrung, Behandler-Arbeitszeiten, Pufferzeiten und Online-Terminvergabe. Sprich auf Deutsch in der höflichen Sie-Form, aber herzlich, lebendig, dynamisch und natürlich (keine steifen Standard-Phrasen, kein Bot-Gehabe). Wenn der Nutzer Smalltalk macht (z.B. "wie gehts", "hallo", "wer bist du"), antworte persönlich, charmant und freundlich. Bei Fachfragen hilf präzise und Schritt für Schritt.';
 
     let answer = "";
 
     try {
-      if (process.env.GEMINI_API_KEY || process.env.API_KEY) {
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: contents.length > 0 ? contents : [{ role: 'user', parts: [{ text: 'Hallo' }] }],
-          config: {
-            systemInstruction,
-            temperature: 0.4,
-          }
-        });
-        answer = response.text || "";
-      }
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: contents.length > 0 ? contents : [{ role: 'user', parts: [{ text: userMessage || 'Hallo' }] }],
+        config: {
+          systemInstruction,
+          temperature: 0.7,
+        }
+      });
+      answer = response.text || "";
     } catch (genAiErr) {
-      console.warn("Gemini direct inference warning, using instant contextual engine:", genAiErr);
+      console.warn("Gemini generation notice:", genAiErr);
     }
 
-    // High quality contextual fallback if external API key is empty or temporarily rate limited
+    // Dynamic response if API key is not yet set in environment
     if (!answer) {
-      const lower = userMessage.toLowerCase();
-      if (lower.includes('termin') && (lower.includes('anleg') || lower.includes('erstell') || lower.includes('buch') || lower.includes('neu'))) {
-        answer = `**Termin im Kalender anlegen:**\n\n1. Klicken Sie oben rechts auf den blauen Button **„+ Neuer Termin“** oder klicken Sie direkt auf einen freien Zeitslot im Kalender.\n2. Wählen Sie den **Patienten**, den **Behandler (Arzt)**, die **Terminart** sowie den **Raum bzw. das Gerät** aus.\n3. Bestätigen Sie mit **„Termin speichern“**. Der Termin ist sofort gebucht und gegen Doppelbuchungen geschützt.`;
+      const lower = userMessage.toLowerCase().trim();
+      if (lower.includes('wie geht') || lower.includes('wie steht')) {
+        answer = "Mir geht es hervorragend, vielen Dank der Nachfrage! 🌸 Ich freue mich sehr darauf, Sie bei Ihrer Kalenderorganisation, Terminplanung und Praxiseinrichtung zu unterstützen. Wie läuft es bei Ihnen?";
+      } else if (lower.includes('hallo') || lower.includes('hi') || lower.includes('guten tag') || lower.includes('hey') || lower.includes('servus') || lower.includes('moin')) {
+        answer = "Herzlich willkommen! Schön, dass Sie da sind. Ich bin Auxilia, Ihre smarte KI-Assistentin für den Praxiskalender. Wie kann ich Ihnen heute bei Ihren Terminen oder Einstellungen zur Hand gehen?";
+      } else if (lower.includes('termin') && (lower.includes('anleg') || lower.includes('erstell') || lower.includes('buch') || lower.includes('neu'))) {
+        answer = "Einen neuen Termin können Sie im Handumdrehen anlegen:\n\nKlicken Sie im Kalender einfach direkt auf die gewünschte freie Uhrzeit oder oben rechts auf **„+ Neuer Termin“**. Dort wählen Sie den Patienten, den behandelnden Arzt und die Terminart aus – das System prüft dabei automatisch die Raum- und Geräteverfügbarkeit in Echtzeit!";
       } else if (lower.includes('arzt') || lower.includes('ärzte') || lower.includes('behandler') || lower.includes('arbeitszeit')) {
-        answer = `**Ärzte & Behandler verwalten (Schritt 1):**\n\n* **Unbegrenzte Ärzte:** Sie können beliebig viele Ärztinnen und Ärzte mit Namen und Fachrichtung anlegen.\n* **Eigene Kalenderfarbe:** Jeder Arzt erhält eine eigene Signalfarbe, sodass Termine im Kalender sofort auf einen Blick unterscheidbar sind.\n* **Arbeitszeiten:** Die Sprechzeiten können flexibel für jeden Wochentag hinterlegt werden.`;
+        answer = "Ihre Ärzte und Behandler können Sie ganz flexibel verwalten: In **Schritt 1 (Team & Ärzte)** können Sie beliebig viele Kollegen anlegen, individuelle Farben für die Kalenderübersicht wählen und die jeweiligen Sprech- und Arbeitszeiten minutengenau hinterlegen.";
       } else if (lower.includes('raum') || lower.includes('räume') || lower.includes('gerät') || lower.includes('sperr') || lower.includes('wartung') || lower.includes('ultraschall')) {
-        answer = `**Räume & Geräte verwalten & sperren (Schritt 2):**\n\n* **Räume:** Feste Behandlungszimmer (z. B. Zimmer 1, Labor, OP).\n* **Geräte:** Mobile oder stationäre Medizingeräte (z. B. Sonographie, EKG, LuFu).\n* **Echtzeit-Sperre:** Bei Wartung oder Defekt klicken Sie einfach auf „Sperren“ – das System verhindert dann automatisch Doppelbelegungen und blockiert Online-Buchungen für diesen Zeitraum.`;
+        answer = "In **Schritt 2 (Räume & Geräte)** haben Sie die volle Kontrolle über Ihre Praxis-Ressourcen. Ob Behandlungszimmer oder Spezialgeräte wie Ultraschall und EKG: Fällt mal ein Gerät aus oder steht eine Wartung an, klicken Sie einfach auf **„Sperren“** – sofort werden Doppelbuchungen und Online-Termine dafür blockiert.";
       } else if (lower.includes('dauer') || lower.includes('puffer') || lower.includes('terminart') || lower.includes('leistung')) {
-        answer = `**Terminarten & Pufferzeiten einrichten (Schritt 3):**\n\n* **Behandlungsdauer:** Definieren Sie die Standardzeit (z. B. 15, 20 oder 30 Min.).\n* **Automatische Raum-Kopplung:** Wählen Sie unter „Sperrt“, welcher Raum oder welches Gerät für diese Terminart zwingend reserviert werden muss (z. B. Ultraschall-Gerät für Sonographie).\n* **Pufferzeiten:** Verhindern Hektik und ermöglichen Desinfektion zwischen Patienten.`;
+        answer = "In **Schritt 3 (Terminarten)** definieren Sie Ihre Leistungen samt Dauer. Das Geniale dabei: Sie können automatische Pufferzeiten für Desinfektion einrichten und festlegen, welches Gerät (z.B. Sonographie) zwingend mitreserviert werden muss.";
       } else if (lower.includes('farbe') || lower.includes('design') || lower.includes('logo') || lower.includes('branding')) {
-        answer = `**Praxisdesign & Branding anpassen (Schritt 4):**\n\n* **Markenfarbe:** Wählen Sie Ihre Primärfarbe passend zu Ihrer Praxis (z. B. Medizinisches Teal, Königsblau, Smaragdgrün).\n* **Slogan & Name:** Personalisieren Sie den Titel für Ihre Patientinnen und Patienten.\n* **Sichtbarkeit:** Das Design wird automatisch im Kalender, im Online-Buchungswidget und in allen Bestätigungen angewendet.`;
+        answer = "Ihr Praxisauftritt liegt mir am Herzen! In **Schritt 4** passen Sie Ihre Primärfarbe, Ihr Logo und Ihren Praxisslogan an. So fühlen sich Ihre Patienten von der ersten Sekunde an wie auf Ihrer eigenen Praxis-Homepage.";
       } else if (lower.includes('link') || lower.includes('website') || lower.includes('homepage') || lower.includes('iframe') || lower.includes('einbind')) {
-        answer = `**Ihr persönlicher Online-Buchungslink (Schritt 5):**\n\n* **Praxis-Website Button:** Verlinken Sie Ihren persönlichen Buchungslink (z.B. „Jetzt online Termin buchen“) direkt auf Ihrer Homepage.\n* **iFrame-Einbettung:** Sie können den Buchungskalender auch nahtlos direkt in Ihre Website einbetten.\n* **Automatische Synchronisation:** Alle Online-Buchungen landen sekundengenau direkt in Ihrem Praxiskalender.`;
+        answer = "Ihren Online-Buchungskalender können Sie sofort einsetzen: Verlinken Sie einfach Ihren persönlichen Buchungslink als Button auf Ihrer Website oder betten Sie ihn direkt als Widget ein. Alle Patientenbuchungen erscheinen sekundengenau in Ihrem Praxiskalender.";
       } else {
-        answer = `Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin für den Praxiskalender!\n\nIch helfe Ihnen bei:\n1. **Ärzte & Arbeitszeiten** anlegen (Schritt 1)\n2. **Räume & Geräte** verwalten und sperren (Schritt 2)\n3. **Terminarten & Pufferzeiten** konfigurieren (Schritt 3)\n4. **Praxisdesign & Farben** anpassen (Schritt 4)\n5. **Online-Buchungslink** auf Ihrer Website einbinden (Schritt 5)\n\nZu welchem Thema haben Sie eine Frage?`;
+        answer = `Sehr gerne helfe ich Ihnen dabei! Als Ihre KI-Assistentin für den Praxiskalender unterstütze ich Sie bei allen Themen rund um Termine, Behandler, Raum-/Gerätesperren und die Online-Buchung. Was möchten Sie als Nächstes einrichten oder anpassen?`;
       }
-    }
-
-    // Store in memory cache
-    if (cacheKey && answer) {
-      chatResponseCache.set(cacheKey, { answer, timestamp: Date.now() });
     }
 
     res.json({ 

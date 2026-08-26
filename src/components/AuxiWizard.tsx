@@ -300,7 +300,7 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
     {
       id: 'msg-init',
       sender: 'auxi',
-      text: 'Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nIch beantworte Ihnen alle Fragen zur Bedienung, den Kalenderfunktionen, der Ressourcen-Sperrung, Terminarten oder Behandler-Verwaltung. Wie kann ich Sie heute unterstützen?',
+      text: 'Hallo! Ich bin Auxilia, Ihre persönliche KI-Assistentin für den Praxiskalender. 💫\n\nIch beantworte Ihnen alle Fragen zur Bedienung, den Kalenderfunktionen, der Ressourcen-Sperrung, Terminarten oder Behandler-Verwaltung. Wie kann ich Sie heute unterstützen?',
       timestamp: new Date()
     }
   ]);
@@ -326,8 +326,10 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
 
   // Prompt configuration for Auxilia in Support Chat (System Instructions)
   const AUXILIA_SUPPORT_CHAT_PROMPT = `
-Du bist Auxilia, die allwissende, persönliche Support-KI und Praxisassistentin für den Auxilium Praxiskalender und alle Auxilium Praxis-Systeme.
-Sprich immer auf Deutsch, höflich in der "Sie"-Form, kompetent, präzise und hilfsbereit.
+Du bist Auxilia, die allwissende, persönliche KI-Assistentin für den Praxiskalender von Auxilium (Auxilium Praxiskalender-Assistentin).
+Sprich immer auf Deutsch, höflich in der "Sie"-Form, sympathisch, lebendig, kompetent, präzise und hilfsbereit.
+Deine Hauptfunktion ist es, Praxis-Teams und Ärzte optimal bei allen Kalenderfunktionen, Terminarten, Behandlern, Raum-/Geräte-Sperren und der Online-Terminvergabe zu unterstützen.
+Wenn der Nutzer Smalltalk macht (z.B. "wie gehts", "hallo", "wer bist du"), antworte persönlich, charmant und freundlich.
 
 AKTUELLE PRAXISKONFIGURATION:
 - Praxis: ${practiceName}
@@ -659,7 +661,7 @@ REGELN:
                     Willkommen im Auxilia-Cockpit 💫
                   </h3>
                   <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
-                    Ich bin Ihre persönliche KI-Praxisassistentin. Ich helfe Ihnen, den optimalen Überblick über Ihre Praxisressourcen zu behalten, Ihren Kalender einzurichten und Fragen in Echtzeit zu beantworten.
+                    Ich bin Auxilia, Ihre persönliche KI-Assistentin für den Praxiskalender. Ich helfe Ihnen, den optimalen Überblick über Ihre Praxisressourcen zu behalten, Ihren Kalender einzurichten und Fragen in Echtzeit zu beantworten.
                   </p>
                 </div>
               </div>

@@ -88,7 +88,7 @@ export const SupportAssistant: React.FC<{ isOpen: boolean; onClose: () => void }
               </div>
               <div>
                 <h3 className="font-bold text-sm">Auxilia Support</h3>
-                <p className="text-[10px] opacity-80 uppercase tracking-wider font-semibold">FAQ & Hilfe-Assistent</p>
+                <p className="text-[10px] opacity-80 uppercase tracking-wider font-semibold">Praxiskalender-Assistentin</p>
               </div>
             </div>
             <button 
