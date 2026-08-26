@@ -54,7 +54,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={(e) => handleNav(e, 'features')} className="hover:text-primary transition-colors text-left">Funktionen</button></li>
               <li><button onClick={(e) => handleNav(e, 'pricing')} className="hover:text-primary transition-colors text-left">Preise</button></li>
               <li><button onClick={(e) => handleNav(e, 'tarife')} className="hover:text-primary transition-colors text-left">Tarife</button></li>
-              <li><button onClick={(e) => handleNav(e, 'kalender')} className="hover:text-primary transition-colors text-left font-semibold text-primary">Praxiskalender</button></li>
               <li>
                 <button onClick={(e) => handleNav(e, 'security')} className="hover:text-primary transition-colors text-left flex items-center gap-1.5">
                   <Check size={14} className="text-emerald-500 shrink-0" strokeWidth={3} />
