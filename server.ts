@@ -118,11 +118,29 @@ app.post("/api/chat", async (req, res) => {
 
     const userMessage = [...(messages || [])].reverse().find((m: any) => m.role === 'user')?.content || '';
 
-    // Format messages for Gemini API
-    const contents = (messages || []).map((m: any) => ({
+    // Format and sanitize messages for Gemini API
+    const rawList = (messages || []).map((m: any) => ({
       role: m.role === 'user' ? 'user' : 'model',
-      parts: [{ text: m.content || m.text || '' }]
-    }));
+      parts: [{ text: String(m.content || m.text || '').trim() }]
+    })).filter((m: any) => m.parts[0].text.length > 0);
+
+    // Gemini requires multi-turn history to start with a 'user' turn
+    const firstUserIndex = rawList.findIndex((m: any) => m.role === 'user');
+    const validList = firstUserIndex !== -1 ? rawList.slice(firstUserIndex) : [];
+
+    // Merge consecutive same-role turns to guarantee strict alternating user/model sequence
+    const sanitizedContents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
+    for (const item of validList) {
+      if (sanitizedContents.length > 0 && sanitizedContents[sanitizedContents.length - 1].role === item.role) {
+        sanitizedContents[sanitizedContents.length - 1].parts[0].text += `\n${item.parts[0].text}`;
+      } else {
+        sanitizedContents.push({ role: item.role, parts: [{ text: item.parts[0].text }] });
+      }
+    }
+
+    const contents = sanitizedContents.length > 0 
+      ? sanitizedContents 
+      : [{ role: 'user', parts: [{ text: userMessage || 'Hallo' }] }];
 
     const systemInstruction = systemPrompt || 
       'Du bist Auxilia, eine hochintelligente, empathische, sympathische und kompetente KI-Assistentin für den Praxiskalender (Auxilium Praxiskalender-Assistentin). Deine Kernaufgabe ist die Unterstützung bei der Kalenderverwaltung, Terminkoordination, Ressourcen-/Raum-/Geräte-Sperrung, Behandler-Arbeitszeiten, Pufferzeiten und Online-Terminvergabe. Sprich auf Deutsch in der höflichen Sie-Form, aber herzlich, lebendig, dynamisch und natürlich (keine steifen Standard-Phrasen, kein Bot-Gehabe). Wenn der Nutzer Smalltalk macht (z.B. "wie gehts", "hallo", "wer bist du"), antworte persönlich, charmant und freundlich. Bei Fachfragen hilf präzise und Schritt für Schritt.';
@@ -130,9 +148,10 @@ app.post("/api/chat", async (req, res) => {
     let answer = "";
 
     try {
+      // Primary: gemini-2.5-flash, fallback to gemini-2.0-flash or gemini-1.5-flash
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: contents.length > 0 ? contents : [{ role: 'user', parts: [{ text: userMessage || 'Hallo' }] }],
+        contents,
         config: {
           systemInstruction,
           temperature: 0.7,
@@ -140,16 +159,29 @@ app.post("/api/chat", async (req, res) => {
       });
       answer = response.text || "";
     } catch (genAiErr) {
-      console.warn("Gemini generation notice:", genAiErr);
+      console.warn("Gemini generation attempt 1 (gemini-2.5-flash) failed, trying fallback:", genAiErr);
+      try {
+        const fallbackResponse = await ai.models.generateContent({
+          model: 'gemini-2.0-flash',
+          contents,
+          config: {
+            systemInstruction,
+            temperature: 0.7,
+          }
+        });
+        answer = fallbackResponse.text || "";
+      } catch (err2) {
+        console.error("Gemini direct inference failed:", err2);
+      }
     }
 
     // Dynamic response if API key is not yet set in environment
     if (!answer) {
       const lower = userMessage.toLowerCase().trim();
       if (lower.includes('wie geht') || lower.includes('wie steht')) {
-        answer = "Mir geht es hervorragend, vielen Dank der Nachfrage! 🌸 Ich freue mich sehr darauf, Sie bei Ihrer Kalenderorganisation, Terminplanung und Praxiseinrichtung zu unterstützen. Wie läuft es bei Ihnen?";
+        answer = "Hallo! Mir geht es wunderbar, danke der Nachfrage! 🌸 Ich bin voller Energie und bereit, Sie und Ihr Praxisteam optimal beim Praxiskalender zu unterstützen.\n\nGibt es denn etwas Spezielles, wobei ich Ihnen heute behilflich sein kann? Vielleicht eine Frage zum Kalender, den Terminarten oder der Online-Buchung? Ich freue mich darauf! 😊";
       } else if (lower.includes('hallo') || lower.includes('hi') || lower.includes('guten tag') || lower.includes('hey') || lower.includes('servus') || lower.includes('moin')) {
-        answer = "Herzlich willkommen! Schön, dass Sie da sind. Ich bin Auxilia, Ihre smarte KI-Assistentin für den Praxiskalender. Wie kann ich Ihnen heute bei Ihren Terminen oder Einstellungen zur Hand gehen?";
+        answer = "Hallo! Schön, dass Sie da sind. 💫 Ich bin Auxilia, Ihre persönliche KI-Assistentin für den Praxiskalender. Wie kann ich Ihnen heute bei der Praxisorganisation, Terminvergabe oder Kalendereinrichtung behilflich sein?";
       } else if (lower.includes('termin') && (lower.includes('anleg') || lower.includes('erstell') || lower.includes('buch') || lower.includes('neu'))) {
         answer = "Einen neuen Termin können Sie im Handumdrehen anlegen:\n\nKlicken Sie im Kalender einfach direkt auf die gewünschte freie Uhrzeit oder oben rechts auf **„+ Neuer Termin“**. Dort wählen Sie den Patienten, den behandelnden Arzt und die Terminart aus – das System prüft dabei automatisch die Raum- und Geräteverfügbarkeit in Echtzeit!";
       } else if (lower.includes('arzt') || lower.includes('ärzte') || lower.includes('behandler') || lower.includes('arbeitszeit')) {

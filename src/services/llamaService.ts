@@ -20,107 +20,6 @@ export const COMPLIANCE_INFO: AIComplianceInfo = {
   cacheStatus: "⚡ Sofort-Cache aktiv (0 Tokens / 0 ms Latenz)"
 };
 
-// --- CLIENT-SIDE INSTANT KNOWLEDGE BASE (0 TOKENS, 0 MS LATENCY, 100% KOSTENLOS) ---
-interface StandardFaqRule {
-  keywords: string[];
-  generateAnswer: (context?: string) => string;
-}
-
-const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
-  {
-    keywords: ["termin anlegen", "neuer termin", "termin erstellen", "termin buchen", "termin eintragen", "wie lege ich einen termin an", "terminvergabe", "termin", "buchen"],
-    generateAnswer: () => 
-      `**Termin im Kalender anlegen:**\n\n` +
-      `1. Klicken Sie oben rechts auf den blauen Button **„+ Neuer Termin“** oder klicken Sie direkt auf einen freien Zeitslot im Kalender.\n` +
-      `2. Wählen Sie den **Patienten**, den **Behandler (Arzt)**, die **Terminart** sowie den **Raum bzw. das Gerät** aus.\n` +
-      `3. Bestätigen Sie mit **„Termin speichern“**. Der Termin ist sofort gebucht und gegen Doppelbuchungen geschützt.`
-  },
-  {
-    keywords: ["termin absagen", "termin löschen", "stornieren", "termin stornieren", "termin entfernen", "absagen", "löschen", "storno"],
-    generateAnswer: () =>
-      `**Termin absagen oder löschen:**\n\n` +
-      `1. Klicken Sie im Kalender einfach auf den gewünschten Termin, um die **Detailansicht** zu öffnen.\n` +
-      `2. Sie können den Status auf **„Abgesagt“** setzen (bleibt zur Dokumentation sichtbar) oder auf **„Termin löschen“** klicken, um den Slot sofort wieder für neue Patienten freizugeben.`
-  },
-  {
-    keywords: ["termin verschieben", "zeit ändern", "uhrzeit ändern", "verschiebung", "verschieben", "verlegen"],
-    generateAnswer: () =>
-      `**Termin verschieben:**\n\n` +
-      `* **Per Klick:** Klicken Sie auf den Termin, wählen Sie eine neue Uhrzeit oder ein anderes Datum aus und speichern Sie.\n` +
-      `* **Automatische Prüfung:** Das System prüft automatisch in Echtzeit, ob der Arzt und der benötigte Raum zu der neuen Zeit verfügbar sind.`
-  },
-  {
-    keywords: ["arzt", "ärzte", "behandler", "doktor", "team", "mitarbeiter hinzufügen", "arbeitszeiten", "wie viele ärzte", "kalenderfarbe", "farbe arzt", "sprechzeiten", "arbeitszeit", "schritt 1"],
-    generateAnswer: () =>
-      `**Ärzte & Behandler verwalten (Schritt 1):**\n\n` +
-      `* **Unbegrenzte Ärzte:** Sie können beliebig viele Ärztinnen und Ärzte mit Namen und Fachrichtung anlegen.\n` +
-      `* **Eigene Kalenderfarbe:** Jeder Arzt erhält eine eigene Signalfarbe, sodass Termine im Kalender sofort auf einen Blick unterscheidbar sind.\n` +
-      `* **Arbeitszeiten:** Die Sprechzeiten können flexibel für jeden Wochentag hinterlegt werden.`
-  },
-  {
-    keywords: ["raum", "räume", "zimmer", "labor", "geräte", "sonographie", "ultraschall", "labor", "ekg", "ressource", "ressourcen", "sperren", "sperrung", "wartung", "unterschied raum gerät", "doppelbelegung", "schritt 2"],
-    generateAnswer: () =>
-      `**Räume & Geräte verwalten & sperren (Schritt 2):**\n\n` +
-      `* **Räume:** Feste Behandlungszimmer (z. B. Zimmer 1, Labor, OP).\n` +
-      `* **Geräte:** Mobile oder stationäre Medizingeräte (z. B. Sonographie, EKG, LuFu).\n` +
-      `* **Echtzeit-Sperre:** Bei Wartung oder Defekt klicken Sie einfach auf „Sperren“ – das System verhindert dann automatisch Doppelbelegungen und blockiert Online-Buchungen für diesen Zeitraum.`
-  },
-  {
-    keywords: ["terminart", "terminarten", "leistung", "leistungen", "dauer", "puffer", "pufferzeit", "pufferzeiten", "behandlungsart", "behandlungsarten", "kopplung", "pflicht-ressource", "schritt 3"],
-    generateAnswer: () =>
-      `**Terminarten & Pufferzeiten einrichten (Schritt 3):**\n\n` +
-      `* **Behandlungsdauer:** Definieren Sie die Standardzeit (z. B. 15, 20 oder 30 Min.).\n` +
-      `* **Automatische Raum-Kopplung:** Wählen Sie unter „Sperrt“, welcher Raum oder welches Gerät für diese Terminart zwingend reserviert werden muss (z. B. Ultraschall-Gerät für Sonographie).\n` +
-      `* **Pufferzeiten:** Verhindern Hektik und ermöglichen Desinfektion zwischen Patienten.`
-  },
-  {
-    keywords: ["farbe", "farben", "design", "logo", "branding", "aussehen", "anpassen", "slogan", "praxisname", "schritt 4"],
-    generateAnswer: () =>
-      `**Praxisdesign & Branding anpassen (Schritt 4):**\n\n` +
-      `* **Markenfarbe:** Wählen Sie Ihre Primärfarbe passend zu Ihrer Praxis (z. B. Medizinisches Teal, Königsblau, Smaragdgrün).\n` +
-      `* **Slogan & Name:** Personalisieren Sie den Titel für Ihre Patientinnen und Patienten.\n` +
-      `* **Sichtbarkeit:** Das Design wird automatisch im Kalender, im Online-Buchungswidget und in allen Bestätigungen angewendet.`
-  },
-  {
-    keywords: ["link", "buchungslink", "online buchen", "website", "homepage", "iframe", "einbinden", "patienten buchen", "schritt 5", "wie binde ich den link ein", "url", "online-kalender"],
-    generateAnswer: () =>
-      `**Ihr persönlicher Online-Buchungslink (Schritt 5):**\n\n` +
-      `* **Praxis-Website Button:** Verlinken Sie Ihren persönlichen Buchungslink (z.B. „Jetzt online Termin buchen“) direkt auf Ihrer Homepage.\n` +
-      `* **iFrame-Einbettung:** Sie können den Buchungskalender auch nahtlos direkt in Ihre Website einbetten.\n` +
-      `* **Automatische Synchronisation:** Alle Online-Buchungen landen sekundengenau direkt in Ihrem Praxiskalender.`
-  },
-  {
-    keywords: ["sms", "e-mail", "email", "mail", "erinnerung", "erinnerungen", "bestätigung", "no-show", "ausfall", "benachrichtigung"],
-    generateAnswer: () =>
-      `**Automatische Patienten-Erinnerungen:**\n\n` +
-      `* Bei jeder Buchung erhält der Patient sofort eine **Bestätigungs-E-Mail** inklusive digitaler Kalenderdatei (.ics).\n` +
-      `* **SMS-Erinnerung:** 24 Stunden vor dem Termin wird eine automatische Erinnerung versendet, was Termin-Ausfälle (No-Shows) um bis zu 85 % reduziert.`
-  },
-  {
-    keywords: ["dsgvo", "datenschutz", "sicherheit", "frankfurt", "server", "eu", "art 28", "avv", "kostenlos", "tokens", "token", "limit", "kosten", "preis", "preise", "kostenfrei"],
-    generateAnswer: () =>
-      `**Datenschutz (DSGVO) & Kosten:**\n\n` +
-      `* **100 % DSGVO-konform:** Serverstandort in Frankfurt am Main (EU, \`europe-west3\`) nach Art. 28 DSGVO.\n` +
-      `* **Zero-Retention:** Keine Speicherung für KI-Modelltraining.\n` +
-      `* **0 Tokens & Kostenlos:** Dank unseres integrierten Sofort-Caches werden Standardfragen mit 0 Tokens und 0 ms Latenz beantwortet – dauerhaft ohne Limits.`
-  },
-  {
-    keywords: ["hallo", "guten tag", "servus", "moin", "hi", "hey", "wer bist du"],
-    generateAnswer: () =>
-      `Hallo! Ich bin Auxilia, Ihre persönliche KI-Assistentin für den Praxiskalender. 💫\n\nIch helfe Ihnen bei allen Schritten der Kalendereinrichtung, Behandlerverwaltung, Ressourcen-Sperrung, Terminvergabe und Website-Einbindung. Worüber möchten Sie mehr erfahren?`
-  },
-  {
-    keywords: ["hilfe", "anleitung", "was kann ich tun", "wie geht das", "funktionen", "übersicht"],
-    generateAnswer: () =>
-      `**Kurzübersicht des Auxilium Praxiskalenders:**\n\n` +
-      `1. **Schritt 1:** Ärzte & Arbeitszeiten anlegen\n` +
-      `2. **Schritt 2:** Behandlungsräume & Medizingeräte verwalten / sperren\n` +
-      `3. **Schritt 3:** Behandlungsarten & Pufferzeiten definieren\n` +
-      `4. **Schritt 4:** Praxisdesign, Logo & Farben anpassen\n` +
-      `5. **Schritt 5:** Online-Buchungslink auf Ihrer Website einbinden`
-  }
-];
-
 class AIManager {
   private isLoading = false;
   private listeners: Array<() => void> = [];
@@ -145,7 +44,7 @@ class AIManager {
       error: null,
       isServerFallback: true,
       compliance: COMPLIANCE_INFO,
-      modelName: "Auxilia AI + Sofort-Cache (EU Frankfurt, DSGVO)",
+      modelName: "Auxilia KI (Gemini AI, EU Frankfurt, DSGVO)",
     };
   }
 
@@ -154,29 +53,8 @@ class AIManager {
     this.notify();
   }
 
-  /**
-   * Checks if user message matches the instant standard knowledge cache.
-   * Returns instant answer if matched (0 ms, 0 Tokens, 0 API Calls).
-   */
-  public matchInstantCache(userMessage: string): string | null {
-    const cleanMsg = userMessage.toLowerCase().trim();
-    if (!cleanMsg) return null;
-
-    // Check session cache first
-    if (this.sessionCache.has(cleanMsg)) {
-      return this.sessionCache.get(cleanMsg)!;
-    }
-
-    // Match against standard rules
-    for (const rule of STANDARD_KNOWLEDGE_BASE) {
-      const match = rule.keywords.some(keyword => cleanMsg.includes(keyword));
-      if (match) {
-        const answer = rule.generateAnswer();
-        this.sessionCache.set(cleanMsg, answer);
-        return answer;
-      }
-    }
-
+  public matchInstantCache(_userMessage: string): string | null {
+    // Let dynamic Gemini AI handle queries naturally with full context
     return null;
   }
 
@@ -188,18 +66,6 @@ class AIManager {
     this.notify();
 
     try {
-      const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')?.content || '';
-      
-      // Check session cache for exact repeated identical queries in this browser session
-      const cleanKey = lastUserMsg.trim().toLowerCase();
-      if (cleanKey && this.sessionCache.has(cleanKey)) {
-        const cached = this.sessionCache.get(cleanKey)!;
-        onChunk(cached);
-        this.isLoading = false;
-        this.notify();
-        return cached;
-      }
-
       // Dynamic Gemini AI inference (Server-side, DSGVO EU Frankfurt)
       const systemPrompt = messages.find(m => m.role === 'system')?.content;
       const conversationMessages = messages.filter(m => m.role !== 'system');
@@ -220,11 +86,6 @@ class AIManager {
 
       const data = await res.json();
       const answer = data.answer || "Hallo! Ich bin für Sie da. Wie kann ich Sie unterstützen?";
-
-      // Save into session cache
-      if (cleanKey && answer) {
-        this.sessionCache.set(cleanKey, answer);
-      }
 
       // Fluid typewriter streaming effect for pleasant, real-time feel
       const words = answer.split(' ');
