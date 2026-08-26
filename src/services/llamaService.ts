@@ -28,7 +28,7 @@ interface StandardFaqRule {
 
 const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
   {
-    keywords: ["termin anlegen", "neuer termin", "termin erstellen", "termin buchen", "termin eintragen", "wie lege ich einen termin an"],
+    keywords: ["termin anlegen", "neuer termin", "termin erstellen", "termin buchen", "termin eintragen", "wie lege ich einen termin an", "terminvergabe", "termin", "buchen"],
     generateAnswer: () => 
       `**Termin im Kalender anlegen:**\n\n` +
       `1. Klicken Sie oben rechts auf den blauen Button **„+ Neuer Termin“** oder klicken Sie direkt auf einen freien Zeitslot im Kalender.\n` +
@@ -36,21 +36,21 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `3. Bestätigen Sie mit **„Termin speichern“**. Der Termin ist sofort gebucht und gegen Doppelbuchungen geschützt.`
   },
   {
-    keywords: ["termin absagen", "termin löschen", "stornieren", "termin stornieren", "termin entfernen"],
+    keywords: ["termin absagen", "termin löschen", "stornieren", "termin stornieren", "termin entfernen", "absagen", "löschen", "storno"],
     generateAnswer: () =>
       `**Termin absagen oder löschen:**\n\n` +
       `1. Klicken Sie im Kalender einfach auf den gewünschten Termin, um die **Detailansicht** zu öffnen.\n` +
       `2. Sie können den Status auf **„Abgesagt“** setzen (bleibt zur Dokumentation sichtbar) oder auf **„Termin löschen“** klicken, um den Slot sofort wieder für neue Patienten freizugeben.`
   },
   {
-    keywords: ["termin verschieben", "zeit ändern", "uhrzeit ändern", "verschiebung"],
+    keywords: ["termin verschieben", "zeit ändern", "uhrzeit ändern", "verschiebung", "verschieben", "verlegen"],
     generateAnswer: () =>
       `**Termin verschieben:**\n\n` +
       `* **Per Klick:** Klicken Sie auf den Termin, wählen Sie eine neue Uhrzeit oder ein anderes Datum aus und speichern Sie.\n` +
       `* **Automatische Prüfung:** Das System prüft automatisch in Echtzeit, ob der Arzt und der benötigte Raum zu der neuen Zeit verfügbar sind.`
   },
   {
-    keywords: ["arzt", "ärzte", "behandler", "doktor", "team", "mitarbeiter hinzufügen", "arbeitszeiten", "wie viele ärzte", "kalenderfarbe", "farbe arzt"],
+    keywords: ["arzt", "ärzte", "behandler", "doktor", "team", "mitarbeiter hinzufügen", "arbeitszeiten", "wie viele ärzte", "kalenderfarbe", "farbe arzt", "sprechzeiten", "arbeitszeit", "schritt 1"],
     generateAnswer: () =>
       `**Ärzte & Behandler verwalten (Schritt 1):**\n\n` +
       `* **Unbegrenzte Ärzte:** Sie können beliebig viele Ärztinnen und Ärzte mit Namen und Fachrichtung anlegen.\n` +
@@ -58,7 +58,7 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `* **Arbeitszeiten:** Die Sprechzeiten können flexibel für jeden Wochentag hinterlegt werden.`
   },
   {
-    keywords: ["raum", "geräte", "sonographie", "ultraschall", "labor", "ekg", "ressource", "sperren", "wartung", "unterschied raum gerät", "doppelbelegung"],
+    keywords: ["raum", "räume", "zimmer", "labor", "geräte", "sonographie", "ultraschall", "labor", "ekg", "ressource", "ressourcen", "sperren", "sperrung", "wartung", "unterschied raum gerät", "doppelbelegung", "schritt 2"],
     generateAnswer: () =>
       `**Räume & Geräte verwalten & sperren (Schritt 2):**\n\n` +
       `* **Räume:** Feste Behandlungszimmer (z. B. Zimmer 1, Labor, OP).\n` +
@@ -66,7 +66,7 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `* **Echtzeit-Sperre:** Bei Wartung oder Defekt klicken Sie einfach auf „Sperren“ – das System verhindert dann automatisch Doppelbelegungen und blockiert Online-Buchungen für diesen Zeitraum.`
   },
   {
-    keywords: ["terminart", "leistung", "dauer", "puffer", "pufferzeit", "behandlungsart", "kopplung", "pflicht-ressource"],
+    keywords: ["terminart", "terminarten", "leistung", "leistungen", "dauer", "puffer", "pufferzeit", "pufferzeiten", "behandlungsart", "behandlungsarten", "kopplung", "pflicht-ressource", "schritt 3"],
     generateAnswer: () =>
       `**Terminarten & Pufferzeiten einrichten (Schritt 3):**\n\n` +
       `* **Behandlungsdauer:** Definieren Sie die Standardzeit (z. B. 15, 20 oder 30 Min.).\n` +
@@ -74,7 +74,7 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `* **Pufferzeiten:** Verhindern Hektik und ermöglichen Desinfektion zwischen Patienten.`
   },
   {
-    keywords: ["farbe", "design", "logo", "branding", "aussehen", "anpassen", "slogan", "praxisname"],
+    keywords: ["farbe", "farben", "design", "logo", "branding", "aussehen", "anpassen", "slogan", "praxisname", "schritt 4"],
     generateAnswer: () =>
       `**Praxisdesign & Branding anpassen (Schritt 4):**\n\n` +
       `* **Markenfarbe:** Wählen Sie Ihre Primärfarbe passend zu Ihrer Praxis (z. B. Medizinisches Teal, Königsblau, Smaragdgrün).\n` +
@@ -82,7 +82,7 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `* **Sichtbarkeit:** Das Design wird automatisch im Kalender, im Online-Buchungswidget und in allen Bestätigungen angewendet.`
   },
   {
-    keywords: ["link", "buchungslink", "online buchen", "website", "homepage", "iframe", "einbinden", "patienten buchen", "schritt 5", "wie binde ich den link ein"],
+    keywords: ["link", "buchungslink", "online buchen", "website", "homepage", "iframe", "einbinden", "patienten buchen", "schritt 5", "wie binde ich den link ein", "url", "online-kalender"],
     generateAnswer: () =>
       `**Ihr persönlicher Online-Buchungslink (Schritt 5):**\n\n` +
       `* **Praxis-Website Button:** Verlinken Sie Ihren persönlichen Buchungslink (z.B. „Jetzt online Termin buchen“) direkt auf Ihrer Homepage.\n` +
@@ -90,19 +90,34 @@ const STANDARD_KNOWLEDGE_BASE: StandardFaqRule[] = [
       `* **Automatische Synchronisation:** Alle Online-Buchungen landen sekundengenau direkt in Ihrem Praxiskalender.`
   },
   {
-    keywords: ["sms", "e-mail", "erinnerung", "bestätigung", "no-show", "ausfall"],
+    keywords: ["sms", "e-mail", "email", "mail", "erinnerung", "erinnerungen", "bestätigung", "no-show", "ausfall", "benachrichtigung"],
     generateAnswer: () =>
       `**Automatische Patienten-Erinnerungen:**\n\n` +
       `* Bei jeder Buchung erhält der Patient sofort eine **Bestätigungs-E-Mail** inklusive digitaler Kalenderdatei (.ics).\n` +
       `* **SMS-Erinnerung:** 24 Stunden vor dem Termin wird eine automatische Erinnerung versendet, was Termin-Ausfälle (No-Shows) um bis zu 85 % reduziert.`
   },
   {
-    keywords: ["dsgvo", "datenschutz", "sicherheit", "frankfurt", "server", "eu", "art 28", "avv", "kostenlos", "tokens", "token", "limit"],
+    keywords: ["dsgvo", "datenschutz", "sicherheit", "frankfurt", "server", "eu", "art 28", "avv", "kostenlos", "tokens", "token", "limit", "kosten", "preis", "preise", "kostenfrei"],
     generateAnswer: () =>
       `**Datenschutz (DSGVO) & Kosten:**\n\n` +
       `* **100 % DSGVO-konform:** Serverstandort in Frankfurt am Main (EU, \`europe-west3\`) nach Art. 28 DSGVO.\n` +
       `* **Zero-Retention:** Keine Speicherung für KI-Modelltraining.\n` +
       `* **0 Tokens & Kostenlos:** Dank unseres integrierten Sofort-Caches werden Standardfragen mit 0 Tokens und 0 ms Latenz beantwortet – dauerhaft ohne Limits.`
+  },
+  {
+    keywords: ["hallo", "guten tag", "servus", "moin", "hi", "hey", "wer bist du"],
+    generateAnswer: () =>
+      `Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nIch helfe Ihnen bei allen Schritten der Praxiseinrichtung, Behandlerverwaltung, Terminvergabe und Website-Einbindung. Worüber möchten Sie mehr erfahren?`
+  },
+  {
+    keywords: ["hilfe", "anleitung", "was kann ich tun", "wie geht das", "funktionen", "übersicht"],
+    generateAnswer: () =>
+      `**Kurzübersicht des Auxilium Praxiskalenders:**\n\n` +
+      `1. **Schritt 1:** Ärzte & Arbeitszeiten anlegen\n` +
+      `2. **Schritt 2:** Behandlungsräume & Medizingeräte verwalten / sperren\n` +
+      `3. **Schritt 3:** Behandlungsarten & Pufferzeiten definieren\n` +
+      `4. **Schritt 4:** Praxisdesign, Logo & Farben anpassen\n` +
+      `5. **Schritt 5:** Online-Buchungslink auf Ihrer Website einbinden`
   }
 ];
 
