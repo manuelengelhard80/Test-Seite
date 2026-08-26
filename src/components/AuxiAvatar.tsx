@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 export interface AuxiAvatarProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isSpeaking?: boolean;
   isCelebrating?: boolean;
   className?: string;
@@ -16,6 +16,7 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
   className = '',
 }) => {
   const sizeMap = {
+    xs: 'w-6 h-6',
     sm: 'w-8 h-8',
     md: 'w-11 h-11',
     lg: 'w-16 h-16',
@@ -52,94 +53,14 @@ export const AuxiAvatar: React.FC<AuxiAvatarProps> = ({
           duration: isCelebrating ? 0.9 : isSpeaking ? 2.2 : 4,
           ease: 'easeInOut',
         }}
-        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/85 via-teal-100/40 to-sky-200/40 shadow-md shadow-slate-900/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md`}
+        className={`relative ${sizeMap[size]} rounded-full p-[2px] bg-gradient-to-b from-white/85 via-teal-100/40 to-sky-200/40 shadow-md shadow-slate-900/15 border border-teal-200/70 flex items-center justify-center backdrop-blur-md overflow-hidden`}
       >
-        <svg
-          viewBox="0 0 100 100"
-          className="w-full h-full rounded-full"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            {/* Perfectly Balanced 60% Teal to 40% Blue Brand Gradient */}
-            <linearGradient id="auxiHarmonicGrad" x1="10%" y1="10%" x2="90%" y2="90%">
-              <stop offset="0%" stopColor="#14b8a6" />       {/* Fresh Teal top-left */}
-              <stop offset="40%" stopColor="#0D9488" />      {/* Auxilium Primary Teal */}
-              <stop offset="65%" stopColor="#0891b2" />      {/* Transition Cyan-Ocean */}
-              <stop offset="100%" stopColor="#0284C7" />     {/* Rich Sky/Ocean Blue bottom-right */}
-            </linearGradient>
-
-            {/* 3D Sphere Highlight Overlay for deep spherical volume */}
-            <radialGradient id="auxiSphereShade" cx="36%" cy="30%" r="68%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
-              <stop offset="45%" stopColor="#ffffff" stopOpacity="0" />
-              <stop offset="85%" stopColor="#0f172a" stopOpacity="0.12" />
-              <stop offset="100%" stopColor="#0f172a" stopOpacity="0.38" />
-            </radialGradient>
-
-            {/* Feminine Glassy Highlight (Soft circular spot from image) */}
-            <radialGradient id="auxiSphereGloss" cx="50%" cy="25%" r="40%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.65" />
-              <stop offset="50%" stopColor="#ffffff" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </radialGradient>
-
-            {/* Soft Glowing Cheek Blush (Harmonious Mint-Cyan Glow) */}
-            <radialGradient id="auxiDotBlush" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#67e8f9" stopOpacity="0" />
-            </radialGradient>
-
-            {/* Subtle glow filter for the facial light lines */}
-            <filter id="eyeGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="0.7" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          {/* 1. Base 3D Sphere with brand Gradient */}
-          <circle cx="50" cy="50" r="48" fill="url(#auxiHarmonicGrad)" />
-
-          {/* 2. 3D Spherical Volume Overlay */}
-          <circle cx="50" cy="50" r="48" fill="url(#auxiSphereShade)" />
-
-          {/* 3. Soft Glassy Top Reflection (Feminine Highlight) */}
-          <circle cx="50" cy="30" r="30" fill="url(#auxiSphereGloss)" opacity="0.8" />
-
-          {/* 4. Delicate Glowing Cheeks (Blush) */}
-          <circle cx="28" cy="62" r="7" fill="url(#auxiDotBlush)" />
-          <circle cx="72" cy="62" r="7" fill="url(#auxiDotBlush)" />
-
-          {/* 5. Harmonious Feminine Eye Arcs (^ ^) - Thicker and softer */}
-          {/* Left Eye Arc */}
-          <path
-            d="M 28 52 C 32.5 40, 41.5 40, 46 52"
-            stroke="#ffffff"
-            strokeWidth="3.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#eyeGlow)"
-          />
-          {/* Right Eye Arc */}
-          <path
-            d="M 54 52 C 58.5 40, 67.5 40, 72 52"
-            stroke="#ffffff"
-            strokeWidth="3.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#eyeGlow)"
-          />
-
-          {/* 6. Cute Feminine Smile Arc */}
-          <path
-            d="M 45 61 C 47.5 66, 52.5 66, 55 61"
-            stroke="#ffffff"
-            strokeWidth="3.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            filter="url(#eyeGlow)"
-          />
-        </svg>
+        <img
+          src="https://2bmedia-marketing.de/bilder/auxilia.png"
+          alt="Auxilia"
+          className="w-full h-full rounded-full object-cover bg-teal-50"
+          referrerPolicy="no-referrer"
+        />
       </motion.div>
     </div>
   );

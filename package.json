@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/genai": "^1.30.0",
     "@libsql/client": "^0.17.4",
+    "@mlc-ai/web-llm": "^0.2.84",
     "esbuild": "^0.28.2",
     "express": "^5.2.1",
     "lucide-react": "^0.554.0",

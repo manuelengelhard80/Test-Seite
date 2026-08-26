@@ -23,10 +23,54 @@ import {
   HelpCircle,
   Clock,
   Layers,
-  X
+  X,
+  Search,
+  Send,
+  MessageSquare,
+  BookOpen
 } from 'lucide-react';
 import { AuxiAvatar, AuxiSpeechBubble } from './AuxiAvatar';
 import { Doctor, ServiceType, Resource, DOCTOR_COLOR_PALETTE } from '../types/calendar';
+import { globalLlama } from '../services/llamaService';
+
+const FAQS_LIST = [
+  {
+    id: "FAQ_RAUM_KONFLIKT_01",
+    keywords: ["Raum", "Doppelbuchung", "Konflikt", "Zimmer", "Belegung"],
+    question: "Wie verhindert Auxilia, dass ein Behandlungszimmer doppelt belegt wird?",
+    answer: "Auxilia überwacht Ihre Ressourcen in Echtzeit. Verknüpfen Sie Ihre Terminarten fest mit einem Raum in Schritt 3 der Einrichtung. Auxilia blockiert den Raum automatisch bei jeder Buchung. Ist er belegt, wird dieser Zeitraum Patienten online gar nicht erst angeboten."
+  },
+  {
+    id: "FAQ_GERAET_WARTUNG_02",
+    keywords: ["Defekt", "Wartung", "Sperren", "Gerät", "Sono", "Ausfall"],
+    question: "Ein medizinisches Gerät ist defekt. Wie sperre ich die Termine sofort?",
+    answer: "Um Ausfälle zu managen, können Sie eine Ressource zeitweise sperren. Gehen Sie in Ihre Ressourcen-Verwaltung, wählen Sie das Gerät aus und setzen Sie den Status auf 'Wartung' für den betroffenen Zeitraum. Auxilia blockiert sofort alle neuen Online-Buchungen und markiert betroffene Termine zur Umplanung."
+  },
+  {
+    id: "FAQ_MULTIRESOURCE_03",
+    keywords: ["Labor", "MFA", "Blutentnahme", "Personal", "Ketten"],
+    question: "Ein Termin benötigt Raum UND MFA-Unterstützung. Wie stelle ich das ein?",
+    answer: "Über 'Ketten-Abhängigkeiten' können Sie bestimmen, dass eine Terminart (z.B. Blutentnahme) mehrere Ressourcen gleichzeitig blockiert – zum Beispiel sowohl den Raum 'Labor' als auch das Personal 'MFA-Pool'. Auxilia bietet Termine nur an, wenn beide Einheiten zeitgleich frei sind."
+  },
+  {
+    id: "FAQ_ONBOARD_01",
+    keywords: ["Einrichtung", "Assistentin", "Abbruch", "Speichern", "Fortsetzen"],
+    question: "Ich habe den Einrichtungs-Assistenten geschlossen. Sind meine Daten verloren?",
+    answer: "Nein, Ihre Daten sind sicher. Alle Eingaben werden bei jedem Schritt automatisch lokal zwischengespeichert. Sie können das Fenster jederzeit schließen und später genau an derselben Stelle fortsetzen."
+  },
+  {
+    id: "FAQ_ABSAGEN_04",
+    keywords: ["Absage", "Stornieren", "Frist", "Patienten", "Absagen"],
+    question: "Wie kurzfristig können Patienten Termine online absagen oder verschieben?",
+    answer: "Standardmäßig ist eine Storno-Frist von 24 Stunden vor dem Termin voreingestellt. Diesen Wert können Sie in Ihren Einstellungen flexibel anpassen (z.B. auf 12 oder 48 Stunden), um Leerzeiten zu verhindern."
+  },
+  {
+    id: "FAQ_BENACHRICHTIGUNG_05",
+    keywords: ["SMS", "E-Mail", "Erinnerung", "Terminausfall", "Benachrichtigung"],
+    question: "Sendet Auxilia automatische Termin-Erinnerungen an Patienten?",
+    answer: "Ja. Direkt nach der Buchung erhalten Patienten eine Bestätigungs-E-Mail mit einer Kalenderdatei (.ics). Zusätzlich wird 24 Stunden vor dem eigentlichen Termin eine automatische E-Mail- oder SMS-Erinnerung versendet, was No-Shows um bis zu 75% reduziert."
+  }
+];
 
 export interface OnboardingData {
   doctors: Doctor[];
@@ -43,6 +87,7 @@ export interface AuxiWizardProps {
   initialDoctors?: Doctor[];
   initialResources?: Resource[];
   initialServices?: ServiceType[];
+  defaultTab?: 'selection' | 'einrichtung' | 'faq' | 'support';
 }
 
 export const AuxiWizard: React.FC<AuxiWizardProps> = ({
@@ -51,7 +96,11 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
   initialDoctors,
   initialResources,
   initialServices,
+  defaultTab,
 }) => {
+  // Active Tab state: selection (Cockpit overview), einrichtung, faq, support
+  const [activeTab, setActiveTab] = useState<'selection' | 'einrichtung' | 'faq' | 'support'>(defaultTab || 'selection');
+
   // Wizard Milestone Step: 0: Welcome, 1: Team, 2: Resources/Rooms, 3: Services & Resource Locking, 4: Branding, 5: Finish
   const [currentStep, setCurrentStep] = useState<0 | 1 | 2 | 3 | 4 | 5>(0);
 
@@ -99,6 +148,140 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
   // STEP 5: SUCCESS & WIDGET LINK
   const [copiedLink, setCopiedLink] = useState(false);
   const [supportRequested, setSupportRequested] = useState(false);
+
+  // --- INTEGRATED FAQ & SUPPORT STATES ---
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
+  const [selectedFaq, setSelectedFaq] = useState<any | null>(null);
+  const [displayedFaqAnswer, setDisplayedFaqAnswer] = useState('');
+
+  // Support Chat states
+  const [chatMessages, setChatMessages] = useState<Array<{ id: string; sender: 'user' | 'auxi'; text: string; timestamp: Date }>>([
+    {
+      id: 'msg-init',
+      sender: 'auxi',
+      text: 'Hallo! Ich bin Auxilia, Ihre persönliche KI-Praxisassistentin. 💫\n\nGerne helfe ich Ihnen bei Fragen zur Einrichtung, den Kalenderfunktionen, der Ressourcen-Sperrung oder Behandler-Verwaltung. Wie kann ich Sie heute unterstützen?',
+      timestamp: new Date()
+    }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const [isChatTyping, setIsChatTyping] = useState(false);
+
+  // --- LOCAL LLAMA (WebLLM) STATES ---
+  const [llamaStatus, setLlamaStatus] = useState(globalLlama.getStatus());
+
+  // Subscribe to global Llama preloading service
+  React.useEffect(() => {
+    const unsubscribe = globalLlama.subscribe(() => {
+      setLlamaStatus(globalLlama.getStatus());
+    });
+    // Ensure preload is triggered
+    globalLlama.preload();
+    return () => unsubscribe();
+  }, []);
+
+  // Prompt configuration for Auxilia in Support Chat (System Instructions)
+  const AUXILIA_SUPPORT_CHAT_PROMPT = `
+Du bist Auxilia, die persönliche Support-KI für den Auxilium Praxiskalender.
+Sprich immer auf Deutsch, höflich ("Sie"), direkt und auf den Punkt.
+
+PRAXIS-DATEN:
+- Praxis: ${practiceName}
+- Ärzte: ${doctors.map(d => `${d.name} (${d.specialty})`).join(', ')}
+- Räume & Geräte: ${resources.map(r => `${r.name} [${r.type === 'room' ? 'Raum' : 'Gerät'}]`).join(', ')}
+- Leistungen: ${services.map(s => `${s.name} (${s.durationMinutes} Min)`).join(', ')}
+
+SUPPORT-THEMEN:
+1. "Behandler/Ärzte hinzufügen": Im Tab "Einrichtung" -> Schritt 1 (Team).
+2. "Räume/Geräte anlegen": Im Tab "Einrichtung" -> Schritt 2 (Ressourcen).
+3. "Terminarten & Dauer": Im Tab "Einrichtung" -> Schritt 3 (Terminarten).
+4. "Design/Farbe": Im Tab "Einrichtung" -> Schritt 4 (Praxisdesign).
+5. "Buchungslink": Im Tab "Vorschau & Live-Link".
+
+WICHTIG:
+- Antworte NUR auf die konkrete Frage des Nutzers.
+- Halte deine Antwort kurz (2-3 Sätze).
+- Keine Erfindungen oder unpassende Themen.
+`;
+
+  // Typewriter effect logic for FAQs inside wizard
+  React.useEffect(() => {
+    if (selectedFaq) {
+      setDisplayedFaqAnswer('');
+      let i = 0;
+      const text = selectedFaq.answer;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          setDisplayedFaqAnswer(prev => prev + text.charAt(i));
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 15);
+      return () => clearInterval(interval);
+    }
+  }, [selectedFaq]);
+
+  // Support Chat response logic - 100% LOCAL LLAMA
+  const handleSendChatMessage = async (textToSend?: string) => {
+    const rawText = textToSend || chatInput;
+    if (!rawText.trim()) return;
+
+    // Add user message
+    const userMsg = {
+      id: `msg-user-${Date.now()}`,
+      sender: 'user' as const,
+      text: rawText,
+      timestamp: new Date()
+    };
+    setChatMessages(prev => [...prev, userMsg]);
+    if (!textToSend) setChatInput('');
+
+    // Trigger typing simulation
+    setIsChatTyping(true);
+
+    const auxiMsgId = `msg-auxi-${Date.now()}`;
+    let hasCreatedMsg = false;
+
+    try {
+      const messages = [
+        { role: 'system' as const, content: AUXILIA_SUPPORT_CHAT_PROMPT },
+        ...chatMessages.slice(-4).map(m => ({
+          role: m.sender === 'user' ? 'user' as const : 'assistant' as const,
+          content: m.text
+        })),
+        { role: 'user' as const, content: rawText }
+      ];
+
+      await globalLlama.generateChatStream(messages, (streamedText) => {
+        if (!hasCreatedMsg) {
+          hasCreatedMsg = true;
+          setChatMessages(prev => [...prev, {
+            id: auxiMsgId,
+            sender: 'auxi',
+            text: streamedText,
+            timestamp: new Date()
+          }]);
+        } else {
+          setChatMessages(prev => prev.map(m => m.id === auxiMsgId ? { ...m, text: streamedText } : m));
+        }
+      });
+    } catch (err: any) {
+      console.warn("Local Llama generation notice:", err);
+      let errorResponse = `Ich lade gerade noch das lokale Llama-Modell (${llamaStatus.progress}%)... Bitte versuchen Sie es in wenigen Sekunden erneut.`;
+      if (llamaStatus.error) {
+        errorResponse = `Hinweis zu WebGPU: ${llamaStatus.error}`;
+      }
+      setChatMessages(prev => [...prev, {
+        id: `msg-auxi-note-${Date.now()}`,
+        sender: 'auxi',
+        text: errorResponse,
+        timestamp: new Date()
+      }]);
+    } finally {
+      setIsChatTyping(false);
+    }
+  };
+
 
   const practiceSlug = practiceName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'praxis';
   const widgetUrl = `https://termin.auxilium-assist.de/${practiceSlug}`;
@@ -190,20 +373,28 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
             <AuxiAvatar size="sm" isSpeaking={true} />
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none flex items-center gap-2">
-                <span>Auxilia • 5-Minuten Einrichtung</span>
+                <span>
+                  {activeTab === 'selection' && 'Auxilia • Praxis-Cockpit'}
+                  {activeTab === 'einrichtung' && 'Auxilia • 5-Minuten Einrichtung'}
+                  {activeTab === 'faq' && 'Auxilia • Häufige Fragen (FAQ)'}
+                  {activeTab === 'support' && 'Auxilia • Live-Support-Chat'}
+                </span>
                 <span className="text-[10px] bg-teal-50 text-teal-800 border border-teal-200/80 font-bold px-2 py-0.5 rounded-full">
                   Auxilium Praxiskalender
                 </span>
               </h2>
               <p className="text-[11px] text-slate-500 mt-0.5">
-                Geführtes Onboarding in der höflichen Sie-Form ohne Handbuch oder Einrichtungsstress
+                {activeTab === 'selection' && 'Zentrale Übersicht aller intelligenten Assistenten-Dienste'}
+                {activeTab === 'einrichtung' && 'Geführtes Onboarding in der höflichen Sie-Form ohne Handbuch oder Einrichtungsstress'}
+                {activeTab === 'faq' && 'Antworten zu Themen wie Räumen, Geräten, SMS-Erinnerungen und Storno-Fristen'}
+                {activeTab === 'support' && 'Fragen Sie Auxilia alles zur Einrichtung und Bedienung des Praxiskalenders'}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Progress Indicator */}
-            {currentStep > 0 && (
+            {/* Progress Indicator (only shown in setup tab) */}
+            {activeTab === 'einrichtung' && currentStep > 0 && (
               <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
                 <span>Schritt {currentStep} von 5</span>
                 <div className="flex gap-1 ml-1.5">
@@ -234,8 +425,176 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
           </div>
         </div>
 
+        {/* Unified Tab Navigation Bar */}
+        <div className="px-6 py-2.5 bg-slate-50/50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-1 bg-slate-200/50 p-1 rounded-xl border border-slate-200/30">
+            <button
+              type="button"
+              onClick={() => setActiveTab('selection')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'selection'
+                  ? 'bg-white shadow-xs text-[#0D9488]'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Bot size={14} />
+              <span>Cockpit</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('einrichtung')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'einrichtung'
+                  ? 'bg-white shadow-xs text-[#0D9488]'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Sparkles size={14} />
+              <span>Einrichtung</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('faq')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'faq'
+                  ? 'bg-white shadow-xs text-[#0D9488]'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <HelpCircle size={14} />
+              <span>FAQ</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('support')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'support'
+                  ? 'bg-white shadow-xs text-[#0D9488]'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <MessageSquare size={14} />
+              <span>Support-Chat</span>
+            </button>
+          </div>
+
+          <div className="text-[11px] text-slate-500 font-medium hidden sm:block">
+            {activeTab === 'selection' && <span>Zentrale Assistenten-Übersicht</span>}
+            {activeTab === 'einrichtung' && <span>Onboarding Schritt {currentStep} von 5</span>}
+            {activeTab === 'faq' && <span>FAQ-Suchen & Finden</span>}
+            {activeTab === 'support' && <span>Live-Hilfe mit Auxilia</span>}
+          </div>
+        </div>
+
         {/* Body Area */}
         <div className="p-6 sm:p-8 flex-1 overflow-y-auto space-y-6">
+
+          {/* ========================================================================= */}
+          {/* 1. SELECTION / OVERVIEW COCKPIT TAB */}
+          {/* ========================================================================= */}
+          {activeTab === 'selection' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="py-4 space-y-8"
+            >
+              {/* Main Welcome Hero */}
+              <div className="bg-gradient-to-r from-teal-50/50 via-sky-50/30 to-white p-6 rounded-2xl border border-teal-100/50 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+                <AuxiAvatar size="lg" isSpeaking={true} />
+                <div className="space-y-1.5">
+                  <h3 className="text-xl font-extrabold text-slate-900">
+                    Willkommen im Auxilia-Cockpit 💫
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+                    Ich bin Ihre persönliche KI-Praxisassistentin. Ich helfe Ihnen, den optimalen Überblick über Ihre Praxisressourcen zu behalten, Ihren Kalender einzurichten und Fragen in Echtzeit zu beantworten.
+                  </p>
+                </div>
+              </div>
+
+              {/* Grid of the three options */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* CARD 1: EINRICHTUNG */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('einrichtung')}
+                  className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-teal-500 hover:shadow-lg transition-all text-left flex flex-col justify-between h-[240px] group cursor-pointer"
+                >
+                  <div className="space-y-3">
+                    <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                      <Sparkles size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-base">Praxiskalender einrichten</h4>
+                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                        Konfigurieren Sie Behandler, Räume, Geräte, Behandlungen und Ihr Corporate-Design in 5 einfachen Schritten.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-xs font-bold text-teal-600 flex items-center gap-1 group-hover:text-teal-700">
+                    <span>{currentStep > 0 ? 'Einrichtung fortsetzen' : 'Jetzt einrichten'}</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </button>
+
+                {/* CARD 2: FAQ */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('faq')}
+                  className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-sky-500 hover:shadow-lg transition-all text-left flex flex-col justify-between h-[240px] group cursor-pointer"
+                >
+                  <div className="space-y-3">
+                    <div className="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center group-hover:bg-sky-100 transition-colors">
+                      <HelpCircle size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-base">Häufige Fragen (FAQ)</h4>
+                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                        Finden Sie sofort Lösungen für Themen wie Raum-Sperrungen, Doppelbelegungen, E-Mail-Erinnerungen und Storno-Fristen.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-xs font-bold text-sky-600 flex items-center gap-1 group-hover:text-sky-700">
+                    <span>FAQs durchsuchen</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </button>
+
+                {/* CARD 3: SUPPORT */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('support')}
+                  className="p-6 rounded-2xl border border-slate-200 bg-white hover:border-indigo-500 hover:shadow-lg transition-all text-left flex flex-col justify-between h-[240px] group cursor-pointer"
+                >
+                  <div className="space-y-3">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                      <MessageSquare size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 text-base">Live-Support-Chat</h4>
+                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                        Chatten Sie direkt mit mir. Fragen Sie nach bestimmten Kalenderfunktionen oder lassen Sie sich assistieren.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-xs font-bold text-indigo-600 flex items-center gap-1 group-hover:text-indigo-700">
+                    <span>Support-Chat starten</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </button>
+
+              </div>
+            </motion.div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* 2. ONBOARDING SETUP WIDGET TAB */}
+          {/* ========================================================================= */}
+          {activeTab === 'einrichtung' && (
+            <>
 
           {/* ========================================================================= */}
           {/* MILESTONE 0: WELCOME SCREEN */}
@@ -895,6 +1254,274 @@ export const AuxiWizard: React.FC<AuxiWizardProps> = ({
                     Möchten Sie, dass unser Support weitere Daten für Sie importiert?
                   </button>
                 )}
+              </div>
+            </motion.div>
+          )}
+            </>
+          )}
+
+          {/* ========================================================================= */}
+          {/* 3. FAQ TAB */}
+          {/* ========================================================================= */}
+          {activeTab === 'faq' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="flex flex-col md:flex-row gap-6">
+                
+                {/* Left Side: Search and List */}
+                <div className="w-full md:w-5/12 space-y-4">
+                  <div className="relative">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input
+                      type="text"
+                      placeholder="Suchbegriff eingeben (z.B. Raum, SMS)..."
+                      value={faqSearchQuery}
+                      onChange={(e) => {
+                        setFaqSearchQuery(e.target.value);
+                        setSelectedFaq(null);
+                      }}
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+                    {FAQS_LIST.filter(faq => 
+                      faq.question.toLowerCase().includes(faqSearchQuery.toLowerCase()) ||
+                      faq.keywords.some(k => k.toLowerCase().includes(faqSearchQuery.toLowerCase()))
+                    ).map(faq => (
+                      <button
+                        key={faq.id}
+                        type="button"
+                        onClick={() => setSelectedFaq(faq)}
+                        className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs flex items-start gap-3 cursor-pointer ${
+                          selectedFaq?.id === faq.id
+                            ? 'bg-teal-50/50 border-teal-200 shadow-2xs'
+                            : 'bg-white border-slate-100 hover:border-slate-300'
+                        }`}
+                      >
+                        <BookOpen size={16} className={`shrink-0 mt-0.5 ${selectedFaq?.id === faq.id ? 'text-teal-600' : 'text-slate-400'}`} />
+                        <span className="font-bold text-slate-800 leading-snug">{faq.question}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Side: Reading Answer with typewriter effect */}
+                <div className="w-full md:w-7/12">
+                  {selectedFaq ? (
+                    <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 space-y-4 h-full min-h-[250px]">
+                      <div className="flex items-center gap-3 border-b border-slate-200/50 pb-3">
+                        <AuxiAvatar size="xs" isSpeaking={true} />
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-xs">Auxilia Antwortet</h4>
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Thema: {selectedFaq.keywords[0]}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <p className="font-extrabold text-slate-900 text-sm leading-snug">{selectedFaq.question}</p>
+                        <div className="text-slate-700 text-xs leading-relaxed font-semibold whitespace-pre-wrap">
+                          {displayedFaqAnswer}
+                          <motion.span
+                            animate={{ opacity: [1, 0] }}
+                            transition={{ duration: 0.5, repeat: Infinity }}
+                            className="inline-block w-1 h-3.5 bg-teal-500 ml-1 translate-y-0.5"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-slate-200/50 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Hat Ihnen diese Antwort geholfen?</span>
+                        <div className="flex gap-2">
+                          <button onClick={() => setSelectedFaq(null)} className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-600 font-bold transition-all cursor-pointer">Ja</button>
+                          <button onClick={() => setSelectedFaq(null)} className="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-600 font-bold transition-all cursor-pointer">Nein</button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center h-full min-h-[250px] space-y-3">
+                      <div className="w-12 h-12 bg-white rounded-xl shadow-xs border border-slate-100 flex items-center justify-center text-slate-300">
+                        <BookOpen size={24} />
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-800 text-sm">Wählen Sie eine Frage aus</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Klicken Sie links auf eine FAQ, um die Antwort anzuzeigen.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </motion.div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* 4. SUPPORT CHAT TAB */}
+          {/* ========================================================================= */}
+          {activeTab === 'support' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[440px]">
+                
+                {/* Chat feed column (8 Cols) */}
+                <div className="md:col-span-8 flex flex-col border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50">
+                  
+                  {/* Chat Header */}
+                  <div className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <AuxiAvatar size="xs" isSpeaking={isChatTyping} />
+                      <div>
+                        <span className="font-bold text-slate-800 text-xs block">Hilfe & Support</span>
+                        <span className="text-[10px] text-[#0D9488] font-bold flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 bg-[#0D9488] rounded-full animate-pulse" />
+                          <span>Auxilia ist online</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Subtle AI Engine Status Badge */}
+                    <div>
+                      {llamaStatus.isLoaded ? (
+                        <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
+                          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                          <span>Llama lokal aktiv</span>
+                        </span>
+                      ) : llamaStatus.isLoading ? (
+                        <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs">
+                          <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                          <span>Llama lädt ({llamaStatus.progress}%)</span>
+                        </span>
+                      ) : llamaStatus.error ? (
+                        <span 
+                          title={llamaStatus.error}
+                          className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200/80 px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-2xs"
+                        >
+                          <span>WebGPU nicht aktiv</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-slate-600 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1.5">
+                          <Sparkles size={11} className="text-teal-600" />
+                          <span>Llama initialisiert</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Messages Feed */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-3 scroll-smooth">
+                    {chatMessages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex items-start gap-3.5 max-w-[85%] ${
+                          msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''
+                        }`}
+                      >
+                        {msg.sender === 'auxi' && <AuxiAvatar size="xs" />}
+                        <div
+                          className={`p-3.5 rounded-2xl text-xs font-semibold leading-relaxed whitespace-pre-wrap shadow-2xs ${
+                            msg.sender === 'user'
+                              ? 'bg-gradient-to-r from-[#0D9488] to-[#0D9488]/90 text-white rounded-tr-none'
+                              : 'bg-white text-slate-800 border border-slate-200/60 rounded-tl-none'
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
+                      </div>
+                    ))}
+
+                    {isChatTyping && (
+                      <div className="flex items-start gap-3 max-w-[85%]">
+                        <AuxiAvatar size="xs" isSpeaking={true} />
+                        <div className="bg-white border border-slate-200/60 p-3.5 rounded-2xl rounded-tl-none flex gap-1 items-center">
+                          <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Message Input bar */}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSendChatMessage();
+                    }}
+                    className="p-3 bg-white border-t border-slate-100 flex gap-2"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Stellen Sie eine Frage zur Einrichtung oder Bedienung..."
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      disabled={isChatTyping}
+                      className="flex-1 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all disabled:opacity-60"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!chatInput.trim() || isChatTyping}
+                      className="px-3.5 bg-[#0D9488] hover:bg-[#0f766e] text-white rounded-xl shadow-2xs flex items-center justify-center transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                    >
+                      <Send size={15} />
+                    </button>
+                  </form>
+                </div>
+
+                {/* FAQ Quick suggestions & Helper Cards (4 Cols) */}
+                <div className="md:col-span-4 space-y-3.5 flex flex-col justify-between max-h-[440px] overflow-y-auto pr-1">
+                  
+                  {/* Suggestions List */}
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 shrink-0">
+                    <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block mb-1">Häufige Fragen</span>
+                    <div className="space-y-2">
+                      {[
+                        "Wie lege ich neue Ärzte an?",
+                        "Wie verhindere ich Raum-Doppelbelegungen?",
+                        "Wo finde ich meinen Buchungs-Link?",
+                        "Wie kann ich mein Praxis-Design anpassen?"
+                      ].map((q, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleSendChatMessage(q)}
+                          disabled={isChatTyping}
+                          className="w-full text-left p-2.5 bg-white border border-slate-100 hover:border-teal-200 hover:bg-teal-50/20 transition-all text-xs font-bold text-slate-700 cursor-pointer shadow-2xs block rounded-xl"
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Context Info Box */}
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-2.5 shrink-0 shadow-2xs">
+                    <span className="text-[10px] font-extrabold text-teal-700 uppercase tracking-widest block">Verbundene Praxis</span>
+                    <p className="text-xs font-bold text-slate-800 truncate">{practiceName}</p>
+                    <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+                      <span>{doctors.length} Behandler</span>
+                      <span>•</span>
+                      <span>{resources.length} Ressourcen</span>
+                      <span>•</span>
+                      <span>{services.length} Leistungen</span>
+                    </div>
+                  </div>
+
+                  {/* Smart Assistant Badge */}
+                  <div className="bg-gradient-to-br from-teal-50/80 to-sky-50/80 border border-teal-100 rounded-2xl p-4 flex gap-3">
+                    <Sparkles className="text-[#0D9488] shrink-0 mt-0.5" size={16} />
+                    <div>
+                      <p className="text-[10px] font-extrabold text-teal-950 uppercase tracking-tight mb-0.5">Lokale KI-Assistentin</p>
+                      <p className="text-[11px] text-teal-900 leading-relaxed font-semibold">Auxilia beantwortet Ihre Fragen in Echtzeit auf Basis Ihrer Praxiseinstellungen.</p>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </motion.div>
           )}

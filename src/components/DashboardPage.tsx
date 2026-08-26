@@ -37,6 +37,7 @@ import { AuxiWizard, OnboardingData } from './AuxiWizard';
 import { PhoneAiUpsellBanner } from './PhoneAiUpsellBanner';
 import { AuxiSetupBanner } from './AuxiSetupBanner';
 import { AuxiAvatar } from './AuxiAvatar';
+import { SupportAssistant, SupportFloatingButton } from './SupportAssistant';
 
 interface DashboardPageProps {
   onLogout: () => void;
@@ -182,6 +183,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
 
   // Auxi Onboarding Wizard State
   const [showAuxiWizard, setShowAuxiWizard] = useState(false);
+  const [auxiWizardDefaultTab, setAuxiWizardDefaultTab] = useState<'selection' | 'einrichtung' | 'faq' | 'support'>('selection');
   const [practiceName, setPracticeName] = useState('Gemeinschaftspraxis am Marktplatz');
   const [practiceSubtitle, setPracticeSubtitle] = useState('Ihr vertrauensvolles Praxisteam für ganzheitliche Medizin');
   const [primaryBrandColor, setPrimaryBrandColor] = useState('#0D9488');
@@ -1050,7 +1052,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             <div className="flex items-center gap-2">
                <button
                  type="button"
-                 onClick={() => setShowAuxiWizard(true)}
+                 onClick={() => {
+                   setAuxiWizardDefaultTab('selection');
+                   setShowAuxiWizard(true);
+                 }}
                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-teal-50 to-sky-50 hover:from-teal-100 hover:to-sky-100 border border-teal-200/80 text-teal-900 text-xs font-bold shadow-2xs transition-all cursor-pointer"
                  title="Praxiskalender-Einrichtung mit Auxilia starten"
                >
@@ -1086,7 +1091,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                 <div className="px-4 pt-2 shrink-0">
                   {!hasCompletedWizard ? (
                     <AuxiSetupBanner 
-                      onStartSetup={() => setShowAuxiWizard(true)}
+                      onStartSetup={() => {
+                        setAuxiWizardDefaultTab('einrichtung');
+                        setShowAuxiWizard(true);
+                      }}
                       onDismiss={() => {
                         setHasCompletedWizard(true);
                         try {
@@ -1099,7 +1107,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
                   ) : (
                     <PhoneAiUpsellBanner 
                       practiceName={practiceName} 
-                      onReopenWizard={() => setShowAuxiWizard(true)}
+                      onReopenWizard={() => {
+                        setAuxiWizardDefaultTab('selection');
+                        setShowAuxiWizard(true);
+                      }}
                     />
                   )}
                 </div>
@@ -2304,6 +2315,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
       {/* Auxi 4-Minuten Onboarding Wizard Modal */}
       {showAuxiWizard && (
         <AuxiWizard
+          defaultTab={auxiWizardDefaultTab}
           initialDoctors={doctors}
           initialResources={resources}
           initialServices={serviceTypes}
@@ -2326,6 +2338,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
           }}
         />
       )}
+
+      {/* Support Floating Button connected to our Unified Wizard Cockpit */}
+      <SupportFloatingButton 
+        isOpen={showAuxiWizard} 
+        onClick={() => {
+          if (showAuxiWizard) {
+            setShowAuxiWizard(false);
+          } else {
+            setAuxiWizardDefaultTab('selection');
+            setShowAuxiWizard(true);
+          }
+        }} 
+      />
 
     </div>
   );

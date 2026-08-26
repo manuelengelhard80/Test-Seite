@@ -32,6 +32,7 @@ import { WhatsAppWidget } from './components/WhatsAppWidget';
 import { PreLaunchPage } from './components/PreLaunchPage';
 import { PreLaunchPricingPage } from './components/PreLaunchPricingPage';
 import { StandaloneBookingPage } from './components/StandaloneBookingPage';
+import './services/llamaService';
 
 
 const Layout: React.FC<{ onNavigate: (view: string) => void }> = ({ onNavigate }) => {

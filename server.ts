@@ -2,11 +2,21 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { createClient } from "@libsql/client";
+import { GoogleGenAI } from "@google/genai";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+// Google GenAI client (lazy initialization)
+let aiClient: GoogleGenAI | null = null;
+function getAI() {
+  if (!aiClient) {
+    aiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || '' });
+  }
+  return aiClient;
+}
 
 // Turso Client Setup (Lazy initialization as per guidelines)
 let dbClient: any = null;
@@ -80,6 +90,35 @@ app.post("/api/appointments", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create appointment" });
+  }
+});
+
+// AI Chat Support Assistant Endpoint (Fallback if local WebLLM is not loaded or initializing)
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { messages, systemPrompt } = req.body;
+    const ai = getAI();
+
+    // Format messages for Gemini
+    const contents = (messages || []).map((m: any) => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.content || m.text || '' }]
+    }));
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: contents.length > 0 ? contents : [{ role: 'user', parts: [{ text: 'Hallo' }] }],
+      config: {
+        systemInstruction: systemPrompt || 'Du bist Auxilia, die freundliche KI-Praxisassistentin für den Auxilium Praxiskalender. Antworte auf Deutsch in der höflichen Sie-Form, hilfsbereit, präzise und lösungsorientiert.',
+        temperature: 0.7,
+      }
+    });
+
+    const answer = response.text || "Ich bin für Sie da! Wie kann ich Ihnen bei der Einrichtung oder Bedienung weiterhelfen?";
+    res.json({ answer });
+  } catch (error: any) {
+    console.error("AI Chat route error:", error);
+    res.status(500).json({ error: "Chat service currently unavailable", details: error?.message });
   }
 });
 
